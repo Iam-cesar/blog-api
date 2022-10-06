@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  email      String    @unique
+  password   String
+  deleted    Boolean   @default(false)
+  deletedAt  DateTime?
+  createdAt  DateTime?
+  updatedAt  DateTime?
+  Role       Role?      @relation(fields: [role], references: [name])
+  role       String?
+  like       Like[]
+  post       Post[]
+  profile    Profile[]
+}
+
+model Role {
+  id                Int     @id() @default(autoincrement())
+  name              String  @unique
+  canCreatePost     Boolean @default(false)
+  canUpdatePost     Boolean @default(false)
+  canDeletePost     Boolean @default(false)
+  canSoftDeletePost Boolean @default(false)
+  canCreateUser     Boolean @default(false)
+  canUpdateUser     Boolean @default(false)
+  canDeleteUser     Boolean @default(false)
+  canSoftDeleteUser Boolean @default(false)
+  canLikeUser       Boolean @default(false)
+  canLikePost       Boolean @default(false)
+  user              User[]
+}
+
+model Profile {
+  id     Int    @id @unique @default(autoincrement())
+  bio    String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id        Int        @id @unique @default(autoincrement())
+  title     String
+  content   String
+  published Boolean    @default(false)
+  author    User       @relation(fields: [authorId], references: [id])
+  authorId  Int
+  deleted   Boolean    @default(false)
+  deletedAt DateTime?
+  createdAt DateTime?
+  updatedAt DateTime?
+  comment   Comment[]
+  like      Like[]
+  category  Category[]
+}
+
+model Category {
+  id   Int    @id @unique @default(autoincrement())
+  name String
+  post Post[]
+}
+
+model Comment {
+  id      Int    @id @unique @default(autoincrement())
+  content String
+  postId  Int
+  post    Post   @relation(fields: [postId], references: [id])
+  like    Like[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  commentId Int?
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  post      Post?    @relation(fields: [postId], references: [id])
+  postId    Int?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
