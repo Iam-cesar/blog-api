@@ -1,6 +1,8 @@
+import { genSaltSync, hashSync } from 'bcrypt';
+
 export class AuthHelper {
-  async createHashPassword(password): Promise<string> {
-    const hashPassword = password;
-    return `hash${hashPassword}`;
+  async createHashPassword(password: string): Promise<string> {
+    const salt = genSaltSync(12);
+    return hashSync(password, salt);
   }
 }
