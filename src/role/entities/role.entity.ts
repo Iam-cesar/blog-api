@@ -11,4 +11,6 @@ export class RoleEntity {
   canSoftDeleteUser?: boolean;
   canLikeUser?: boolean;
   canLikePost?: boolean;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }

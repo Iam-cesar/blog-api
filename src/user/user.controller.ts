@@ -8,7 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import authHelper from 'src/auth/auth.helper';
+import { AuthHelper } from 'src/auth/auth.helper';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -21,7 +21,7 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserDto) {
     try {
       const { password } = createUserDto;
-      const hashPassword = await authHelper.createHashPassword(password);
+      const hashPassword = await new AuthHelper().createHashPassword(password);
       return await this.userService.create({
         ...createUserDto,
         password: hashPassword,

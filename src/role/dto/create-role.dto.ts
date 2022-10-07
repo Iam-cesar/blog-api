@@ -13,4 +13,6 @@ export class CreateRoleDto {
   canLikeUser: boolean;
   canLikePost: boolean;
   user?: Prisma.UserCreateNestedManyWithoutRoleInput;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }

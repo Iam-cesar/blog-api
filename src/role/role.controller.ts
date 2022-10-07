@@ -42,7 +42,7 @@ export class RoleController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() data: UpdateRoleDto) {
-    return this.roleService.update({ id: Number(id) }, data);
+    return this.roleService.update({ where: { id: Number(id) }, data });
   }
 
   @Delete(':id')

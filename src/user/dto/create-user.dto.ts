@@ -13,5 +13,5 @@ export class CreateUserDto {
   Role: Prisma.RoleCreateNestedOneWithoutUserInput;
   like?: Prisma.LikeCreateNestedManyWithoutUserInput;
   post?: Prisma.PostCreateNestedManyWithoutAuthorInput;
-  profile?: Prisma.ProfileCreateNestedManyWithoutUserInput;
+  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput;
 }

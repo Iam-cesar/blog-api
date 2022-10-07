@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { createdAt, deletedAt, updatedAt } from './../app.helper';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -15,7 +16,7 @@ export class UserService {
 
   async create(data: CreateUserDto): Promise<UserEntity> {
     return this.prisma.user.create({
-      data,
+      data: { ...data, createdAt },
       select: {
         id: true,
       },
@@ -41,10 +42,10 @@ export class UserService {
   }
 
   async findOne(
-    uniqueInput: Prisma.UserWhereUniqueInput,
+    where: Prisma.UserWhereUniqueInput,
   ): Promise<UserEntity | null> {
     return this.prisma.user.findUnique({
-      where: uniqueInput,
+      where,
       select: {
         _count: true,
         id: true,
@@ -64,7 +65,11 @@ export class UserService {
             deletedAt: false,
           },
         },
-        profile: true,
+        profile: {
+          select: {
+            bio: true,
+          },
+        },
         role: true,
         updatedAt: true,
         createdAt: true,
@@ -80,7 +85,7 @@ export class UserService {
     const { where, data } = params;
     return this.prisma.user.update({
       where,
-      data: { ...data, updatedAt: new Date().toISOString() },
+      data: { ...data, updatedAt },
       select: { id: true },
     });
   }
@@ -88,7 +93,7 @@ export class UserService {
   async softRemove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
     return this.prisma.user.update({
       where,
-      data: { deleted: true, deletedAt: new Date().toISOString() },
+      data: { deleted: true, deletedAt },
       select: { id: true },
     });
   }
@@ -96,7 +101,7 @@ export class UserService {
   async renew(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
     return this.prisma.user.update({
       where,
-      data: { deleted: false, updatedAt: new Date().toISOString() },
+      data: { deleted: false, updatedAt },
       select: { id: true },
     });
   }
