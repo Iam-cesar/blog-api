@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { createdAt, deletedAt, updatedAt } from './../app.helper';
+import { createdAt, deletedAt, updatedAt } from '../helpers/date.helper';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -10,8 +10,13 @@ import { UserEntity } from './entities/user.entity';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async findOneWithPassword(where: Prisma.UserWhereUniqueInput) {
-    return this.prisma.user.findUnique({ where, select: { password: true } });
+  async findOneWithPassword(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<UserEntity> {
+    return this.prisma.user.findUnique({
+      where,
+      select: { password: true, email: true, id: true },
+    });
   }
 
   async create(data: CreateUserDto): Promise<UserEntity> {
@@ -27,7 +32,7 @@ export class UserService {
     skip?: number;
     take?: number;
     orderBy?: Prisma.UserOrderByWithRelationInput;
-  }): Promise<UserEntity[] | null> {
+  }): Promise<UserEntity[]> {
     return this.prisma.user.findMany({
       ...params,
       select: {
@@ -37,6 +42,7 @@ export class UserService {
         email: true,
         role: true,
         deleted: true,
+        createdAt: true,
       },
     });
   }
@@ -57,12 +63,10 @@ export class UserService {
         post: {
           select: {
             id: true,
-            authorId: true,
             category: true,
             title: true,
             createdAt: false,
             updatedAt: false,
-            deletedAt: false,
           },
         },
         profile: {
