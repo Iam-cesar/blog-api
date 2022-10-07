@@ -6,18 +6,22 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileService } from './profile.service';
 
 @Controller('profile')
+@UseGuards(AuthGuard('jwt'))
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post()
   create(@Body() data: CreateProfileDto) {
-    return this.profileService.create(data);
+    // create profile logic
+    return this.profileService.create({ ...data, user: {} });
   }
 
   @Get(':id')

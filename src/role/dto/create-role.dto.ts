@@ -1,7 +1,10 @@
+import { Length } from '@nestjs/class-validator';
 import { Prisma } from '@prisma/client';
 
 export class CreateRoleDto {
+  @Length(4, 64)
   name: string;
+
   canCreatePost: boolean;
   canUpdatePost: boolean;
   canDeletePost: boolean;

@@ -7,24 +7,26 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthHelper } from 'src/auth/auth.helper';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
+@UseGuards(AuthGuard('jwt'))
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() data: CreateUserDto) {
     try {
-      const { password } = createUserDto;
-      const hashPassword = await new AuthHelper().createHashPassword(password);
+      const { password } = data;
       return await this.userService.create({
-        ...createUserDto,
-        password: hashPassword,
+        ...data,
+        password: await new AuthHelper().createHashPassword(password),
       });
     } catch (error) {
       console.log('error', error);

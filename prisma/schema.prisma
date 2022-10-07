@@ -59,7 +59,6 @@ model Post {
   author    User       @relation(fields: [authorId], references: [id])
   authorId  Int
   deleted   Boolean    @default(false)
-  deletedAt DateTime?
   createdAt DateTime?
   updatedAt DateTime?
   comment   Comment[]

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { createdAt, updatedAt } from './../app.helper';
+import { createdAt, updatedAt } from '../helpers/date.helper';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileEntity } from './entities/profile.entity';
@@ -13,6 +13,9 @@ export class ProfileService {
   create(data: CreateProfileDto): Promise<ProfileEntity> {
     return this.prisma.profile.create({
       data: { ...data, createdAt },
+      select: {
+        id: true,
+      },
     });
   }
 

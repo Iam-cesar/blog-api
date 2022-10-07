@@ -3,6 +3,7 @@ export class UserEntity {
   firstName?: string;
   lastName?: string;
   email?: string;
+  password?: string;
   deleted?: boolean;
   deletedAt?: string | Date;
   createdAt?: string | Date;
