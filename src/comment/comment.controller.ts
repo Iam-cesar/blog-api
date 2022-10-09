@@ -14,15 +14,15 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { PostService } from 'src/post/post.service';
 import { UserService } from 'src/user/user.service';
-import { CommentsService } from './comments.service';
+import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Controller('comment')
 @UseGuards(AuthGuard('jwt'))
-export class CommentsController {
+export class CommentController {
   constructor(
-    private readonly commentsService: CommentsService,
+    private readonly CommentService: CommentService,
     private readonly userService: UserService,
     private readonly postService: PostService,
   ) {}
@@ -39,7 +39,7 @@ export class CommentsController {
     const post = await this.postService.findOne({ id: Number(postId) });
     if (!post) throw new NotFoundException();
 
-    return this.commentsService.create({
+    return this.CommentService.create({
       ...data,
       user: { connect: { id: user?.id } },
       post: { connect: { id: post?.id } },
@@ -48,16 +48,16 @@ export class CommentsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.commentsService.findOne({ id: Number(id) });
+    return this.CommentService.findOne({ id: Number(id) });
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() data: UpdateCommentDto) {
-    return this.commentsService.update({ where: { id: Number(id) }, data });
+    return this.CommentService.update({ where: { id: Number(id) }, data });
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.commentsService.remove({ id: Number(id) });
+    return this.CommentService.remove({ id: Number(id) });
   }
 }

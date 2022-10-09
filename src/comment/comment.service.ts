@@ -7,7 +7,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentEntity } from './entities/comment.entity';
 
 @Injectable()
-export class CommentsService {
+export class CommentService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateCommentDto): Promise<CommentEntity> {

@@ -59,6 +59,7 @@ export class PostService {
           select: {
             id: true,
             content: true,
+            user: { select: { id: true, firstName: true, lastName: true } },
           },
         },
         createdAt: true,
@@ -66,6 +67,7 @@ export class PostService {
         like: {
           select: {
             id: true,
+            user: { select: { id: true, firstName: true, lastName: true } },
           },
         },
         updatedAt: true,
