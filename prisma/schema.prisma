@@ -21,6 +21,7 @@ model User {
   role      String?
   like      Like[]
   post      Post[]
+  comment   Comment[]
   profile   Profile?
 }
 
@@ -69,7 +70,7 @@ model Post {
 model Category {
   id        Int       @id @unique @default(autoincrement())
   name      String
-  post      Post?      @relation(fields: [postId], references: [id])
+  post      Post?     @relation(fields: [postId], references: [id])
   postId    Int?
   createdAt DateTime?
   updatedAt DateTime?
@@ -79,6 +80,8 @@ model Comment {
   id        Int       @id @unique @default(autoincrement())
   content   String
   postId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    Int
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   like      Like[]
   createdAt DateTime?

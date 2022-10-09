@@ -40,7 +40,7 @@ export class PostController {
   }
 
   @Get()
-  findAll(
+  async findAll(
     @Query()
     query?: {
       skip?: string;
@@ -54,7 +54,7 @@ export class PostController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.postService.findOne({ id: Number(id) });
   }
 

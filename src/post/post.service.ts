@@ -58,6 +58,7 @@ export class PostService {
         comment: {
           select: {
             id: true,
+            content: true,
           },
         },
         createdAt: true,

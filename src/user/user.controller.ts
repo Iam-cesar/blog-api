@@ -34,7 +34,7 @@ export class UserController {
   }
 
   @Get()
-  findAll(
+  async findAll(
     @Query()
     query?: {
       skip?: string;
@@ -49,13 +49,13 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.userService.findOne({ id: Number(id) });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() data: UpdateUserDto) {
     return this.userService.update({
       where: { id: Number(id) },
       data,
@@ -64,19 +64,19 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id/soft-delete')
-  softRemove(@Param('id') id: string) {
+  async softRemove(@Param('id') id: string) {
     return this.userService.softRemove({ id: Number(id) });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id/renew')
-  renew(@Param('id') id: string) {
+  async renew(@Param('id') id: string) {
     return this.userService.renew({ id: Number(id) });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.userService.remove({ id: Number(id) });
   }
 }
