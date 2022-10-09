@@ -46,7 +46,7 @@ model Profile {
   id        Int       @id @unique @default(autoincrement())
   bio       String
   userId    Int       @unique
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt DateTime?
   updatedAt DateTime?
 }
@@ -56,7 +56,7 @@ model Post {
   title     String
   content   String
   published Boolean    @default(false)
-  author    User       @relation(fields: [authorId], references: [id])
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   authorId  Int
   deleted   Boolean    @default(false)
   createdAt DateTime?
@@ -69,7 +69,8 @@ model Post {
 model Category {
   id        Int       @id @unique @default(autoincrement())
   name      String
-  post      Post[]
+  post      Post?      @relation(fields: [postId], references: [id])
+  postId    Int?
   createdAt DateTime?
   updatedAt DateTime?
 }
@@ -78,7 +79,7 @@ model Comment {
   id        Int       @id @unique @default(autoincrement())
   content   String
   postId    Int
-  post      Post      @relation(fields: [postId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   like      Like[]
   createdAt DateTime?
   updatedAt DateTime?
@@ -87,10 +88,10 @@ model Comment {
 model Like {
   id        Int       @id @default(autoincrement())
   commentId Int?
-  comment   Comment?  @relation(fields: [commentId], references: [id])
-  post      Post?     @relation(fields: [postId], references: [id])
+  comment   Comment?  @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   postId    Int?
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    Int
   createdAt DateTime?
   updatedAt DateTime?

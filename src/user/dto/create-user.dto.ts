@@ -1,4 +1,4 @@
-import { IsEmail, Length, Matches } from '@nestjs/class-validator';
+import { IsEmail, IsOptional, Length, Matches } from '@nestjs/class-validator';
 import { Prisma } from '@prisma/client';
 import { MessageHelper } from 'src/helpers/message.helper';
 import { RegexHelper } from 'src/helpers/regexp.helper';
@@ -19,12 +19,21 @@ export class CreateUserDto {
   })
   password: string;
 
+  @IsOptional()
   deleted?: boolean;
+
   deletedAt: string | Date;
   createdAt: string | Date;
   updatedAt: string | Date;
+
   Role: Prisma.RoleCreateNestedOneWithoutUserInput;
+
+  @IsOptional()
   like?: Prisma.LikeCreateNestedManyWithoutUserInput;
+
+  @IsOptional()
   post?: Prisma.PostCreateNestedManyWithoutAuthorInput;
+
+  @IsOptional()
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput;
 }

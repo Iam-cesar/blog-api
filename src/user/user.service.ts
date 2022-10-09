@@ -8,7 +8,7 @@ import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findOneWithPassword(
     where: Prisma.UserWhereUniqueInput,

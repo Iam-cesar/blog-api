@@ -8,7 +8,7 @@ import { RoleEntity } from './entities/role.entity';
 
 @Injectable()
 export class RoleService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateRoleDto): Promise<RoleEntity> {
     return this.prisma.role.create({
@@ -49,7 +49,6 @@ export class RoleService {
         canUpdateUser: true,
         createdAt: true,
         updatedAt: true,
-
         user: {
           select: {
             id: true,

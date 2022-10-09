@@ -3,6 +3,7 @@ export class PostEntity {
   title?: string;
   content?: string;
   published?: boolean;
+  category?: { id?: number; name?: string }[];
   authorId?: number;
   deleted?: boolean;
   deletedAt?: Date;

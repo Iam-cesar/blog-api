@@ -1,4 +1,4 @@
-import { IsNotEmpty, Length } from '@nestjs/class-validator';
+import { IsNotEmpty, IsOptional, Length } from '@nestjs/class-validator';
 import { Prisma } from '@prisma/client';
 
 export class CreatePostDto {
@@ -8,14 +8,28 @@ export class CreatePostDto {
   @IsNotEmpty()
   content: string;
 
+  @IsOptional()
   published?: boolean;
 
   author: Prisma.UserCreateNestedOneWithoutPostInput;
 
+  @IsOptional()
   deleted?: boolean;
+
+  @IsOptional()
   createdAt?: string | Date;
+
+  @IsOptional()
   updatedAt?: string | Date;
+
+  @IsOptional()
   comment?: Prisma.CommentCreateNestedManyWithoutPostInput;
+
+  @IsOptional()
   like?: Prisma.LikeCreateNestedManyWithoutPostInput;
-  category?: Prisma.CategoryCreateNestedManyWithoutPostInput;
+
+  @IsOptional()
+  category?:
+    | Prisma.CategoryCreateNestedManyWithoutPostInput
+    | Prisma.CategoryUpdateManyWithoutPostNestedInput;
 }

@@ -6,9 +6,10 @@ import { ProfileModule } from './profile/profile.module';
 import { RoleModule } from './role/role.module';
 import { RoleService } from './role/role.service';
 import { UserModule } from './user/user.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [UserModule, RoleModule, ProfileModule, PostModule, AuthModule],
+  imports: [UserModule, RoleModule, ProfileModule, PostModule, AuthModule, CategoryModule],
   providers: [PrismaService, RoleService],
 })
 export class AppModule {}

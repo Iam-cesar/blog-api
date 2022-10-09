@@ -8,7 +8,7 @@ import { ProfileEntity } from './entities/profile.entity';
 
 @Injectable()
 export class ProfileService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateProfileDto): Promise<ProfileEntity> {
     return this.prisma.profile.create({

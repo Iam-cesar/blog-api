@@ -8,7 +8,7 @@ import { PostEntity } from './entities/post.entity';
 
 @Injectable()
 export class PostService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
   create(data: CreatePostDto): Promise<PostEntity> {
     return this.prisma.post.create({
       data: { ...data, createdAt },

@@ -16,10 +16,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
-@UseGuards(AuthGuard('jwt'))
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() data: CreateUserDto) {
     try {
@@ -47,11 +47,13 @@ export class UserController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne({ id: Number(id) });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   update(@Param('id') id: string, @Body() data: UpdateUserDto) {
     return this.userService.update({
@@ -60,16 +62,19 @@ export class UserController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id/soft-delete')
   softRemove(@Param('id') id: string) {
     return this.userService.softRemove({ id: Number(id) });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id/renew')
   renew(@Param('id') id: string) {
     return this.userService.renew({ id: Number(id) });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove({ id: Number(id) });
