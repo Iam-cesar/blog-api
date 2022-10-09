@@ -21,12 +21,12 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
-  create(@Body() data: CreateCategoryDto) {
+  async create(@Body() data: CreateCategoryDto) {
     return this.categoryService.create(data);
   }
 
   @Get()
-  findAll(
+  async findAll(
     @Query()
     query?: {
       skip?: string;
@@ -40,12 +40,12 @@ export class CategoryController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.categoryService.findOne({ id: Number(id) });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
+  async update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
     return this.categoryService.update({
       where: { id: Number(id) },
       data: { ...data, updatedAt },
@@ -53,7 +53,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.categoryService.remove({ id: Number(id) });
   }
 }

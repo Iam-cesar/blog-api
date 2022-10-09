@@ -7,9 +7,18 @@ import { RoleModule } from './role/role.module';
 import { RoleService } from './role/role.service';
 import { UserModule } from './user/user.module';
 import { CategoryModule } from './category/category.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
-  imports: [UserModule, RoleModule, ProfileModule, PostModule, AuthModule, CategoryModule],
+  imports: [
+    UserModule,
+    RoleModule,
+    ProfileModule,
+    PostModule,
+    AuthModule,
+    CategoryModule,
+    CommentsModule,
+  ],
   providers: [PrismaService, RoleService],
 })
 export class AppModule {}

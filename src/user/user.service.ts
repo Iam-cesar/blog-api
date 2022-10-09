@@ -10,16 +10,14 @@ import { UserEntity } from './entities/user.entity';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findOneWithPassword(
-    where: Prisma.UserWhereUniqueInput,
-  ): Promise<UserEntity> {
+  findOneWithPassword(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
     return this.prisma.user.findUnique({
       where,
       select: { password: true, email: true, id: true },
     });
   }
 
-  async create(data: CreateUserDto): Promise<UserEntity> {
+  create(data: CreateUserDto): Promise<UserEntity> {
     return this.prisma.user.create({
       data: { ...data, createdAt },
       select: {
@@ -28,7 +26,7 @@ export class UserService {
     });
   }
 
-  async findAll(params?: {
+  findAll(params?: {
     skip?: number;
     take?: number;
     orderBy?: Prisma.UserOrderByWithRelationInput;
@@ -47,9 +45,7 @@ export class UserService {
     });
   }
 
-  async findOne(
-    where: Prisma.UserWhereUniqueInput,
-  ): Promise<UserEntity | null> {
+  findOne(where: Prisma.UserWhereUniqueInput): Promise<UserEntity | null> {
     return this.prisma.user.findUnique({
       where,
       select: {
@@ -82,7 +78,7 @@ export class UserService {
     });
   }
 
-  async update(params: {
+  update(params: {
     where: Prisma.UserWhereUniqueInput;
     data: UpdateUserDto;
   }): Promise<UserEntity> {
@@ -94,7 +90,7 @@ export class UserService {
     });
   }
 
-  async softRemove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
+  softRemove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
     return this.prisma.user.update({
       where,
       data: { deleted: true, deletedAt },
@@ -102,7 +98,7 @@ export class UserService {
     });
   }
 
-  async renew(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
+  renew(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
     return this.prisma.user.update({
       where,
       data: { deleted: false, updatedAt },
@@ -110,7 +106,7 @@ export class UserService {
     });
   }
 
-  async remove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
+  remove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
     return this.prisma.user.delete({ where, select: { id: true } });
   }
 }

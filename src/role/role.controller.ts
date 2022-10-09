@@ -20,7 +20,7 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
-  create(@Body() data: CreateRoleDto) {
+  async create(@Body() data: CreateRoleDto) {
     return this.roleService.create(data);
   }
 
@@ -39,17 +39,17 @@ export class RoleController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.roleService.findOne({ id: Number(id) });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: UpdateRoleDto) {
+  async update(@Param('id') id: string, @Body() data: UpdateRoleDto) {
     return this.roleService.update({ where: { id: Number(id) }, data });
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.roleService.remove({ id: Number(id) });
   }
 }
