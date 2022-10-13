@@ -1,20 +1,38 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { PostService } from '../post/post.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { UserService } from '../user/user.service';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 
 describe('CommentController', () => {
-  let controller: CommentController;
+  let commentController: CommentController;
+  let prismaService: PrismaService;
+  let userService: UserService;
+  let postService: PostService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CommentController],
-      providers: [CommentService],
+      providers: [CommentService, PrismaService, UserService, PostService],
     }).compile();
 
-    controller = module.get<CommentController>(CommentController);
+    commentController = module.get<CommentController>(CommentController);
+    prismaService = module.get<PrismaService>(PrismaService);
+    userService = module.get<UserService>(UserService);
+    postService = module.get<PostService>(PostService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(commentController).toBeDefined();
+  });
+  it('should be defined', () => {
+    expect(prismaService).toBeDefined();
+  });
+  it('should be defined', () => {
+    expect(userService).toBeDefined();
+  });
+  it('should be defined', () => {
+    expect(postService).toBeDefined();
   });
 });

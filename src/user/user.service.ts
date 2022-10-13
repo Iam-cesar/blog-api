@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { createdAt, deletedAt, updatedAt } from '../helpers/date.helper';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -13,7 +13,12 @@ export class UserService {
   findOneWithPassword(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
     return this.prisma.user.findUnique({
       where,
-      select: { password: true, email: true, id: true },
+      select: {
+        password: true,
+        email: true,
+        id: true,
+        hashedRefreshToken: true,
+      },
     });
   }
 
@@ -55,7 +60,11 @@ export class UserService {
         lastName: true,
         email: true,
         deleted: true,
-        like: true,
+        profile: {
+          select: {
+            bio: true,
+          },
+        },
         post: {
           select: {
             id: true,
@@ -63,11 +72,6 @@ export class UserService {
             title: true,
             createdAt: false,
             updatedAt: false,
-          },
-        },
-        profile: {
-          select: {
-            bio: true,
           },
         },
         role: true,

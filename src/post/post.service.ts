@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { createdAt, updatedAt } from '../helpers/date.helper';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entities/post.entity';
@@ -58,8 +58,16 @@ export class PostService {
         comment: {
           select: {
             id: true,
+            createdAt: true,
             content: true,
             user: { select: { id: true, firstName: true, lastName: true } },
+            like: {
+              select: {
+                id: true,
+                createdAt: true,
+                user: { select: { id: true, firstName: true, lastName: true } },
+              },
+            },
           },
         },
         createdAt: true,
@@ -67,6 +75,7 @@ export class PostService {
         like: {
           select: {
             id: true,
+            createdAt: true,
             user: { select: { id: true, firstName: true, lastName: true } },
           },
         },

@@ -8,6 +8,7 @@ export class UserEntity {
   deletedAt?: string | Date;
   createdAt?: string | Date;
   updatedAt?: string | Date;
+  hashedRefreshToken?: string;
   role?: string;
   like?: object | null;
   post?: object | null;

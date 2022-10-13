@@ -1,22 +1,96 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compareSync } from 'bcrypt';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
+import { compare, compareSync, hash } from 'bcrypt';
+import { PrismaService } from '..//prisma/prisma.service';
+import { MessageHelper } from '../helpers/message.helper';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserEntity } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
+import { AuthHelper } from './auth.helper';
+import { CreateAuthDto } from './dto/create-auth.dto';
+import { Tokens } from './types/token.type';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+    private readonly authHelper: AuthHelper,
+    private readonly prisma: PrismaService,
   ) {}
 
-  async login(user: UserEntity) {
-    const payload = { sub: user.id, email: user.email };
-
-    return {
-      token: this.jwtService.sign(payload),
+  async signin({ id, email }: UserEntity): Promise<Tokens> {
+    const payload = { sub: id, email };
+    const oneWeek = 60 * 60 * 24 * 7;
+    const tokens = {
+      accessToken: this.jwtService.sign(payload),
+      refreshToken: this.jwtService.sign(payload, { expiresIn: oneWeek }),
     };
+
+    await this.updateRefreshToken(id, tokens.refreshToken);
+
+    return tokens;
+  }
+
+  async signup(data: CreateUserDto): Promise<Tokens> {
+    try {
+      const { password } = data;
+
+      const { id, email } = await this.userService.create({
+        ...data,
+        password: await this.authHelper.createHashPassword(password),
+      });
+
+      const { accessToken, refreshToken } = await this.signin({
+        id,
+        email,
+      } as CreateAuthDto);
+
+      await this.updateRefreshToken(id, refreshToken);
+      return { accessToken, refreshToken };
+    } catch (error) {
+      if (error.meta.target.includes('email'))
+        throw new ForbiddenException(MessageHelper.EMAIL_ALREADY_EXISTS);
+
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async logout(id: number): Promise<void> {
+    const user = await this.userService.findOneWithPassword({ id });
+
+    if (!user?.hashedRefreshToken) throw new BadRequestException();
+
+    await this.prisma.user.updateMany({
+      where: { id: user.id, hashedRefreshToken: { not: null } },
+      data: { hashedRefreshToken: null },
+    });
+  }
+
+  async refreshToken({ id, requestRefreshToken }): Promise<Tokens> {
+    const user = await this.userService.findOneWithPassword({ id });
+
+    if (!user.hashedRefreshToken) throw new UnauthorizedException();
+
+    const refreshTokenMatch = await compare(
+      requestRefreshToken,
+      user.hashedRefreshToken,
+    );
+
+    if (refreshTokenMatch) throw new UnauthorizedException();
+
+    const { accessToken, refreshToken } = await this.signin({
+      id: user.id,
+      email: user.email,
+    });
+
+    await this.updateRefreshToken(id, refreshToken);
+    return { accessToken, refreshToken };
   }
 
   async validateUser(email: string, password: string) {
@@ -33,5 +107,16 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  private async updateRefreshToken(
+    userId: number,
+    refreshToken: string,
+  ): Promise<void> {
+    const hashToken = await hash(refreshToken, 10);
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { hashedRefreshToken: hashToken },
+    });
   }
 }

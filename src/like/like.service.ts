@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { createdAt } from 'src/helpers/date.helper';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { createdAt } from '../helpers/date.helper';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { LikeEntity } from './entities/like.entity';
 

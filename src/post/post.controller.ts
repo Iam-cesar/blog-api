@@ -1,9 +1,13 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -11,15 +15,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CategoryService } from 'src/category/category.service';
-import { updatedAt } from 'src/helpers/date.helper';
-import { UserService } from 'src/user/user.service';
+import { ApiTags } from '@nestjs/swagger';
+import { CategoryService } from '../category/category.service';
+import { updatedAt } from '../helpers/date.helper';
+import { FindAllQueryDto } from '../helpers/dto/findAllQuery.dto';
+import { MessageHelper } from '../helpers/message.helper';
+import { UserService } from '../user/user.service';
+import { CreatePostCategoryDto } from './dto/create-post-category.dto';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostCategoryDto } from './dto/update-post-category.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostService } from './post.service';
 
 @Controller('post')
 @UseGuards(AuthGuard('jwt'))
+@ApiTags('Post')
 export class PostController {
   constructor(
     private readonly postService: PostService,
@@ -28,49 +38,69 @@ export class PostController {
   ) {}
 
   @Post()
+  @HttpCode(201)
   async create(
     @Body() data: CreatePostDto,
     @Req() req: { user: { email: string } },
   ) {
     const user = await this.userService.findOne({ email: req.user.email });
-    return this.postService.create({
+
+    if (!user) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+
+    const post = await this.postService.create({
       ...data,
       author: { connect: { email: user.email } },
     });
+
+    if (!post)
+      throw new BadRequestException(MessageHelper.CATEGORY_BAD_REQUEST);
+
+    return post;
   }
 
   @Get()
-  async findAll(
-    @Query()
-    query?: {
-      skip?: string;
-      take?: string;
-    },
-  ) {
-    return this.postService.findAll({
+  @HttpCode(200)
+  async findAll(@Query() query?: FindAllQueryDto) {
+    const post = await this.postService.findAll({
       skip: Number(query.skip) || undefined,
       take: Number(query.skip) || undefined,
     });
+
+    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+
+    return post;
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.postService.findOne({ id: Number(id) });
+  @HttpCode(200)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const post = await this.postService.findOne({ id });
+
+    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+
+    return post;
   }
 
   @Post(':id/category/:categoryId')
   async addCategory(
-    @Param() params: { id: string; categoryId: string },
+    @Param() params: CreatePostCategoryDto,
     @Body() data: UpdatePostDto,
   ) {
     const { categoryId, id } = params;
+
+    const post = await this.postService.findOne({ id });
+
+    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
 
     const category = await this.categoryService.findOne({
       id: Number(categoryId),
     });
 
-    return this.postService.update({
-      where: { id: Number(id) },
+    if (!category)
+      throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+
+    return await this.postService.update({
+      where: { id },
       data: {
         ...data,
         updatedAt,
@@ -80,9 +110,17 @@ export class PostController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() data: UpdatePostDto) {
-    return this.postService.update({
-      where: { id: Number(id) },
+  @HttpCode(200)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdatePostDto,
+  ) {
+    const post = await this.postService.findOne({ id });
+
+    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+
+    return await this.postService.update({
+      where: { id },
       data: {
         ...data,
         updatedAt,
@@ -91,16 +129,33 @@ export class PostController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove({ id: Number(id) });
+  @HttpCode(200)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const post = await this.postService.findOne({ id });
+
+    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+
+    return await this.postService.remove({ id });
   }
 
   @Delete(':id/category/:categoryId')
-  async removeCategory(@Param() params: { id: string; categoryId: string }) {
+  @HttpCode(200)
+  async removeCategory(@Param() params: UpdatePostCategoryDto) {
     const { id, categoryId } = params;
 
-    return this.postService.update({
-      where: { id: Number(id) },
+    const post = await this.postService.findOne({ id });
+
+    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+
+    const category = await this.categoryService.findOne({
+      id: Number(categoryId),
+    });
+
+    if (!category)
+      throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+
+    return await this.postService.update({
+      where: { id },
       data: { category: { disconnect: { id: Number(categoryId) } } },
     });
   }

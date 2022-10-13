@@ -8,21 +8,22 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  firstName String
-  lastName  String
-  email     String    @unique
-  password  String
-  deleted   Boolean   @default(false)
-  deletedAt DateTime?
-  createdAt DateTime?
-  updatedAt DateTime?
-  Role      Role?     @relation(fields: [role], references: [name])
-  role      String?
-  like      Like[]
-  post      Post[]
-  comment   Comment[]
-  profile   Profile?
+  id                 Int       @id @default(autoincrement())
+  firstName          String
+  lastName           String
+  email              String    @unique
+  password           String
+  deleted            Boolean   @default(false)
+  deletedAt          DateTime?
+  createdAt          DateTime?
+  updatedAt          DateTime?
+  Role               Role?     @relation(fields: [role], references: [name])
+  role               String?
+  hashedRefreshToken String?
+  like               Like[]
+  post               Post[]
+  comment            Comment[]
+  profile            Profile?
 }
 
 model Role {

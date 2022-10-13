@@ -1,55 +1,87 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
+import { FindAllQueryDto } from '../helpers/dto/findAllQuery.dto';
+import { MessageHelper } from '../helpers/message.helper';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RoleService } from './role.service';
 
 @Controller('role')
 @UseGuards(AuthGuard('jwt'))
+@ApiTags('Role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
+  @HttpCode(201)
   async create(@Body() data: CreateRoleDto) {
-    return this.roleService.create(data);
+    const role = await this.roleService.create(data);
+
+    if (!role) throw new BadRequestException(MessageHelper.ROLE_BAD_REQUEST);
+
+    return role;
   }
 
   @Get()
-  findAll(
+  @HttpCode(200)
+  async findAll(
     @Query()
-    query?: {
-      skip?: string;
-      take?: string;
-    },
+    query?: FindAllQueryDto,
   ) {
-    return this.roleService.findAll({
+    return await this.roleService.findAll({
       skip: Number(query.skip) || undefined,
       take: Number(query.skip) || undefined,
     });
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.roleService.findOne({ id: Number(id) });
+  @HttpCode(200)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const role = await this.roleService.findOne({ id });
+
+    if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
+
+    return role;
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() data: UpdateRoleDto) {
-    return this.roleService.update({ where: { id: Number(id) }, data });
+  @HttpCode(200)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdateRoleDto,
+  ) {
+    const role = await this.roleService.findOne({ id });
+
+    if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
+
+    return await this.roleService.update({
+      where: { id },
+      data,
+    });
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.roleService.remove({ id: Number(id) });
+  @HttpCode(200)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const role = await this.roleService.findOne({ id });
+
+    if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
+
+    return await this.roleService.remove({ id });
   }
 }
