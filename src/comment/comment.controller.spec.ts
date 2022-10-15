@@ -7,7 +7,7 @@ import { CommentService } from './comment.service';
 
 describe('CommentController', () => {
   let commentController: CommentController;
-  let prismaService: PrismaService;
+
   let userService: UserService;
   let postService: PostService;
 
@@ -18,7 +18,7 @@ describe('CommentController', () => {
     }).compile();
 
     commentController = module.get<CommentController>(CommentController);
-    prismaService = module.get<PrismaService>(PrismaService);
+
     userService = module.get<UserService>(UserService);
     postService = module.get<PostService>(PostService);
   });
@@ -26,9 +26,7 @@ describe('CommentController', () => {
   it('should be defined', () => {
     expect(commentController).toBeDefined();
   });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
-  });
+
   it('should be defined', () => {
     expect(userService).toBeDefined();
   });

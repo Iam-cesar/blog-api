@@ -19,7 +19,7 @@ import { Prisma } from '@prisma/client';
 import { CommentService } from '../comment/comment.service';
 import { MessageHelper } from '../helpers/message.helper';
 import { PostService } from '../post/post.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { db } from '../prisma/utils/db.server';
 import { UserService } from '../user/user.service';
 import { UserEntity } from './../user/entities/user.entity';
 import { CreateLikeDto } from './dto/create-like.dto';
@@ -32,7 +32,6 @@ export class LikeController {
     private readonly userService: UserService,
     private readonly postService: PostService,
     private readonly commentService: CommentService,
-    private readonly prisma: PrismaService,
   ) {}
 
   @Post()
@@ -97,7 +96,7 @@ export class LikeController {
     user: UserEntity,
     commentId: Prisma.CommentCreateNestedOneWithoutLikeInput,
   ) {
-    return await this.prisma.comment.findFirst({
+    return await db.comment.findFirst({
       where: {
         id: Number(commentId),
         like: { some: { user: { email: user?.email } } },
@@ -110,7 +109,7 @@ export class LikeController {
     user: UserEntity,
     postId: Prisma.PostCreateNestedOneWithoutLikeInput,
   ) {
-    return await this.prisma.post.findFirst({
+    return await db.post.findFirst({
       where: {
         id: Number(postId),
         like: { some: { user: { email: user?.email } } },

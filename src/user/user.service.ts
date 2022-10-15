@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { createdAt, deletedAt, updatedAt } from '../helpers/date.helper';
-import { PrismaService } from '../prisma/prisma.service';
+import { db } from '../prisma/utils/db.server';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  create(data: CreateUserDto): Promise<UserEntity> {
+    return db.user.create({
+      data: { ...data, createdAt },
+      select: {
+        id: true,
+      },
+    });
+  }
 
   findOneWithPassword(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
-    return this.prisma.user.findUnique({
+    return db.user.findUnique({
       where,
       select: {
         password: true,
@@ -22,21 +29,12 @@ export class UserService {
     });
   }
 
-  create(data: CreateUserDto): Promise<UserEntity> {
-    return this.prisma.user.create({
-      data: { ...data, createdAt },
-      select: {
-        id: true,
-      },
-    });
-  }
-
   findAll(params?: {
     skip?: number;
     take?: number;
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<UserEntity[]> {
-    return this.prisma.user.findMany({
+    return db.user.findMany({
       ...params,
       select: {
         id: true,
@@ -51,7 +49,7 @@ export class UserService {
   }
 
   findOne(where: Prisma.UserWhereUniqueInput): Promise<UserEntity | null> {
-    return this.prisma.user.findUnique({
+    return db.user.findUnique({
       where,
       select: {
         _count: true,
@@ -87,7 +85,7 @@ export class UserService {
     data: UpdateUserDto;
   }): Promise<UserEntity> {
     const { where, data } = params;
-    return this.prisma.user.update({
+    return db.user.update({
       where,
       data: { ...data, updatedAt },
       select: { id: true },
@@ -95,7 +93,7 @@ export class UserService {
   }
 
   softRemove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
-    return this.prisma.user.update({
+    return db.user.update({
       where,
       data: { deleted: true, deletedAt },
       select: { id: true },
@@ -103,7 +101,7 @@ export class UserService {
   }
 
   renew(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
-    return this.prisma.user.update({
+    return db.user.update({
       where,
       data: { deleted: false, updatedAt },
       select: { id: true },
@@ -111,6 +109,6 @@ export class UserService {
   }
 
   remove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
-    return this.prisma.user.delete({ where, select: { id: true } });
+    return db.user.delete({ where, select: { id: true } });
   }
 }

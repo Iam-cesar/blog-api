@@ -12,7 +12,6 @@ describe('AuthController', () => {
   let userService: UserService;
   let jwtService: JwtService;
   let authHelper: AuthHelper;
-  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,7 +30,6 @@ describe('AuthController', () => {
     userService = module.get<UserService>(UserService);
     jwtService = module.get<JwtService>(JwtService);
     authHelper = module.get<AuthHelper>(AuthHelper);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
@@ -48,8 +46,5 @@ describe('AuthController', () => {
   });
   it('should be defined', () => {
     expect(authHelper).toBeDefined();
-  });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
   });
 });

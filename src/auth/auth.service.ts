@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, compareSync, hash } from 'bcrypt';
-import { PrismaService } from '..//prisma/prisma.service';
 import { MessageHelper } from '../helpers/message.helper';
+import { db } from '../prisma/utils/db.server';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
@@ -21,7 +21,6 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly authHelper: AuthHelper,
-    private readonly prisma: PrismaService,
   ) {}
 
   async signin({ id, email }: UserEntity): Promise<Tokens> {
@@ -66,7 +65,7 @@ export class AuthService {
 
     if (!user?.hashedRefreshToken) throw new BadRequestException();
 
-    await this.prisma.user.updateMany({
+    await db.user.updateMany({
       where: { id: user.id, hashedRefreshToken: { not: null } },
       data: { hashedRefreshToken: null },
     });
@@ -114,7 +113,7 @@ export class AuthService {
     refreshToken: string,
   ): Promise<void> {
     const hashToken = await hash(refreshToken, 10);
-    await this.prisma.user.update({
+    await db.user.update({
       where: { id: userId },
       data: { hashedRefreshToken: hashToken },
     });

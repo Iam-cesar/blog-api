@@ -4,7 +4,6 @@ import { CategoryService } from './category.service';
 
 describe('CategoryService', () => {
   let categoryService: CategoryService;
-  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -12,13 +11,9 @@ describe('CategoryService', () => {
     }).compile();
 
     categoryService = module.get<CategoryService>(CategoryService);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
     expect(categoryService).toBeDefined();
-  });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
   });
 });

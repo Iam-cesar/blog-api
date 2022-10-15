@@ -8,7 +8,7 @@ import { LikeService } from './like.service';
 
 describe('LikeController', () => {
   let likeController: LikeController;
-  let prismaService: PrismaService;
+
   let userService: UserService;
   let postService: PostService;
   let commentService: CommentService;
@@ -26,7 +26,7 @@ describe('LikeController', () => {
     }).compile();
 
     likeController = module.get<LikeController>(LikeController);
-    prismaService = module.get<PrismaService>(PrismaService);
+
     userService = module.get<UserService>(UserService);
     postService = module.get<PostService>(PostService);
     commentService = module.get<CommentService>(CommentService);
@@ -35,9 +35,7 @@ describe('LikeController', () => {
   it('should be defined', () => {
     expect(likeController).toBeDefined();
   });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
-  });
+
   it('should be defined', () => {
     expect(userService).toBeDefined();
   });

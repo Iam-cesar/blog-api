@@ -5,7 +5,6 @@ import { RoleService } from './role.service';
 
 describe('RoleController', () => {
   let roleController: RoleController;
-  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -14,13 +13,9 @@ describe('RoleController', () => {
     }).compile();
 
     roleController = module.get<RoleController>(RoleController);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
     expect(roleController).toBeDefined();
-  });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
   });
 });

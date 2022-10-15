@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { db } from '../prisma/utils/db.server';
 import { createdAt, updatedAt } from './../helpers/date.helper';
-import { PrismaService } from './../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryEntity } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly prisma: PrismaService) {}
-
   create(data: CreateCategoryDto): Promise<CategoryEntity> {
-    return this.prisma.category.create({
+    return db.category.create({
       data: { ...data, createdAt },
       select: { id: true },
     });
@@ -22,7 +20,7 @@ export class CategoryService {
     take?: number;
     orderBy?: Prisma.PostOrderByWithRelationInput;
   }): Promise<CategoryEntity[]> {
-    return this.prisma.category.findMany({
+    return db.category.findMany({
       ...params,
       select: {
         id: true,
@@ -32,7 +30,7 @@ export class CategoryService {
   }
 
   findOne(where: Prisma.CategoryWhereUniqueInput): Promise<CategoryEntity> {
-    return this.prisma.category.findUnique({
+    return db.category.findUnique({
       where,
       select: {
         id: true,
@@ -49,7 +47,7 @@ export class CategoryService {
     data: UpdateCategoryDto;
   }): Promise<CategoryEntity> {
     const { where, data } = params;
-    return this.prisma.category.update({
+    return db.category.update({
       where,
       data: { ...data, updatedAt },
       select: { id: true },
@@ -57,6 +55,6 @@ export class CategoryService {
   }
 
   remove(where: Prisma.CategoryWhereUniqueInput): Promise<CategoryEntity> {
-    return this.prisma.category.delete({ where, select: { id: true } });
+    return db.category.delete({ where, select: { id: true } });
   }
 }

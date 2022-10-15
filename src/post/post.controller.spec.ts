@@ -7,7 +7,7 @@ import { PostService } from './post.service';
 
 describe('PostController', () => {
   let postController: PostController;
-  let prismaService: PrismaService;
+
   let userService: UserService;
   let categoryService: CategoryService;
 
@@ -18,7 +18,7 @@ describe('PostController', () => {
     }).compile();
 
     postController = module.get<PostController>(PostController);
-    prismaService = module.get<PrismaService>(PrismaService);
+
     userService = module.get<UserService>(UserService);
     categoryService = module.get<CategoryService>(CategoryService);
   });
@@ -26,9 +26,7 @@ describe('PostController', () => {
   it('should be defined', () => {
     expect(postController).toBeDefined();
   });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
-  });
+
   it('should be defined', () => {
     expect(userService).toBeDefined();
   });

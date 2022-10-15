@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 
 describe('UserController', () => {
   let userController: UserController;
-  let prismaService: PrismaService;
+
   let authHelper: AuthHelper;
 
   beforeEach(async () => {
@@ -16,16 +16,14 @@ describe('UserController', () => {
     }).compile();
 
     userController = module.get<UserController>(UserController);
-    prismaService = module.get<PrismaService>(PrismaService);
+
     authHelper = module.get<AuthHelper>(AuthHelper);
   });
 
   it('should be defined', () => {
     expect(userController).toBeDefined();
   });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
-  });
+
   it('should be defined', () => {
     expect(authHelper).toBeDefined();
   });

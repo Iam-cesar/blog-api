@@ -4,7 +4,6 @@ import { PostService } from './post.service';
 
 describe('PostService', () => {
   let postService: PostService;
-  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -12,13 +11,9 @@ describe('PostService', () => {
     }).compile();
 
     postService = module.get<PostService>(PostService);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
     expect(postService).toBeDefined();
-  });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
   });
 });

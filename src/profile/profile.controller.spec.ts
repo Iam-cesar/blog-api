@@ -6,7 +6,7 @@ import { ProfileService } from './profile.service';
 
 describe('ProfileController', () => {
   let profileController: ProfileController;
-  let prismaService: PrismaService;
+
   let userService: UserService;
 
   beforeEach(async () => {
@@ -16,16 +16,14 @@ describe('ProfileController', () => {
     }).compile();
 
     profileController = module.get<ProfileController>(ProfileController);
-    prismaService = module.get<PrismaService>(PrismaService);
+
     userService = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {
     expect(profileController).toBeDefined();
   });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
-  });
+
   it('should be defined', () => {
     expect(userService).toBeDefined();
   });
