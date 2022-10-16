@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -35,10 +36,13 @@ export class UserController {
   async create(@Body() data: CreateUserDto) {
     const { password } = data;
 
-    return await this.userService.create({
+    const user = await this.userService.create({
       ...data,
       password: await this.authHelper.createHashPassword(password),
     });
+    if (!user) throw new BadRequestException(MessageHelper.ROLE_BAD_REQUEST);
+
+    return user;
   }
 
   @Get()

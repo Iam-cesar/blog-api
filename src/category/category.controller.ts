@@ -46,8 +46,8 @@ export class CategoryController {
     query?: FindAllQueryDto,
   ) {
     return await this.categoryService.findAll({
-      skip: Number(query.skip) || undefined,
-      take: Number(query.skip) || undefined,
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.skip) || undefined,
     });
   }
 

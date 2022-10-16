@@ -15,7 +15,7 @@ export class RoleService {
     });
   }
 
-  findAll(params: {
+  findAll(params?: {
     skip?: number;
     take?: number;
     orderBy?: Prisma.RoleOrderByWithAggregationInput;
