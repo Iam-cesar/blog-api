@@ -24,9 +24,9 @@ export const MOCK_CREATE = {
   lastName: 'mock_last_name',
   email: 'mock_email@email.com',
   password: 'mock_password',
-  createdAt: '',
-  updatedAt: '',
-  deletedAt: '',
+  createdAt: null,
+  updatedAt: null,
+  deletedAt: null,
 };
 
 export const MOCK_UPDATE = {

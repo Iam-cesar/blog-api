@@ -54,6 +54,11 @@ describe('UserController', () => {
       const user = await userController.create(MOCK_CREATE);
       expect(user.id).toBe(2);
     });
+
+    it('should to throw an exception', () => {
+      jest.spyOn(userController, 'create').mockRejectedValueOnce(new Error());
+      expect(userController.create(null)).rejects.toStrictEqual(new Error());
+    });
   });
 
   describe('FIND_ONE', () => {

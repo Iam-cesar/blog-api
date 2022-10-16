@@ -44,8 +44,8 @@ export class RoleController {
     query?: FindAllQueryDto,
   ) {
     return await this.roleService.findAll({
-      skip: Number(query.skip) || undefined,
-      take: Number(query.skip) || undefined,
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.take) || undefined,
     });
   }
 

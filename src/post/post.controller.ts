@@ -65,8 +65,8 @@ export class PostController {
   @HttpCode(200)
   async findAll(@Query() query?: FindAllQueryDto) {
     const post = await this.postService.findAll({
-      skip: Number(query.skip) || undefined,
-      take: Number(query.skip) || undefined,
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.skip) || undefined,
     });
 
     if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
