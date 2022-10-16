@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { createdAt, updatedAt } from '../helpers/date.helper';
-import { PrismaService } from '../prisma/prisma.service';
+import { db } from '../prisma/utils/db.server';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RoleEntity } from './entities/role.entity';
 
 @Injectable()
 export class RoleService {
-  constructor(private readonly prisma: PrismaService) {}
-
   create(data: CreateRoleDto): Promise<RoleEntity> {
-    return this.prisma.role.create({
+    return db.role.create({
       data: { ...data, createdAt },
       select: { id: true },
     });
@@ -22,7 +20,7 @@ export class RoleService {
     take?: number;
     orderBy?: Prisma.RoleOrderByWithAggregationInput;
   }): Promise<RoleEntity[]> {
-    return this.prisma.role.findMany({
+    return db.role.findMany({
       ...params,
       select: {
         id: true,
@@ -32,7 +30,7 @@ export class RoleService {
   }
 
   findOne(where: Prisma.RoleWhereUniqueInput) {
-    return this.prisma.role.findUnique({
+    return db.role.findUnique({
       where,
       select: {
         id: true,
@@ -60,7 +58,7 @@ export class RoleService {
 
   update(params: { where: Prisma.RoleWhereUniqueInput; data: UpdateRoleDto }) {
     const { where, data } = params;
-    return this.prisma.role.update({
+    return db.role.update({
       where,
       data: { ...data, updatedAt },
       select: { id: true },
@@ -68,6 +66,6 @@ export class RoleService {
   }
 
   remove(where: Prisma.RoleWhereUniqueInput) {
-    return this.prisma.role.delete({ where, select: { id: true } });
+    return db.role.delete({ where, select: { id: true } });
   }
 }

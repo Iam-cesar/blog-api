@@ -43,7 +43,8 @@ export class CreateUserDto {
   @IsEmpty()
   updatedAt: string | Date;
 
-  Role: Prisma.RoleCreateNestedOneWithoutUserInput;
+  @IsOptional()
+  Role?: Prisma.RoleCreateNestedOneWithoutUserInput;
 
   @IsOptional()
   like?: Prisma.LikeCreateNestedManyWithoutUserInput;

@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { createdAt, updatedAt } from '../helpers/date.helper';
-import { PrismaService } from '../prisma/prisma.service';
+import { db } from '../prisma/utils/db.server';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entities/post.entity';
 
 @Injectable()
 export class PostService {
-  constructor(private readonly prisma: PrismaService) {}
   create(data: CreatePostDto): Promise<PostEntity> {
-    return this.prisma.post.create({
+    return db.post.create({
       data: { ...data, createdAt },
       select: {
         id: true,
@@ -23,7 +22,7 @@ export class PostService {
     take?: number;
     orderBy?: Prisma.PostOrderByWithRelationInput;
   }): Promise<PostEntity[]> {
-    return this.prisma.post.findMany({
+    return db.post.findMany({
       ...params,
       select: {
         id: true,
@@ -34,7 +33,7 @@ export class PostService {
   }
 
   findOne(where: Prisma.PostWhereUniqueInput): Promise<PostEntity> {
-    return this.prisma.post.findUnique({
+    return db.post.findUnique({
       where,
       select: {
         id: true,
@@ -89,7 +88,7 @@ export class PostService {
     data: UpdatePostDto;
   }): Promise<PostEntity> {
     const { where, data } = params;
-    return this.prisma.post.update({
+    return db.post.update({
       where,
       data: { ...data, updatedAt },
       select: {
@@ -99,7 +98,7 @@ export class PostService {
   }
 
   remove(where: Prisma.PostWhereUniqueInput): Promise<PostEntity> {
-    return this.prisma.post.delete({
+    return db.post.delete({
       where,
       select: {
         id: true,

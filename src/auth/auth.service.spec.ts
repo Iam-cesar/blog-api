@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let prismaService: PrismaService;
+
   let userService: UserService;
   let jwtService: JwtService;
   let authHelper: AuthHelper;
@@ -24,26 +24,16 @@ describe('AuthService', () => {
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
-    prismaService = module.get<PrismaService>(PrismaService);
+
     userService = module.get<UserService>(UserService);
     jwtService = module.get<JwtService>(JwtService);
     authHelper = module.get<AuthHelper>(AuthHelper);
   });
 
   it('should be defined', () => {
-    expect(authService).toBeDefined();
-  });
-
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
-  });
-  it('should be defined', () => {
-    expect(userService).toBeDefined();
-  });
-  it('should be defined', () => {
-    expect(jwtService).toBeDefined();
-  });
-  it('should be defined', () => {
     expect(authHelper).toBeDefined();
+    expect(userService).toBeDefined();
+    expect(jwtService).toBeDefined();
+    expect(authService).toBeDefined();
   });
 });

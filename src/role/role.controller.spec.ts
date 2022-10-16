@@ -1,26 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../prisma/prisma.service';
 import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
 
 describe('RoleController', () => {
   let roleController: RoleController;
-  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RoleController],
-      providers: [RoleService, PrismaService],
+      providers: [RoleService],
     }).compile();
 
     roleController = module.get<RoleController>(RoleController);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
     expect(roleController).toBeDefined();
-  });
-  it('should be defined', () => {
-    expect(prismaService).toBeDefined();
   });
 });

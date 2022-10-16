@@ -1,24 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { createdAt, updatedAt } from '../helpers/date.helper';
-import { PrismaService } from '../prisma/prisma.service';
+import { db } from '../prisma/utils/db.server';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentEntity } from './entities/comment.entity';
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly prisma: PrismaService) {}
-
   create(data: CreateCommentDto): Promise<CommentEntity> {
-    return this.prisma.comment.create({
+    return db.comment.create({
       data: { ...data, createdAt },
       select: { id: true },
     });
   }
 
   findOne(where: Prisma.CommentWhereUniqueInput): Promise<CommentEntity> {
-    return this.prisma.comment.findUnique({
+    return db.comment.findUnique({
       where,
       select: {
         id: true,
@@ -43,7 +41,7 @@ export class CommentService {
     data: UpdateCommentDto;
   }): Promise<CommentEntity> {
     const { where, data } = params;
-    return this.prisma.comment.update({
+    return db.comment.update({
       where,
       data: { ...data, updatedAt },
       select: { id: true },
@@ -51,6 +49,6 @@ export class CommentService {
   }
 
   remove(where: Prisma.CommentWhereUniqueInput): Promise<CommentEntity> {
-    return this.prisma.comment.delete({ where, select: { id: true } });
+    return db.comment.delete({ where, select: { id: true } });
   }
 }

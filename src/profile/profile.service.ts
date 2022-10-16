@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { createdAt, updatedAt } from '../helpers/date.helper';
-import { PrismaService } from '../prisma/prisma.service';
+import { db } from '../prisma/utils/db.server';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileEntity } from './entities/profile.entity';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly prisma: PrismaService) {}
-
   create(data: CreateProfileDto): Promise<ProfileEntity> {
-    return this.prisma.profile.create({
+    return db.profile.create({
       data: { ...data, createdAt },
       select: {
         id: true,
@@ -22,7 +20,7 @@ export class ProfileService {
   findOne(
     where: Prisma.ProfileWhereUniqueInput,
   ): Promise<ProfileEntity | null> {
-    return this.prisma.profile.findUnique({ where });
+    return db.profile.findUnique({ where });
   }
 
   update(params: {
@@ -30,7 +28,7 @@ export class ProfileService {
     data: UpdateProfileDto;
   }): Promise<ProfileEntity> {
     const { where, data } = params;
-    return this.prisma.profile.update({
+    return db.profile.update({
       where,
       data: { ...data, updatedAt },
       select: { id: true },
@@ -38,6 +36,6 @@ export class ProfileService {
   }
 
   remove(where: Prisma.ProfileWhereUniqueInput): Promise<ProfileEntity> {
-    return this.prisma.profile.delete({ where, select: { id: true } });
+    return db.profile.delete({ where, select: { id: true } });
   }
 }
