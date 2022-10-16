@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../prisma/prisma.service';
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
 
@@ -9,7 +8,7 @@ describe('CategoryController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CategoryController],
-      providers: [CategoryService, PrismaService],
+      providers: [CategoryService],
     }).compile();
 
     categoryController = module.get<CategoryController>(CategoryController);

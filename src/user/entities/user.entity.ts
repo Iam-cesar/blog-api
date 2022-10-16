@@ -25,14 +25,14 @@ export class UserEntity {
     password?: string;
     deleted?: boolean;
   }) {
-    this.id = params?.id;
-    this.firstName = params?.firstName;
-    this.lastName = params?.lastName;
-    this.email = params?.email;
-    this.password = params?.password;
-    this.deletedAt = params?.deletedAt;
-    this.createdAt = params?.createdAt;
-    this.updatedAt = params?.updatedAt;
-    this.deleted = params?.deleted;
+    this.id = params.id;
+    this.firstName = params.firstName;
+    this.lastName = params.lastName;
+    this.email = params.email;
+    this.password = params.password;
+    this.deletedAt = params.deletedAt;
+    this.createdAt = params.createdAt;
+    this.updatedAt = params.updatedAt;
+    this.deleted = params.deleted;
   }
 }

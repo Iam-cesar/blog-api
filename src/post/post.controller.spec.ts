@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoryService } from '../category/category.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
 import { PostController } from './post.controller';
 import { PostService } from './post.service';
@@ -14,7 +13,7 @@ describe('PostController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PostController],
-      providers: [PostService, PrismaService, UserService, CategoryService],
+      providers: [PostService, UserService, CategoryService],
     }).compile();
 
     postController = module.get<PostController>(PostController);
@@ -25,12 +24,7 @@ describe('PostController', () => {
 
   it('should be defined', () => {
     expect(postController).toBeDefined();
-  });
-
-  it('should be defined', () => {
     expect(userService).toBeDefined();
-  });
-  it('should be defined', () => {
     expect(categoryService).toBeDefined();
   });
 });

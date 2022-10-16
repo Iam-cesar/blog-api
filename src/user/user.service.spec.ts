@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserEntity } from './entities/user.entity';
 
 import {
   FIND_ALL_MOCK_RESPONSE,
@@ -19,9 +18,7 @@ describe('UserService', () => {
         {
           provide: UserService,
           useValue: {
-            create: jest
-              .fn()
-              .mockResolvedValue(new UserEntity(MOCK_CREATE_RESPONSE)),
+            create: jest.fn().mockResolvedValue(MOCK_CREATE_RESPONSE),
             findOneWithPassword: jest.fn().mockResolvedValue({ id: 2 }),
             findAll: jest.fn().mockResolvedValue(FIND_ALL_MOCK_RESPONSE),
             findOne: jest.fn().mockResolvedValue(FIND_ONE_MOCK_RESPONSE),
@@ -45,20 +42,10 @@ describe('UserService', () => {
     it('should be able to create a user', async () => {
       const user = await userService.create(MOCK_CREATE);
       expect(user.email).toBe('mock_email@email.com');
-      expect(user.id).toBe(2);
+      expect(user).toStrictEqual(MOCK_CREATE_RESPONSE);
     });
 
-    it('should not be deleted', async () => {
-      const user = await userService.create(MOCK_CREATE);
-      expect(user.deleted).toBe(false);
-    });
-
-    it('timestamps should be visible', async () => {
-      const user = await userService.create(MOCK_CREATE);
-      expect(user.createdAt).toBe('2022-10-10T22:26:05.108Z');
-    });
-
-    it('should to throw an error', async () => {
+    it('should to throw an exception', () => {
       jest.spyOn(userService, 'create').mockRejectedValueOnce(new Error());
       expect(userService.create(MOCK_CREATE)).rejects.toThrowError();
     });
@@ -72,7 +59,7 @@ describe('UserService', () => {
       expect(user.id).toBe(2);
     });
 
-    it('should to throw an error', async () => {
+    it('should to throw an exception', () => {
       jest
         .spyOn(userService, 'findOneWithPassword')
         .mockRejectedValueOnce(new Error());
@@ -89,7 +76,7 @@ describe('UserService', () => {
       expect(user.id).toBe(2);
     });
 
-    it('should to throw an error', async () => {
+    it('should to throw an exception', () => {
       jest.spyOn(userService, 'findOne').mockRejectedValueOnce(new Error());
       expect(
         userService.findOne({ email: FIND_ONE_MOCK_RESPONSE.email }),
@@ -106,7 +93,7 @@ describe('UserService', () => {
       expect(user.id).toBe(2);
     });
 
-    it('should to throw an error', async () => {
+    it('should to throw an exception', () => {
       jest.spyOn(userService, 'findAll').mockRejectedValueOnce(new Error());
       expect(userService.findAll()).rejects.toThrowError();
     });
@@ -122,7 +109,7 @@ describe('UserService', () => {
       expect(user.id).toBe(2);
     });
 
-    it('should to throw an error', async () => {
+    it('should to throw an exception', () => {
       jest.spyOn(userService, 'update').mockRejectedValueOnce(new Error());
       expect(
         userService.update({
@@ -139,7 +126,7 @@ describe('UserService', () => {
       expect(user.id).toBe(2);
     });
 
-    it('should to throw an error', async () => {
+    it('should to throw an exception', () => {
       jest.spyOn(userService, 'remove').mockRejectedValueOnce(new Error());
       expect(
         userService.remove({ email: MOCK_CREATE.email }),
@@ -153,7 +140,7 @@ describe('UserService', () => {
       expect(user.id).toBe(2);
     });
 
-    it('should to throw an error', async () => {
+    it('should to throw an exception', () => {
       jest.spyOn(userService, 'softRemove').mockRejectedValueOnce(new Error());
       expect(
         userService.softRemove({ email: MOCK_CREATE.email }),
@@ -167,7 +154,7 @@ describe('UserService', () => {
       expect(user.id).toBe(2);
     });
 
-    it('should to throw an error', async () => {
+    it('should to throw an exception', () => {
       jest.spyOn(userService, 'renew').mockRejectedValueOnce(new Error());
       expect(
         userService.renew({ email: MOCK_CREATE.email }),

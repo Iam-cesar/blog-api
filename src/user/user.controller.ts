@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -36,14 +35,10 @@ export class UserController {
   async create(@Body() data: CreateUserDto) {
     const { password } = data;
 
-    const user = await this.userService.create({
+    return await this.userService.create({
       ...data,
       password: await this.authHelper.createHashPassword(password),
     });
-
-    if (!user) throw new BadRequestException(MessageHelper.USER_BAD_REQUEST);
-
-    return user;
   }
 
   @Get()
@@ -52,14 +47,10 @@ export class UserController {
     @Query()
     query?: FindAllQueryDto,
   ) {
-    const users = await this.userService.findAll({
-      skip: Number(query.skip) || undefined,
-      take: Number(query.take) || undefined,
+    return await this.userService.findAll({
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.take) || undefined,
     });
-
-    if (!users) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
-
-    return users;
   }
 
   @UseGuards(AuthGuard('jwt'))

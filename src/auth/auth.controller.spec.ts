@@ -1,6 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
 import { AuthHelper } from './auth.helper';
@@ -16,13 +15,7 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [
-        AuthService,
-        UserService,
-        JwtService,
-        AuthHelper,
-        PrismaService,
-      ],
+      providers: [AuthService, UserService, JwtService, AuthHelper],
     }).compile();
 
     authController = module.get<AuthController>(AuthController);
@@ -33,18 +26,10 @@ describe('AuthController', () => {
   });
 
   it('should be defined', () => {
-    expect(authController).toBeDefined();
-  });
-  it('should be defined', () => {
     expect(authService).toBeDefined();
-  });
-  it('should be defined', () => {
     expect(userService).toBeDefined();
-  });
-  it('should be defined', () => {
-    expect(jwtService).toBeDefined();
-  });
-  it('should be defined', () => {
     expect(authHelper).toBeDefined();
+    expect(authController).toBeDefined();
+    expect(jwtService).toBeDefined();
   });
 });

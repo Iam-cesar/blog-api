@@ -38,9 +38,9 @@ export class AuthService {
 
   async signup(data: CreateUserDto): Promise<Tokens> {
     try {
-      const { password } = data;
+      const { password, email } = data;
 
-      const { id, email } = await this.userService.create({
+      const { id } = await this.userService.create({
         ...data,
         password: await this.authHelper.createHashPassword(password),
       });

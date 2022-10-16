@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentService } from '../comment/comment.service';
 import { PostService } from '../post/post.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
 import { LikeController } from './like.controller';
 import { LikeService } from './like.service';
@@ -16,13 +15,7 @@ describe('LikeController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [LikeController],
-      providers: [
-        LikeService,
-        PrismaService,
-        UserService,
-        PostService,
-        CommentService,
-      ],
+      providers: [LikeService, UserService, PostService, CommentService],
     }).compile();
 
     likeController = module.get<LikeController>(LikeController);
@@ -34,15 +27,8 @@ describe('LikeController', () => {
 
   it('should be defined', () => {
     expect(likeController).toBeDefined();
-  });
-
-  it('should be defined', () => {
-    expect(userService).toBeDefined();
-  });
-  it('should be defined', () => {
     expect(postService).toBeDefined();
-  });
-  it('should be defined', () => {
+    expect(userService).toBeDefined();
     expect(commentService).toBeDefined();
   });
 });
