@@ -8,7 +8,8 @@
   "scripts": {
     "prepare": "husky install",
     "prebuild": "rimraf dist",
-    "build": "nest build && npx prisma db push",
+    "build": "nest build",
+    "dist": "npm run build && npx prisma db push",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
