@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, compareSync, hash } from 'bcrypt';
-import { MessageHelper } from '../helpers/message.helper';
+import { MessageHelper } from '../common/helpers/message.helper';
 import { db } from '../prisma/utils/db.server';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserEntity } from '../user/entities/user.entity';

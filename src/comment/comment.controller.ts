@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { MessageHelper } from '../helpers/message.helper';
+import { MessageHelper } from '../common/helpers/message.helper';
 import { PostService } from '../post/post.service';
 import { UserService } from '../user/user.service';
 import { CommentService } from './comment.service';
@@ -51,8 +51,8 @@ export class CommentController {
 
     const comment = await this.CommentService.create({
       ...data,
-      user: { connect: { id: user?.id } },
-      post: { connect: { id: post?.id } },
+      user: { connect: { id: user.id } },
+      post: { connect: { id: post.id } },
     });
 
     if (!comment)

@@ -15,8 +15,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { FindAllQueryDto } from '../helpers/dto/findAllQuery.dto';
-import { MessageHelper } from '../helpers/message.helper';
+import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
+import { MessageHelper } from '../common/helpers/message.helper';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RoleService } from './role.service';

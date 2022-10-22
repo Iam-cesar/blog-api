@@ -8,8 +8,8 @@ import {
 } from '@nestjs/class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { MessageHelper } from '../../helpers/message.helper';
-import { RegexHelper } from '../../helpers/regexp.helper';
+import { MessageHelper } from '../../common/helpers/message.helper';
+import { RegexHelper } from '../../common/helpers/regexp.helper';
 
 export class CreateUserDto {
   @ApiProperty()

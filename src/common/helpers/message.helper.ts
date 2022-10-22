@@ -6,8 +6,11 @@ export const MessageHelper = {
   COMMENT_AND_POST_INVALID: "Post or comment id's must be provided",
   COMMENT_OR_POST_PROVIDE: "Only comment or post id's must be provided",
 
+  UNAUTHORIZED_REQUEST: 'Cannot perform this action',
+
   USER_NOT_FOUND: 'User not found',
   USER_BAD_REQUEST: 'Something went wrong in users',
+  USER_ALREADY_LIKED: 'The user has already liked this content',
 
   CATEGORY_NOT_FOUND: 'Category not found',
   CATEGORY_BAD_REQUEST: 'Something went wrong in categories',

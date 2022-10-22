@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { createdAt, deletedAt, updatedAt } from '../helpers/date.helper';
+import { createdAt, deletedAt, updatedAt } from '../common/helpers/date.helper';
 import { db } from '../prisma/utils/db.server';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';

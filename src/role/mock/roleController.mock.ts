@@ -1,4 +1,4 @@
-export const MOCK_CREATE = {
+export const MOCK_CREATE_ROLE = {
   name: 'mock role',
   canCreatePost: false,
   canUpdatePost: false,
@@ -12,7 +12,7 @@ export const MOCK_CREATE = {
   canLikePost: false,
 };
 
-export const MOCK_UPDATE = {
+export const MOCK_UPDATE_ROLE = {
   name: 'mock role updated',
   canCreatePost: true,
   canUpdatePost: true,
@@ -26,7 +26,7 @@ export const MOCK_UPDATE = {
   canLikePost: true,
 };
 
-export const MOCK_FIND_ONE_RESPONSE = {
+export const MOCK_FIND_ONE_ROLE_RESPONSE = {
   id: 1,
   name: 'mock role',
   canCreatePost: false,
@@ -44,7 +44,7 @@ export const MOCK_FIND_ONE_RESPONSE = {
   user: [],
 };
 
-export const MOCK_FIND_ALL_RESPONSE = [
+export const MOCK_FIND_ALL_ROLE_RESPONSE = [
   {
     id: 1,
     name: 'mock role',

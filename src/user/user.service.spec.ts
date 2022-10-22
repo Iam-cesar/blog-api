@@ -1,16 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  FIND_ALL_MOCK_RESPONSE,
-  FIND_ONE_MOCK_RESPONSE,
-  MOCK_CREATE,
-  MOCK_CREATE_RESPONSE,
-  MOCK_UPDATE,
+  FIND_ALL_USER_MOCK_RESPONSE,
+  FIND_ONE_USER_MOCK_RESPONSE,
+  MOCK_CREATE_USER,
+  MOCK_UPDATE_USER,
 } from './mock/userService.mock';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
   let userService: UserService;
+
+  const MOCK_ID = 1;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,14 +19,14 @@ describe('UserService', () => {
         {
           provide: UserService,
           useValue: {
-            create: jest.fn().mockResolvedValue(MOCK_CREATE_RESPONSE),
-            findOneWithPassword: jest.fn().mockResolvedValue({ id: 2 }),
-            findAll: jest.fn().mockResolvedValue(FIND_ALL_MOCK_RESPONSE),
-            findOne: jest.fn().mockResolvedValue(FIND_ONE_MOCK_RESPONSE),
-            update: jest.fn().mockResolvedValue({ id: 2 }),
-            softRemove: jest.fn().mockResolvedValue({ id: 2 }),
-            renew: jest.fn().mockResolvedValue({ id: 2 }),
-            remove: jest.fn().mockResolvedValue({ id: 2 }),
+            create: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+            findOneWithPassword: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+            findAll: jest.fn().mockResolvedValue(FIND_ALL_USER_MOCK_RESPONSE),
+            findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
+            update: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+            softRemove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+            renew: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+            remove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
           },
         },
       ],
@@ -40,23 +41,22 @@ describe('UserService', () => {
 
   describe('CREATE', () => {
     it('should be able to create a user', async () => {
-      const user = await userService.create(MOCK_CREATE);
-      expect(user.email).toBe('mock_email@email.com');
-      expect(user).toStrictEqual(MOCK_CREATE_RESPONSE);
+      const user = await userService.create(MOCK_CREATE_USER);
+      expect(user).toStrictEqual({ id: MOCK_ID });
     });
 
     it('should to throw an exception', () => {
       jest.spyOn(userService, 'create').mockRejectedValueOnce(new Error());
-      expect(userService.create(MOCK_CREATE)).rejects.toThrowError();
+      expect(userService.create(MOCK_CREATE_USER)).rejects.toThrowError();
     });
   });
 
   describe('FIND ONE WITH PASSWORD', () => {
     it('should be able to find with sensitive information', async () => {
       const user = await userService.findOneWithPassword({
-        email: FIND_ONE_MOCK_RESPONSE.email,
+        email: FIND_ONE_USER_MOCK_RESPONSE.email,
       });
-      expect(user.id).toBe(2);
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
@@ -64,22 +64,22 @@ describe('UserService', () => {
         .spyOn(userService, 'findOneWithPassword')
         .mockRejectedValueOnce(new Error());
       expect(
-        userService.findOneWithPassword(MOCK_CREATE),
+        userService.findOneWithPassword(MOCK_CREATE_USER),
       ).rejects.toThrowError();
     });
   });
   describe('FIND ONE USER', () => {
     it('should be able to find a user', async () => {
       const user = await userService.findOne({
-        email: FIND_ONE_MOCK_RESPONSE.email,
+        email: FIND_ONE_USER_MOCK_RESPONSE.email,
       });
-      expect(user.id).toBe(2);
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
       jest.spyOn(userService, 'findOne').mockRejectedValueOnce(new Error());
       expect(
-        userService.findOne({ email: FIND_ONE_MOCK_RESPONSE.email }),
+        userService.findOne({ email: FIND_ONE_USER_MOCK_RESPONSE.email }),
       ).rejects.toThrowError();
     });
   });
@@ -90,7 +90,7 @@ describe('UserService', () => {
       expect(users).toBeInstanceOf(Array);
 
       const [user] = users;
-      expect(user.id).toBe(2);
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
@@ -102,62 +102,64 @@ describe('UserService', () => {
   describe('UPDATE', () => {
     it('should be able to update a user', async () => {
       const user = await userService.update({
-        where: { email: MOCK_CREATE.email },
-        data: MOCK_UPDATE,
+        where: { email: MOCK_CREATE_USER.email },
+        data: MOCK_UPDATE_USER,
       });
 
-      expect(user.id).toBe(2);
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
       jest.spyOn(userService, 'update').mockRejectedValueOnce(new Error());
       expect(
         userService.update({
-          where: { email: MOCK_CREATE.email },
-          data: MOCK_UPDATE,
+          where: { email: MOCK_CREATE_USER.email },
+          data: MOCK_UPDATE_USER,
         }),
       ).rejects.toThrowError();
     });
   });
 
-  describe('DELETE', () => {
-    it('should be able to delete a user', async () => {
-      const user = await userService.remove({ email: MOCK_CREATE.email });
-      expect(user.id).toBe(2);
+  describe('REMOVE', () => {
+    it('should be able to remove a user', async () => {
+      const user = await userService.remove({ email: MOCK_CREATE_USER.email });
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
       jest.spyOn(userService, 'remove').mockRejectedValueOnce(new Error());
       expect(
-        userService.remove({ email: MOCK_CREATE.email }),
+        userService.remove({ email: MOCK_CREATE_USER.email }),
       ).rejects.toThrowError();
     });
   });
 
-  describe('SOFT DELETE', () => {
+  describe('SOFT REMOVE', () => {
     it('should be able to soft delete a user', async () => {
-      const user = await userService.softRemove({ email: MOCK_CREATE.email });
-      expect(user.id).toBe(2);
+      const user = await userService.softRemove({
+        email: MOCK_CREATE_USER.email,
+      });
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
       jest.spyOn(userService, 'softRemove').mockRejectedValueOnce(new Error());
       expect(
-        userService.softRemove({ email: MOCK_CREATE.email }),
+        userService.softRemove({ email: MOCK_CREATE_USER.email }),
       ).rejects.toThrowError();
     });
   });
 
   describe('RENEW', () => {
     it('should be able to renew a user', async () => {
-      const user = await userService.renew({ email: MOCK_CREATE.email });
-      expect(user.id).toBe(2);
+      const user = await userService.renew({ email: MOCK_CREATE_USER.email });
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
       jest.spyOn(userService, 'renew').mockRejectedValueOnce(new Error());
       expect(
-        userService.renew({ email: MOCK_CREATE.email }),
+        userService.renew({ email: MOCK_CREATE_USER.email }),
       ).rejects.toThrowError();
     });
   });
