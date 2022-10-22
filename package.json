@@ -9,6 +9,7 @@
     "prepare": "husky install",
     "prebuild": "rimraf dist",
     "build": "nest build",
+    "dist": "npm run build && npx prisma db push",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -81,7 +82,11 @@
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s",
-      "!**/*.module.(t|j)s"
+      "!**/*.module.(t|j)s",
+      "!**/*.service.(t|j)s",
+      "!**/prisma/utils/**.*.ts",
+      "!**/main.ts",
+      "!**/auth/strategies/**.*.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

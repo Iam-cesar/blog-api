@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, Length, Matches } from '@nestjs/class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { MessageHelper } from '../../helpers/message.helper';
-import { RegexHelper } from '../../helpers/regexp.helper';
+import { MessageHelper } from '../../common/helpers/message.helper';
+import { RegexHelper } from '../../common/helpers/regexp.helper';
 
 export class CreateAuthDto {
   @IsNotEmpty()

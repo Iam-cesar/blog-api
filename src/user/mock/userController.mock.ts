@@ -1,5 +1,5 @@
-export const MOCK_CREATE_RESPONSE = {
-  id: 2,
+export const MOCK_CREATE_USER_RESPONSE = {
+  id: 1,
   firstName: 'mock_first_name',
   lastName: 'mock_last_name',
   email: 'mock_email@email.com',
@@ -19,7 +19,7 @@ export const MOCK_CREATE_RESPONSE = {
   },
 };
 
-export const MOCK_CREATE = {
+export const MOCK_CREATE_USER = {
   firstName: 'mock_first_name',
   lastName: 'mock_last_name',
   email: 'mock_email@email.com',
@@ -29,7 +29,7 @@ export const MOCK_CREATE = {
   deletedAt: null,
 };
 
-export const MOCK_UPDATE = {
+export const MOCK_UPDATE_USER = {
   firstName: 'mock_first_name_update',
   lastName: 'mock_last_name_update',
   email: 'mock_email@email.com',
@@ -39,9 +39,9 @@ export const MOCK_UPDATE = {
   deletedAt: null,
 };
 
-export const FIND_ALL_MOCK_RESPONSE = [
+export const FIND_ALL_USER_MOCK_RESPONSE = [
   {
-    id: 2,
+    id: 1,
     firstName: 'mock_first_name',
     lastName: 'mock_last_name',
     email: 'mock_email@email.com',
@@ -51,8 +51,8 @@ export const FIND_ALL_MOCK_RESPONSE = [
   },
 ];
 
-export const FIND_ONE_MOCK_RESPONSE = {
-  id: 2,
+export const FIND_ONE_USER_MOCK_RESPONSE = {
+  id: 1,
   firstName: 'mock_first_name',
   lastName: 'mock_last_name',
   email: 'mock_email@email.com',

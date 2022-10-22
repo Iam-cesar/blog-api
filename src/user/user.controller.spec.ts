@@ -1,14 +1,14 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthHelper } from '../auth/auth.helper';
-import { MessageHelper } from '../helpers/message.helper';
+import { MessageHelper } from '../common/helpers/message.helper';
 import { UserEntity } from './entities/user.entity';
 import {
-  FIND_ALL_MOCK_RESPONSE,
-  FIND_ONE_MOCK_RESPONSE,
-  MOCK_CREATE,
-  MOCK_CREATE_RESPONSE,
-  MOCK_UPDATE,
+  FIND_ALL_USER_MOCK_RESPONSE,
+  FIND_ONE_USER_MOCK_RESPONSE,
+  MOCK_CREATE_USER,
+  MOCK_CREATE_USER_RESPONSE,
+  MOCK_UPDATE_USER,
 } from './mock/userController.mock';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -16,6 +16,20 @@ import { UserService } from './user.service';
 describe('UserController', () => {
   let userController: UserController;
   let authHelper: AuthHelper;
+  const MOCK_ID = 1;
+
+  const userServiceMock = {
+    create: jest
+      .fn()
+      .mockResolvedValue(new UserEntity(MOCK_CREATE_USER_RESPONSE)),
+    findOneWithPassword: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    findAll: jest.fn().mockResolvedValue(FIND_ALL_USER_MOCK_RESPONSE),
+    findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
+    update: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    softRemove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    renew: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    remove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,18 +37,7 @@ describe('UserController', () => {
       providers: [
         {
           provide: UserService,
-          useValue: {
-            create: jest
-              .fn()
-              .mockResolvedValue(new UserEntity(MOCK_CREATE_RESPONSE)),
-            findOneWithPassword: jest.fn().mockResolvedValue({ id: 2 }),
-            findAll: jest.fn().mockResolvedValue(FIND_ALL_MOCK_RESPONSE),
-            findOne: jest.fn().mockResolvedValue(FIND_ONE_MOCK_RESPONSE),
-            update: jest.fn().mockResolvedValue({ id: 2 }),
-            softRemove: jest.fn().mockResolvedValue({ id: 2 }),
-            renew: jest.fn().mockResolvedValue({ id: 2 }),
-            remove: jest.fn().mockResolvedValue({ id: 2 }),
-          },
+          useValue: userServiceMock,
         },
         AuthHelper,
       ],
@@ -51,29 +54,27 @@ describe('UserController', () => {
 
   describe('CREATE', () => {
     it('should be able to create a user', async () => {
-      const user = await userController.create(MOCK_CREATE);
-      expect(user.id).toBe(2);
+      const user = await userController.create(MOCK_CREATE_USER);
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
-      jest.spyOn(userController, 'create').mockRejectedValueOnce(new Error());
-      expect(userController.create(null)).rejects.toStrictEqual(new Error());
+      userServiceMock.create.mockResolvedValueOnce(null);
+      expect(userController.create(MOCK_CREATE_USER)).rejects.toStrictEqual(
+        new BadRequestException(MessageHelper.ROLE_BAD_REQUEST),
+      );
     });
   });
 
   describe('FIND_ONE', () => {
     it('should be able to find one user', async () => {
-      const user = await userController.findOne(MOCK_CREATE_RESPONSE.id);
-      expect(user).toStrictEqual(MOCK_CREATE_RESPONSE);
+      const user = await userController.findOne(MOCK_CREATE_USER_RESPONSE.id);
+      expect(user).toStrictEqual(MOCK_CREATE_USER_RESPONSE);
     });
 
     it('should to throw an exception', () => {
-      jest
-        .spyOn(userController, 'findOne')
-        .mockRejectedValueOnce(
-          new NotFoundException(MessageHelper.USER_NOT_FOUND),
-        );
-      expect(userController.findOne(null)).rejects.toStrictEqual(
+      userServiceMock.findOne.mockResolvedValueOnce(null);
+      expect(userController.findOne(MOCK_ID)).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.USER_NOT_FOUND),
       );
     });
@@ -85,7 +86,7 @@ describe('UserController', () => {
       expect(users).toBeInstanceOf(Array);
 
       const [user] = users;
-      expect(user.id).toBe(2);
+      expect(user.id).toBe(MOCK_ID);
     });
 
     it('should be able to find an array of users with url params', async () => {
@@ -93,24 +94,19 @@ describe('UserController', () => {
       expect(users).toBeInstanceOf(Array);
 
       const [user] = users;
-      expect(user.id).toBe(2);
+      expect(user.id).toBe(MOCK_ID);
     });
   });
 
   describe('UPDATE', () => {
     it('should be able to update a user', async () => {
-      const user = await userController.update(1, MOCK_UPDATE);
-      expect(user).toStrictEqual({ id: 2 });
+      const user = await userController.update(1, MOCK_UPDATE_USER);
+      expect(user).toStrictEqual({ id: MOCK_ID });
     });
 
     it('should to throw an exception', () => {
-      jest
-        .spyOn(userController, 'update')
-        .mockRejectedValueOnce(
-          new NotFoundException(MessageHelper.USER_NOT_FOUND),
-        );
-
-      expect(userController.update(null, MOCK_UPDATE)).rejects.toStrictEqual(
+      userServiceMock.findOne.mockResolvedValueOnce(null);
+      expect(userController.update(MOCK_ID, null)).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.USER_NOT_FOUND),
       );
     });
@@ -118,18 +114,13 @@ describe('UserController', () => {
 
   describe('REMOVE', () => {
     it('should be able to remove user', async () => {
-      const user = await userController.remove(MOCK_CREATE_RESPONSE.id);
-      expect(user).toStrictEqual({ id: 2 });
+      const user = await userController.remove(MOCK_CREATE_USER_RESPONSE.id);
+      expect(user).toStrictEqual({ id: MOCK_ID });
     });
 
     it('should to throw an exception', () => {
-      jest
-        .spyOn(userController, 'remove')
-        .mockRejectedValueOnce(
-          new NotFoundException(MessageHelper.USER_NOT_FOUND),
-        );
-
-      expect(userController.remove(null)).rejects.toStrictEqual(
+      userServiceMock.findOne.mockResolvedValueOnce(null);
+      expect(userController.remove(MOCK_ID)).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.USER_NOT_FOUND),
       );
     });
@@ -137,17 +128,15 @@ describe('UserController', () => {
 
   describe('SOFT_REMOVE', () => {
     it('should be able to soft delete one user', async () => {
-      const user = await userController.softRemove(MOCK_CREATE_RESPONSE.id);
-      expect(user).toStrictEqual({ id: 2 });
+      const user = await userController.softRemove(
+        MOCK_CREATE_USER_RESPONSE.id,
+      );
+      expect(user).toStrictEqual({ id: MOCK_ID });
     });
 
     it('should to throw an exception', () => {
-      jest
-        .spyOn(userController, 'softRemove')
-        .mockRejectedValueOnce(
-          new NotFoundException(MessageHelper.USER_NOT_FOUND),
-        );
-      expect(userController.softRemove(null)).rejects.toStrictEqual(
+      userServiceMock.findOne.mockResolvedValueOnce(null);
+      expect(userController.softRemove(MOCK_ID)).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.USER_NOT_FOUND),
       );
     });
@@ -155,17 +144,13 @@ describe('UserController', () => {
 
   describe('RENEW', () => {
     it('should be able to renew user', async () => {
-      const user = await userController.renew(MOCK_CREATE_RESPONSE.id);
-      expect(user).toStrictEqual({ id: 2 });
+      const user = await userController.renew(MOCK_CREATE_USER_RESPONSE.id);
+      expect(user).toStrictEqual({ id: MOCK_ID });
     });
 
     it('should to throw an exception', () => {
-      jest
-        .spyOn(userController, 'renew')
-        .mockRejectedValueOnce(
-          new NotFoundException(MessageHelper.USER_NOT_FOUND),
-        );
-      expect(userController.renew(null)).rejects.toStrictEqual(
+      userServiceMock.findOne.mockResolvedValueOnce(null);
+      expect(userController.renew(MOCK_ID)).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.USER_NOT_FOUND),
       );
     });

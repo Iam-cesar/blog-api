@@ -12,14 +12,15 @@ import {
   Post,
   Query,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { CategoryService } from '../category/category.service';
-import { updatedAt } from '../helpers/date.helper';
-import { FindAllQueryDto } from '../helpers/dto/findAllQuery.dto';
-import { MessageHelper } from '../helpers/message.helper';
+import { updatedAt } from '../common/helpers/date.helper';
+import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
+import { MessageHelper } from '../common/helpers/message.helper';
 import { UserService } from '../user/user.service';
 import { CreatePostCategoryDto } from './dto/create-post-category.dto';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -43,20 +44,19 @@ export class PostController {
     @Body() data: CreatePostDto,
     @Req() req: { user: { email: string } },
   ) {
-    if (!req.user)
-      throw new BadRequestException(MessageHelper.USER_BAD_REQUEST);
+    if (!req?.user)
+      throw new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST);
 
     const user = await this.userService.findOne({ email: req.user.email });
 
-    if (!user) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
     const post = await this.postService.create({
       ...data,
       author: { connect: { email: user.email } },
     });
 
-    if (!post)
-      throw new BadRequestException(MessageHelper.CATEGORY_BAD_REQUEST);
+    if (!post) throw new BadRequestException(MessageHelper.POST_BAD_REQUEST);
 
     return post;
   }
@@ -69,8 +69,6 @@ export class PostController {
       take: Number(query?.skip) || undefined,
     });
 
-    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
-
     return post;
   }
 
@@ -79,21 +77,18 @@ export class PostController {
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const post = await this.postService.findOne({ id });
 
-    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
     return post;
   }
 
   @Post(':id/category/:categoryId')
-  async addCategory(
-    @Param() params: CreatePostCategoryDto,
-    @Body() data: UpdatePostDto,
-  ) {
+  async addCategory(@Param() params: CreatePostCategoryDto) {
     const { categoryId, id } = params;
 
     const post = await this.postService.findOne({ id: Number(id) });
 
-    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
     const category = await this.categoryService.findOne({
       id: Number(categoryId),
@@ -104,11 +99,7 @@ export class PostController {
 
     return await this.postService.update({
       where: { id: Number(id) },
-      data: {
-        ...data,
-        updatedAt,
-        category: { connect: { id: Number(category.id) } },
-      },
+      data: { updatedAt, category: { connect: { id: Number(category.id) } } },
     });
   }
 
@@ -120,7 +111,7 @@ export class PostController {
   ) {
     const post = await this.postService.findOne({ id });
 
-    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
     return await this.postService.update({
       where: { id },
@@ -136,7 +127,7 @@ export class PostController {
   async remove(@Param('id', ParseIntPipe) id: number) {
     const post = await this.postService.findOne({ id });
 
-    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
     return await this.postService.remove({ id });
   }
@@ -148,7 +139,7 @@ export class PostController {
 
     const post = await this.postService.findOne({ id: Number(id) });
 
-    if (!post) throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
     const category = await this.categoryService.findOne({
       id: Number(categoryId),
@@ -159,7 +150,7 @@ export class PostController {
 
     return await this.postService.update({
       where: { id: Number(id) },
-      data: { category: { disconnect: { id: Number(categoryId) } } },
+      data: { updatedAt, category: { disconnect: { id: Number(categoryId) } } },
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { createdAt, updatedAt } from '../helpers/date.helper';
+import { createdAt, updatedAt } from '../common/helpers/date.helper';
 import { db } from '../prisma/utils/db.server';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -39,7 +39,7 @@ export class PostService {
         id: true,
         title: true,
         content: true,
-
+        authorId: true,
         author: {
           select: {
             id: true,

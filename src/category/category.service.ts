@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { createdAt, updatedAt } from '../common/helpers/date.helper';
 import { db } from '../prisma/utils/db.server';
-import { createdAt, updatedAt } from './../helpers/date.helper';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryEntity } from './entities/category.entity';

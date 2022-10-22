@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleEntity } from './entities/role.entity';
 import {
-  MOCK_CREATE,
-  MOCK_FIND_ALL_RESPONSE,
-  MOCK_FIND_ONE_RESPONSE,
-  MOCK_UPDATE,
+  MOCK_CREATE_ROLE,
+  MOCK_FIND_ALL_ROLE_RESPONSE,
+  MOCK_FIND_ONE_ROLE_RESPONSE,
+  MOCK_UPDATE_ROLE,
 } from './mock/roleService.mock';
 import { RoleService } from './role.service';
 
@@ -18,10 +18,10 @@ describe('RoleService', () => {
           provide: RoleService,
           useValue: {
             create: jest.fn().mockResolvedValue({ id: 1 }),
-            findAll: jest.fn().mockResolvedValue(MOCK_FIND_ALL_RESPONSE),
+            findAll: jest.fn().mockResolvedValue(MOCK_FIND_ALL_ROLE_RESPONSE),
             findOne: jest
               .fn()
-              .mockResolvedValue(new RoleEntity(MOCK_FIND_ONE_RESPONSE)),
+              .mockResolvedValue(new RoleEntity(MOCK_FIND_ONE_ROLE_RESPONSE)),
             update: jest.fn().mockResolvedValue({ id: 1 }),
             remove: jest.fn().mockResolvedValue({ id: 1 }),
           },
@@ -38,13 +38,13 @@ describe('RoleService', () => {
 
   describe('CREATE', () => {
     it('should be able to create a role', async () => {
-      const role = await roleService.create(MOCK_CREATE);
+      const role = await roleService.create(MOCK_CREATE_ROLE);
       expect(role).toStrictEqual({ id: 1 });
     });
 
     it('should to throw an exception', () => {
       jest.spyOn(roleService, 'create').mockRejectedValueOnce(new Error());
-      expect(roleService.create(MOCK_CREATE)).rejects.toThrowError();
+      expect(roleService.create(MOCK_CREATE_ROLE)).rejects.toThrowError();
     });
   });
   describe('FIND_ALL', () => {
@@ -76,20 +76,20 @@ describe('RoleService', () => {
   describe('FIND_ONE', () => {
     it('should be able to find one role', async () => {
       const role = await roleService.findOne({ id: 1 });
-      expect(role).toStrictEqual(new RoleEntity(MOCK_FIND_ONE_RESPONSE));
+      expect(role).toStrictEqual(new RoleEntity(MOCK_FIND_ONE_ROLE_RESPONSE));
     });
     it('should to throw an exception', () => {
       jest.spyOn(roleService, 'findOne').mockRejectedValueOnce(new Error());
       expect(
-        roleService.findOne(MOCK_FIND_ONE_RESPONSE),
+        roleService.findOne(MOCK_FIND_ONE_ROLE_RESPONSE),
       ).rejects.toThrowError();
     });
   });
   describe('UPDATE', () => {
     it('should be able to update a role', async () => {
       const role = await roleService.update({
-        where: MOCK_FIND_ONE_RESPONSE,
-        data: MOCK_UPDATE,
+        where: MOCK_FIND_ONE_ROLE_RESPONSE,
+        data: MOCK_UPDATE_ROLE,
       });
       expect(role).toStrictEqual({ id: 1 });
     });
@@ -97,8 +97,8 @@ describe('RoleService', () => {
       jest.spyOn(roleService, 'update').mockRejectedValueOnce(new Error());
       expect(
         roleService.update({
-          where: MOCK_FIND_ONE_RESPONSE,
-          data: MOCK_CREATE,
+          where: MOCK_FIND_ONE_ROLE_RESPONSE,
+          data: MOCK_CREATE_ROLE,
         }),
       ).rejects.toThrowError();
     });
@@ -110,7 +110,9 @@ describe('RoleService', () => {
     });
     it('should to throw an exception', () => {
       jest.spyOn(roleService, 'remove').mockRejectedValueOnce(new Error());
-      expect(roleService.remove(MOCK_FIND_ONE_RESPONSE)).rejects.toThrowError();
+      expect(
+        roleService.remove(MOCK_FIND_ONE_ROLE_RESPONSE),
+      ).rejects.toThrowError();
     });
   });
 });

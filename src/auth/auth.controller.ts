@@ -27,7 +27,7 @@ export class AuthController {
     @Req() req: { user: CreateAuthDto },
     @Body() data: CreateAuthDto,
   ): Promise<Partial<Tokens>> {
-    const { accessToken } = await this.authService.signin(req?.user);
+    const { accessToken } = await this.authService.signin(req.user);
     return { accessToken };
   }
 
@@ -42,7 +42,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('logout')
   async logout(@Req() req: { user: { id: number } }): Promise<void> {
-    return await this.authService.logout(req.user?.id);
+    return await this.authService.logout(req.user.id);
   }
 
   @UseGuards(AuthGuard('local'))
@@ -52,7 +52,7 @@ export class AuthController {
     @Req() req: { user: { id: number; hashedRefreshToken: string } },
   ): Promise<Partial<Tokens>> {
     const { accessToken } = await this.authService.refreshToken({
-      id: req.user?.id,
+      id: req.user.id,
       requestRefreshToken: req.user.hashedRefreshToken,
     });
 

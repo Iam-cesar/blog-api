@@ -15,14 +15,13 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
 import { CommentService } from '../comment/comment.service';
-import { MessageHelper } from '../helpers/message.helper';
+import { MessageHelper } from '../common/helpers/message.helper';
 import { PostService } from '../post/post.service';
-import { db } from '../prisma/utils/db.server';
 import { UserService } from '../user/user.service';
 import { UserEntity } from './../user/entities/user.entity';
 import { CreateLikeDto } from './dto/create-like.dto';
+import { LikeEntity } from './entities/like.entity';
 import { LikeService } from './like.service';
 
 @Controller('like')
@@ -42,23 +41,27 @@ export class LikeController {
     @Body() data: CreateLikeDto,
     @Req() req: { user: { email: string } },
   ) {
-    const { post, comment } = data;
+    const { post: postId, comment: commentId } = data;
     const createBody = data;
 
-    this.invalidCommentAndPostException(comment, post);
+    this.invalidCommentAndPostException(commentId, postId);
 
-    this.provideCommentOrPostException(comment, post);
+    this.provideCommentOrPostException(commentId, postId);
 
-    const user = await this.userService.findOne({ email: req.user?.email });
+    const user = await this.userService.findOne({ email: req.user.email });
 
     if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
 
-    if (comment) {
-      return await this.handleCommentLike(comment, req.user, createBody);
+    if (commentId) {
+      return await this.handleCommentLike(
+        Number(commentId),
+        req.user,
+        createBody,
+      );
     }
 
-    if (post) {
-      return await this.handlePostLike(post, req.user, createBody);
+    if (postId) {
+      return await this.handlePostLike(Number(postId), req.user, createBody);
     }
   }
 
@@ -82,57 +85,51 @@ export class LikeController {
     return await this.likeService.remove({ id });
   }
 
-  private provideCommentOrPostException(comment, post) {
+  private provideCommentOrPostException(comment: number, post: number) {
     if (comment && post)
       throw new BadRequestException(MessageHelper.COMMENT_OR_POST_PROVIDE);
   }
 
-  private invalidCommentAndPostException(comment, post) {
+  private invalidCommentAndPostException(comment: number, post: number) {
     if (!comment && !post)
       throw new BadRequestException(MessageHelper.COMMENT_AND_POST_INVALID);
   }
 
   private async commentHasLike(
     user: UserEntity,
-    commentId: Prisma.CommentCreateNestedOneWithoutLikeInput,
-  ) {
-    return await db.comment.findFirst({
-      where: {
-        id: Number(commentId),
-        like: { some: { user: { email: user?.email } } },
-      },
-      select: { id: true },
-    });
+    comment: number,
+  ): Promise<boolean> {
+    const response = await this.commentService.findOne({ id: comment });
+    if (!response) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
+    const userLikes = response.like.filter((item) => item.userId === user.id);
+
+    if (userLikes.length > 0) {
+      return true;
+    }
+    return false;
   }
 
-  private async postHasLike(
-    user: UserEntity,
-    postId: Prisma.PostCreateNestedOneWithoutLikeInput,
-  ) {
-    return await db.post.findFirst({
-      where: {
-        id: Number(postId),
-        like: { some: { user: { email: user?.email } } },
-      },
-      select: { id: true },
-    });
+  private async postHasLike(user: UserEntity, post: number): Promise<boolean> {
+    const response = await this.postService.findOne({ id: post });
+    if (!response) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+    const userLikes = response.like.filter((item) => item.userId === user.id);
+
+    if (userLikes.length > 0) {
+      return true;
+    }
+    return false;
   }
 
   private async handleCommentLike(
-    comment: Prisma.CommentCreateNestedOneWithoutLikeInput,
+    comment: number,
     user: { email: string },
     createBody: CreateLikeDto,
-  ) {
+  ): Promise<LikeEntity> {
     if (await this.commentHasLike(user, comment)) {
-      return null;
+      throw new BadRequestException(MessageHelper.USER_ALREADY_LIKED);
     }
 
-    const commentEntity = await this.commentService.findOne({
-      id: Number(comment),
-    });
-
-    if (!commentEntity)
-      throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
+    const commentEntity = await this.commentService.findOne({ id: comment });
 
     Object.assign(createBody, {
       comment: { connect: { id: commentEntity.id } },
@@ -146,17 +143,15 @@ export class LikeController {
   }
 
   private async handlePostLike(
-    post: Prisma.PostCreateNestedOneWithoutLikeInput,
+    post: number,
     user: { email: string },
     createBody: CreateLikeDto,
-  ) {
+  ): Promise<LikeEntity> {
     if (await this.postHasLike(user, post)) {
-      return null;
+      throw new BadRequestException(MessageHelper.USER_ALREADY_LIKED);
     }
 
-    const postEntity = await this.postService.findOne({ id: Number(post) });
-
-    if (!postEntity) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+    const postEntity = await this.postService.findOne({ id: post });
 
     Object.assign(createBody, {
       post: { connect: { id: postEntity.id } },

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { createdAt, updatedAt } from '../helpers/date.helper';
+import { createdAt, updatedAt } from '../common/helpers/date.helper';
 import { db } from '../prisma/utils/db.server';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -21,12 +21,29 @@ export class CommentService {
       select: {
         id: true,
         content: true,
-        post: { select: { id: true } },
-        user: { select: { id: true, firstName: true, lastName: true } },
+        post: {
+          select: {
+            id: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
         like: {
           select: {
             id: true,
-            user: { select: { id: true, firstName: true, lastName: true } },
+            userId: true,
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
           },
         },
         createdAt: true,

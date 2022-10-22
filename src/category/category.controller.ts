@@ -15,9 +15,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { updatedAt } from '../helpers/date.helper';
-import { FindAllQueryDto } from '../helpers/dto/findAllQuery.dto';
-import { MessageHelper } from '../helpers/message.helper';
+import { updatedAt } from '../common/helpers/date.helper';
+import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
+import { MessageHelper } from '../common/helpers/message.helper';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
