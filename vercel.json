@@ -1,15 +1,5 @@
 {
   "version": 2,
-  "env": {
-    "DATABASE_URL": "file:./database/dev.db",
-    "JWT_PRIVATE_KEY": "8b/swJgB2VQpfVlGOnUB8lxjqnjbXJvThrwmrVCsjLU="
-  },
-  "builds": [
-    {
-      "src": "src/main.ts",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
