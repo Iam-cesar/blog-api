@@ -9,6 +9,8 @@ import { ProfileModule } from './profile/profile.module';
 import { RoleModule } from './role/role.module';
 import { RoleService } from './role/role.service';
 import { UserModule } from './user/user.module';
+import { AppService } from './app/app.service';
+import { AppController } from './app/app.controller';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { UserModule } from './user/user.module';
     CommentModule,
     LikeModule,
   ],
-  providers: [PrismaService, RoleService],
+  providers: [PrismaService, RoleService, AppService],
+  controllers: [AppController],
 })
 export class AppModule {}
