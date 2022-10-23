@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compare, compareSync, hash } from 'bcrypt';
+import { compare, compareSync, hash } from 'bcryptjs';
 import { MessageHelper } from '../common/helpers/message.helper';
 import { db } from '../prisma/utils/db.server';
 import { CreateUserDto } from '../user/dto/create-user.dto';
