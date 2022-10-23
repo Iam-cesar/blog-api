@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "env": {
     "DATABASE_URL": "file:./database/dev.db",
     "JWT_PRIVATE_KEY": "8b/swJgB2VQpfVlGOnUB8lxjqnjbXJvThrwmrVCsjLU="
