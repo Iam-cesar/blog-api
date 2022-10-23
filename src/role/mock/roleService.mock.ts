@@ -27,7 +27,7 @@ export const MOCK_UPDATE_ROLE = {
 };
 
 export const MOCK_FIND_ONE_ROLE_RESPONSE = {
-  id: 1,
+  id: '1',
   name: 'mock role',
   canCreatePost: false,
   canCreateUser: false,
@@ -46,7 +46,7 @@ export const MOCK_FIND_ONE_ROLE_RESPONSE = {
 
 export const MOCK_FIND_ALL_ROLE_RESPONSE = [
   {
-    id: 1,
+    id: '1',
     name: 'mock role',
   },
   {

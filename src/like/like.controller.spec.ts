@@ -26,7 +26,7 @@ describe('LikeController', () => {
   let postService: PostService;
   let commentService: CommentService;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
   const MOCK_EMAIL = 'user@email.com';
 
   const userServiceMock = {

@@ -14,15 +14,15 @@ import { RoleService } from './role.service';
 describe('RoleController', () => {
   let roleController: RoleController;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
   const roleServiceMock = {
-    create: jest.fn().mockResolvedValue({ id: 1 }),
+    create: jest.fn().mockResolvedValue({ id: '1' }),
     findAll: jest.fn().mockResolvedValue(MOCK_FIND_ALL_ROLE_RESPONSE),
     findOne: jest
       .fn()
       .mockResolvedValue(new RoleEntity(MOCK_FIND_ONE_ROLE_RESPONSE)),
-    update: jest.fn().mockResolvedValue({ id: 1 }),
-    remove: jest.fn().mockResolvedValue({ id: 1 }),
+    update: jest.fn().mockResolvedValue({ id: '1' }),
+    remove: jest.fn().mockResolvedValue({ id: '1' }),
   };
 
   beforeEach(async () => {
@@ -46,7 +46,7 @@ describe('RoleController', () => {
   describe('CREATE', () => {
     it('should be able to create a role', async () => {
       const role = await roleController.create(MOCK_CREATE_ROLE);
-      expect(role).toStrictEqual({ id: 1 });
+      expect(role).toStrictEqual({ id: '1' });
     });
     it('should to throw an exception', () => {
       roleServiceMock.create.mockResolvedValueOnce(null);
@@ -84,7 +84,7 @@ describe('RoleController', () => {
   describe('UPDATE', () => {
     it('should be able to update a role', async () => {
       const role = await roleController.update(MOCK_ID, MOCK_UPDATE_ROLE);
-      expect(role).toStrictEqual({ id: 1 });
+      expect(role).toStrictEqual({ id: '1' });
     });
     it('should to throw an exception', () => {
       roleServiceMock.findOne.mockResolvedValueOnce(null);
@@ -98,7 +98,7 @@ describe('RoleController', () => {
   describe('REMOVE', () => {
     it('should be able to remove a role', async () => {
       const role = await roleController.remove(MOCK_ID);
-      expect(role).toStrictEqual({ id: 1 });
+      expect(role).toStrictEqual({ id: '1' });
     });
     it('should to throw an exception', () => {
       roleServiceMock.findOne.mockResolvedValueOnce(null);

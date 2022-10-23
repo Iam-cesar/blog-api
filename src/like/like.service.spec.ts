@@ -9,7 +9,7 @@ import {
 describe('LikeService', () => {
   let likeService: LikeService;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
   const likeServiceMock = {
     create: jest.fn().mockReturnValue({ id: MOCK_ID }),
     findOne: jest

@@ -7,7 +7,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
   Req,
   UnauthorizedException,
@@ -53,21 +52,17 @@ export class LikeController {
     if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
 
     if (commentId) {
-      return await this.handleCommentLike(
-        Number(commentId),
-        req.user,
-        createBody,
-      );
+      return await this.handleCommentLike(commentId, req.user, createBody);
     }
 
     if (postId) {
-      return await this.handlePostLike(Number(postId), req.user, createBody);
+      return await this.handlePostLike(postId, req.user, createBody);
     }
   }
 
   @Get(':id')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const like = await this.likeService.findOne({ id });
 
     if (!like) throw new NotFoundException(MessageHelper.LIKE_NOT_FOUND);
@@ -77,7 +72,7 @@ export class LikeController {
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id') id: string) {
     const like = await this.likeService.findOne({ id });
 
     if (!like) throw new NotFoundException(MessageHelper.LIKE_NOT_FOUND);
@@ -85,19 +80,19 @@ export class LikeController {
     return await this.likeService.remove({ id });
   }
 
-  private provideCommentOrPostException(comment: number, post: number) {
+  private provideCommentOrPostException(comment: string, post: string) {
     if (comment && post)
       throw new BadRequestException(MessageHelper.COMMENT_OR_POST_PROVIDE);
   }
 
-  private invalidCommentAndPostException(comment: number, post: number) {
+  private invalidCommentAndPostException(comment: string, post: string) {
     if (!comment && !post)
       throw new BadRequestException(MessageHelper.COMMENT_AND_POST_INVALID);
   }
 
   private async commentHasLike(
     user: UserEntity,
-    comment: number,
+    comment: string,
   ): Promise<boolean> {
     const response = await this.commentService.findOne({ id: comment });
     if (!response) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
@@ -109,7 +104,7 @@ export class LikeController {
     return false;
   }
 
-  private async postHasLike(user: UserEntity, post: number): Promise<boolean> {
+  private async postHasLike(user: UserEntity, post: string): Promise<boolean> {
     const response = await this.postService.findOne({ id: post });
     if (!response) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
     const userLikes = response.like.filter((item) => item.userId === user.id);
@@ -121,7 +116,7 @@ export class LikeController {
   }
 
   private async handleCommentLike(
-    comment: number,
+    comment: string,
     user: { email: string },
     createBody: CreateLikeDto,
   ): Promise<LikeEntity> {
@@ -143,7 +138,7 @@ export class LikeController {
   }
 
   private async handlePostLike(
-    post: number,
+    post: string,
     user: { email: string },
     createBody: CreateLikeDto,
   ): Promise<LikeEntity> {

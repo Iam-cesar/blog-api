@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { createdAt, updatedAt } from '../common/helpers/date.helper';
 import { db } from '../prisma/utils/db.server';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -15,7 +14,7 @@ export class CommentService {
     });
   }
 
-  findOne(where: Prisma.CommentWhereUniqueInput): Promise<CommentEntity> {
+  findOne(where: { id: string }): Promise<CommentEntity> {
     return db.comment.findUnique({
       where,
       select: {
@@ -54,7 +53,7 @@ export class CommentService {
   }
 
   update(params: {
-    where: Prisma.CommentWhereUniqueInput;
+    where: { id: string };
     data: UpdateCommentDto;
   }): Promise<CommentEntity> {
     const { where, data } = params;
@@ -65,7 +64,7 @@ export class CommentService {
     });
   }
 
-  remove(where: Prisma.CommentWhereUniqueInput): Promise<CommentEntity> {
+  remove(where: { id: string }): Promise<CommentEntity> {
     return db.comment.delete({ where, select: { id: true } });
   }
 }

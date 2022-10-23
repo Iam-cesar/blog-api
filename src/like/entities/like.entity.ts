@@ -1,8 +1,8 @@
 export class LikeEntity {
-  id?: number;
-  commentId?: number;
-  postId?: number;
-  userId?: number;
+  id?: string;
+  commentId?: string;
+  postId?: string;
+  userId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 

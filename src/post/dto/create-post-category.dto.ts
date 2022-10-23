@@ -4,9 +4,9 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreatePostCategoryDto {
   @ApiProperty()
   @IsNotEmpty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  categoryId: number;
+  categoryId: string;
 }

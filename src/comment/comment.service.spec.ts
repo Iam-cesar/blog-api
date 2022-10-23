@@ -6,7 +6,7 @@ import { MOCK_FIND_ONE_COMMENT_RESPONSE } from './mock/commentController.mock';
 describe('CommentService', () => {
   let commentService: CommentService;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
   const commentServiceMock = {
     create: jest.fn().mockResolvedValue({ id: MOCK_ID }),
     findOne: jest

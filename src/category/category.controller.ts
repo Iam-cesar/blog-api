@@ -7,7 +7,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -53,7 +52,7 @@ export class CategoryController {
 
   @Get(':id')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const category = await this.categoryService.findOne({ id });
 
     if (!category)
@@ -64,10 +63,7 @@ export class CategoryController {
 
   @Patch(':id')
   @HttpCode(200)
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdateCategoryDto,
-  ) {
+  async update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
     const category = await this.categoryService.findOne({ id });
 
     if (!category)
@@ -81,7 +77,7 @@ export class CategoryController {
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id') id: string) {
     const category = await this.categoryService.findOne({ id });
 
     if (!category)

@@ -32,7 +32,7 @@ export class PostService {
     });
   }
 
-  findOne(where: Prisma.PostWhereUniqueInput): Promise<PostEntity> {
+  findOne(where: { id: string }): Promise<PostEntity> {
     return db.post.findUnique({
       where,
       select: {
@@ -84,7 +84,7 @@ export class PostService {
   }
 
   update(params: {
-    where: Prisma.PostWhereUniqueInput;
+    where: { id: string };
     data: UpdatePostDto;
   }): Promise<PostEntity> {
     const { where, data } = params;
@@ -97,7 +97,7 @@ export class PostService {
     });
   }
 
-  remove(where: Prisma.PostWhereUniqueInput): Promise<PostEntity> {
+  remove(where: { id: string }): Promise<PostEntity> {
     return db.post.delete({
       where,
       select: {

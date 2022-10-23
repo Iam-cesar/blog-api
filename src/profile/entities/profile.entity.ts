@@ -1,7 +1,7 @@
 export class ProfileEntity {
-  id?: number;
+  id?: string;
   bio?: string;
-  userId?: number;
+  userId?: string;
   createdAt?: string | Date;
   updatedAt?: string | Date;
 

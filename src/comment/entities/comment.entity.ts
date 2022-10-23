@@ -1,9 +1,9 @@
 import { LikeEntity } from 'src/like/entities/like.entity';
 
 export class CommentEntity {
-  id?: number;
+  id?: string;
   content?: string;
-  postId?: number;
+  postId?: string;
   like?: LikeEntity[];
   createdAt?: Date;
   updatedAt?: Date;

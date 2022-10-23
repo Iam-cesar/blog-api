@@ -1,11 +1,11 @@
 export const MOCK_FIND_ONE_COMMENT_RESPONSE = {
-  id: 1,
+  id: '1',
   content: 'Bela maneira de ensinar a fazer comida ein S2',
   post: {
     id: 2,
   },
   user: {
-    id: 1,
+    id: '1',
     firstName: 'Cesar',
     lastName: 'Augusto',
   },

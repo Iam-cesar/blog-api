@@ -4,6 +4,7 @@ import {
   FIND_ALL_USER_MOCK_RESPONSE,
   FIND_ONE_USER_MOCK_RESPONSE,
   MOCK_CREATE_USER,
+  MOCK_CREATE_USER_RESPONSE,
   MOCK_UPDATE_USER,
 } from './mock/userService.mock';
 import { UserService } from './user.service';
@@ -11,7 +12,7 @@ import { UserService } from './user.service';
 describe('UserService', () => {
   let userService: UserService;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
 
   const userServiceMock = {
     create: jest.fn().mockResolvedValue({ id: MOCK_ID }),
@@ -102,7 +103,7 @@ describe('UserService', () => {
   describe('UPDATE', () => {
     it('should be able to update a user', async () => {
       const user = await userService.update({
-        where: { email: MOCK_CREATE_USER.email },
+        where: { id: MOCK_CREATE_USER_RESPONSE.id },
         data: MOCK_UPDATE_USER,
       });
 
@@ -113,7 +114,7 @@ describe('UserService', () => {
       userServiceMock.update.mockRejectedValueOnce(new Error());
       expect(
         userService.update({
-          where: { email: MOCK_CREATE_USER.email },
+          where: { id: MOCK_CREATE_USER_RESPONSE.id },
           data: MOCK_UPDATE_USER,
         }),
       ).rejects.toThrowError();
@@ -122,14 +123,16 @@ describe('UserService', () => {
 
   describe('REMOVE', () => {
     it('should be able to remove a user', async () => {
-      const user = await userService.remove({ email: MOCK_CREATE_USER.email });
+      const user = await userService.remove({
+        id: MOCK_CREATE_USER_RESPONSE.id,
+      });
       expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
       userServiceMock.remove.mockRejectedValueOnce(new Error());
       expect(
-        userService.remove({ email: MOCK_CREATE_USER.email }),
+        userService.remove({ id: MOCK_CREATE_USER_RESPONSE.id }),
       ).rejects.toThrowError();
     });
   });
@@ -137,7 +140,7 @@ describe('UserService', () => {
   describe('SOFT REMOVE', () => {
     it('should be able to soft delete a user', async () => {
       const user = await userService.softRemove({
-        email: MOCK_CREATE_USER.email,
+        id: MOCK_CREATE_USER_RESPONSE.id,
       });
       expect(user.id).toBe(MOCK_ID);
     });
@@ -145,21 +148,23 @@ describe('UserService', () => {
     it('should to throw an exception', () => {
       userServiceMock.softRemove.mockRejectedValueOnce(new Error());
       expect(
-        userService.softRemove({ email: MOCK_CREATE_USER.email }),
+        userService.softRemove({ id: MOCK_CREATE_USER_RESPONSE.id }),
       ).rejects.toThrowError();
     });
   });
 
   describe('RENEW', () => {
     it('should be able to renew a user', async () => {
-      const user = await userService.renew({ email: MOCK_CREATE_USER.email });
+      const user = await userService.renew({
+        id: MOCK_CREATE_USER_RESPONSE.id,
+      });
       expect(user.id).toBe(MOCK_ID);
     });
 
     it('should to throw an exception', () => {
       userServiceMock.renew.mockRejectedValueOnce(new Error());
       expect(
-        userService.renew({ email: MOCK_CREATE_USER.email }),
+        userService.renew({ id: MOCK_CREATE_USER_RESPONSE.id }),
       ).rejects.toThrowError();
     });
   });

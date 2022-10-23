@@ -7,7 +7,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -45,7 +44,7 @@ export class CommentController {
 
     if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
 
-    const post = await this.postService.findOne({ id: Number(postId) });
+    const post = await this.postService.findOne({ id: postId.connect.id });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
@@ -63,7 +62,7 @@ export class CommentController {
 
   @Get(':id')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const comment = await this.CommentService.findOne({ id });
 
     if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
@@ -73,10 +72,7 @@ export class CommentController {
 
   @Patch(':id')
   @HttpCode(200)
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdateCommentDto,
-  ) {
+  async update(@Param('id') id: string, @Body() data: UpdateCommentDto) {
     const comment = await this.CommentService.findOne({ id });
 
     if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
@@ -89,7 +85,7 @@ export class CommentController {
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id') id: string) {
     const comment = await this.CommentService.findOne({ id });
 
     if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);

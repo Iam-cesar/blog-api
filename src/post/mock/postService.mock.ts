@@ -5,7 +5,7 @@ export const MOCK_CREATE_POST = {
 
 export const MOCK_FIND_ALL_POST_RESPONSE = [
   {
-    id: 1,
+    id: '1',
     title: 'Mock post title',
     createdAt: '2022-10-16T18:55:59.290Z',
   },
@@ -17,11 +17,11 @@ export const MOCK_FIND_ALL_POST_RESPONSE = [
 ];
 
 export const MOCK_FIND_ONE_POST_RESPONSE = {
-  id: 1,
+  id: '1',
   title: 'Mock post title',
   content: 'Mock post content',
   author: {
-    id: 1,
+    id: '1',
     firstName: 'mock first name',
     lastName: 'mock user name',
   },

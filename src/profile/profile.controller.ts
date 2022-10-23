@@ -7,7 +7,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -35,7 +34,7 @@ export class ProfileController {
   @HttpCode(201)
   async create(
     @Body() data: CreateProfileDto,
-    @Req() req: { user: { id: number } },
+    @Req() req: { user: { id: string } },
   ) {
     const user = await this.userService.findOne({ id: req.user.id });
 
@@ -54,7 +53,7 @@ export class ProfileController {
 
   @Get(':id')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const profile = await this.profileService.findOne({ id });
 
     if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
@@ -65,9 +64,9 @@ export class ProfileController {
   @Patch(':id')
   @HttpCode(200)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() data: UpdateProfileDto,
-    @Req() req: { user: { id: number } },
+    @Req() req: { user: { id: string } },
   ) {
     const profile = await this.profileService.findOne({ id });
 
@@ -83,10 +82,7 @@ export class ProfileController {
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req: { user: { id: number } },
-  ) {
+  async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {
     const profile = await this.profileService.findOne({ id });
 
     if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);

@@ -1,5 +1,5 @@
 export class UserEntity {
-  id?: number;
+  id?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -14,17 +14,7 @@ export class UserEntity {
   post?: object | null;
   profile?: object | null;
 
-  constructor(params?: {
-    id?: number;
-    createdAt?: string | Date;
-    updatedAt?: any;
-    deletedAt?: string | Date;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
-    deleted?: boolean;
-  }) {
+  constructor(params?: UserEntity) {
     this.id = params.id;
     this.firstName = params.firstName;
     this.lastName = params.lastName;

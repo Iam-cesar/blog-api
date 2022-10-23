@@ -20,14 +20,14 @@ describe('ProfileController', () => {
   let profileController: ProfileController;
   let userService: UserService;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
   const profileServiceMock = {
-    create: jest.fn().mockResolvedValue({ id: 1 }),
+    create: jest.fn().mockResolvedValue({ id: '1' }),
     findOne: jest
       .fn()
       .mockResolvedValue(new ProfileEntity(MOCK_FIND_ONE_PROFILE_RESPONSE)),
-    update: jest.fn().mockResolvedValue({ id: 1 }),
-    remove: jest.fn().mockResolvedValue({ id: 1 }),
+    update: jest.fn().mockResolvedValue({ id: '1' }),
+    remove: jest.fn().mockResolvedValue({ id: '1' }),
   };
   const userServiceMock = {
     findOne: jest.fn().mockResolvedValue(MOCK_CREATE_USER),
@@ -109,7 +109,7 @@ describe('ProfileController', () => {
         MOCK_UPDATE_PROFILE,
         { user: { id: MOCK_ID } },
       );
-      expect(profile).toStrictEqual({ id: 1 });
+      expect(profile).toStrictEqual({ id: '1' });
     });
     it('should to throw an exception', () => {
       profileServiceMock.findOne.mockResolvedValueOnce(null);
@@ -130,7 +130,7 @@ describe('ProfileController', () => {
       const profile = await profileController.remove(MOCK_ID, {
         user: { id: MOCK_ID },
       });
-      expect(profile).toStrictEqual({ id: 1 });
+      expect(profile).toStrictEqual({ id: '1' });
     });
     it('should to throw an exception', () => {
       profileServiceMock.findOne.mockResolvedValueOnce(null);

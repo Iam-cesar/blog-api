@@ -17,7 +17,10 @@ export class UserService {
     });
   }
 
-  findOneWithPassword(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
+  findOneWithPassword(where: {
+    id?: string;
+    email?: string;
+  }): Promise<UserEntity> {
     return db.user.findUnique({
       where,
       select: {
@@ -48,7 +51,7 @@ export class UserService {
     });
   }
 
-  findOne(where: Prisma.UserWhereUniqueInput): Promise<UserEntity | null> {
+  findOne(where: { id?: string; email?: string }): Promise<UserEntity | null> {
     return db.user.findUnique({
       where,
       select: {
@@ -81,7 +84,7 @@ export class UserService {
   }
 
   update(params: {
-    where: Prisma.UserWhereUniqueInput;
+    where: { id: string };
     data: UpdateUserDto;
   }): Promise<UserEntity> {
     const { where, data } = params;
@@ -92,7 +95,7 @@ export class UserService {
     });
   }
 
-  softRemove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
+  softRemove(where: { id: string }): Promise<UserEntity> {
     return db.user.update({
       where,
       data: { deleted: true, deletedAt },
@@ -100,7 +103,7 @@ export class UserService {
     });
   }
 
-  renew(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
+  renew(where: { id: string }): Promise<UserEntity> {
     return db.user.update({
       where,
       data: { deleted: false, updatedAt },
@@ -108,7 +111,7 @@ export class UserService {
     });
   }
 
-  remove(where: Prisma.UserWhereUniqueInput): Promise<UserEntity> {
+  remove(where: { id: string }): Promise<UserEntity> {
     return db.user.delete({ where, select: { id: true } });
   }
 }

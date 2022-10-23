@@ -7,7 +7,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -62,7 +61,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const user = await this.userService.findOne({ id });
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
@@ -74,9 +73,9 @@ export class UserController {
   @Patch(':id')
   @HttpCode(200)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() data: UpdateUserDto,
-    @Req() req: { user: { id: number } },
+    @Req() req: { user: { id: string } },
   ) {
     const user = await this.userService.findOne({ id });
 
@@ -93,7 +92,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id/soft-delete')
   @HttpCode(200)
-  async softRemove(@Param('id', ParseIntPipe) id: number) {
+  async softRemove(@Param('id') id: string) {
     const user = await this.userService.findOne({ id });
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
@@ -104,7 +103,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id/renew')
   @HttpCode(200)
-  async renew(@Param('id', ParseIntPipe) id: number) {
+  async renew(@Param('id') id: string) {
     const user = await this.userService.findOne({ id });
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
@@ -115,10 +114,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
-  async remove(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req: { user: { id: number } },
-  ) {
+  async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {
     const user = await this.userService.findOne({ id });
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);

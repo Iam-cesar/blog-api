@@ -1,7 +1,7 @@
 import { UserEntity } from 'src/user/entities/user.entity';
 
 export class RoleEntity {
-  id?: number;
+  id?: string;
   name?: string;
   canCreatePost?: boolean;
   canUpdatePost?: boolean;

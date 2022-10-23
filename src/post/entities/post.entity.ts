@@ -1,14 +1,14 @@
 import { LikeEntity } from 'src/like/entities/like.entity';
 
 export class PostEntity {
-  id?: number;
+  id?: string;
   title?: string;
   content?: string;
   published?: boolean;
-  category?: { id?: number; name?: string }[];
-  authorId?: number;
+  category?: { id?: string; name?: string }[];
+  authorId?: string;
   author?: {
-    id: number;
+    id: string;
     firstName: string;
     lastName: string;
   };

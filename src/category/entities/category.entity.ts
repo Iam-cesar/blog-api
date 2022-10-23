@@ -1,7 +1,7 @@
 import { PostEntity } from 'src/post/entities/post.entity';
 
 export class CategoryEntity {
-  id?: number;
+  id?: string;
   name?: string;
   post?: PostEntity;
   createdAt?: Date;

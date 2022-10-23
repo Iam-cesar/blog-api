@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
   firstName          String
   lastName           String
   email              String    @unique
@@ -27,7 +27,7 @@ model User {
 }
 
 model Role {
-  id                Int       @id() @default(autoincrement())
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
   name              String    @unique
   canCreatePost     Boolean   @default(false)
   canUpdatePost     Boolean   @default(false)
@@ -45,21 +45,21 @@ model Role {
 }
 
 model Profile {
-  id        Int       @id @unique @default(autoincrement())
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   bio       String
-  userId    Int       @unique
+  userId    String    @unique
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt DateTime?
   updatedAt DateTime?
 }
 
 model Post {
-  id        Int        @id @unique @default(autoincrement())
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   content   String
   published Boolean    @default(false)
   author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  authorId  Int
+  authorId  String
   deleted   Boolean    @default(false)
   createdAt DateTime?
   updatedAt DateTime?
@@ -69,20 +69,20 @@ model Post {
 }
 
 model Category {
-  id        Int       @id @unique @default(autoincrement())
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   post      Post?     @relation(fields: [postId], references: [id])
-  postId    Int?
+  postId    String?
   createdAt DateTime?
   updatedAt DateTime?
 }
 
 model Comment {
-  id        Int       @id @unique @default(autoincrement())
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   content   String
-  postId    Int
+  postId    String
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    Int
+  userId    String
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   like      Like[]
   createdAt DateTime?
@@ -90,13 +90,13 @@ model Comment {
 }
 
 model Like {
-  id        Int       @id @default(autoincrement())
-  commentId Int?
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  commentId String?
   comment   Comment?  @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  postId    Int?
+  postId    String?
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    Int
+  userId    String
   createdAt DateTime?
   updatedAt DateTime?
 }

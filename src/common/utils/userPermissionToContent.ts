@@ -5,7 +5,7 @@ import { MessageHelper } from '../helpers/message.helper';
 import { ProfileEntity } from './../../profile/entities/profile.entity';
 
 export const exceptionIfPostDontBelongsToUser = (
-  user: { id: number },
+  user: { id: string },
   content: PostEntity,
 ) => {
   if (user.id !== content.author.id)
@@ -13,7 +13,7 @@ export const exceptionIfPostDontBelongsToUser = (
 };
 
 export const exceptionIfProfileDontBelongsToUser = (
-  user: { id: number },
+  user: { id: string },
   content: ProfileEntity,
 ) => {
   if (user.id !== content.userId)
@@ -21,7 +21,7 @@ export const exceptionIfProfileDontBelongsToUser = (
 };
 
 export const exceptionIfUserDontBelongsToUser = (
-  user: { id: number },
+  user: { id: string },
   content: UserEntity,
 ) => {
   if (user.id !== content.id)

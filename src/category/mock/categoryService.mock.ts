@@ -1,7 +1,7 @@
 import { CategoryEntity } from '../entities/category.entity';
 
 export const MOCK_FIND_ONE_CATEGORY_RESPONSE = {
-  id: 1,
+  id: '1',
   name: 'gastronomia americana',
   createdAt: new Date('2022-10-17T13:40:43.553Z'),
   updatedAt: null,

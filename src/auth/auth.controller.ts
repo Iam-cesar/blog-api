@@ -12,7 +12,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { Tokens } from './types/token.type';
 
 @Controller('auth')
@@ -24,8 +23,7 @@ export class AuthController {
   @Post('signin')
   @HttpCode(200)
   async signinLocal(
-    @Req() req: { user: CreateAuthDto },
-    @Body() data: CreateAuthDto,
+    @Req() req: { user: { id: string } },
   ): Promise<Partial<Tokens>> {
     const { accessToken } = await this.authService.signin(req.user);
     return { accessToken };
@@ -41,7 +39,7 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(200)
   @Post('logout')
-  async logout(@Req() req: { user: { id: number } }): Promise<void> {
+  async logout(@Req() req: { user: { id: string } }): Promise<void> {
     return await this.authService.logout(req.user.id);
   }
 
@@ -49,7 +47,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('refresh')
   async refreshTokenLocal(
-    @Req() req: { user: { id: number; hashedRefreshToken: string } },
+    @Req() req: { user: { id: string; hashedRefreshToken: string } },
   ): Promise<Partial<Tokens>> {
     const { accessToken } = await this.authService.refreshToken({
       id: req.user.id,

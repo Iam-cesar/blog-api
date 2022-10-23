@@ -7,7 +7,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -51,7 +50,7 @@ export class RoleController {
 
   @Get(':id')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const role = await this.roleService.findOne({ id });
 
     if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
@@ -61,10 +60,7 @@ export class RoleController {
 
   @Patch(':id')
   @HttpCode(200)
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdateRoleDto,
-  ) {
+  async update(@Param('id') id: string, @Body() data: UpdateRoleDto) {
     const role = await this.roleService.findOne({ id });
 
     if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
@@ -77,7 +73,7 @@ export class RoleController {
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id') id: string) {
     const role = await this.roleService.findOne({ id });
 
     if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);

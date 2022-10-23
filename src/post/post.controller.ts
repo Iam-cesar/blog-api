@@ -7,7 +7,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -75,7 +74,7 @@ export class PostController {
 
   @Get(':id')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const post = await this.postService.findOne({ id });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
@@ -86,35 +85,35 @@ export class PostController {
   @Post(':id/category/:categoryId')
   async addCategory(
     @Param() params: CreatePostCategoryDto,
-    @Req() req: { user: { id: number } },
+    @Req() req: { user: { id: string } },
   ) {
     const { categoryId, id } = params;
 
-    const post = await this.postService.findOne({ id: Number(id) });
+    const post = await this.postService.findOne({ id });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
     exceptionIfPostDontBelongsToUser(req.user, post);
 
     const category = await this.categoryService.findOne({
-      id: Number(categoryId),
+      id: categoryId,
     });
 
     if (!category)
       throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
 
     return await this.postService.update({
-      where: { id: Number(id) },
-      data: { updatedAt, category: { connect: { id: Number(category.id) } } },
+      where: { id },
+      data: { updatedAt, category: { connect: { id: category.id } } },
     });
   }
 
   @Patch(':id')
   @HttpCode(200)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() data: UpdatePostDto,
-    @Req() req: { user: { id: number } },
+    @Req() req: { user: { id: string } },
   ) {
     const post = await this.postService.findOne({ id });
 
@@ -133,10 +132,7 @@ export class PostController {
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req: { user: { id: number } },
-  ) {
+  async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {
     const post = await this.postService.findOne({ id });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
@@ -150,26 +146,26 @@ export class PostController {
   @HttpCode(200)
   async removeCategory(
     @Param() params: UpdatePostCategoryDto,
-    @Req() req: { user: { id: number } },
+    @Req() req: { user: { id: string } },
   ) {
     const { id, categoryId } = params;
 
-    const post = await this.postService.findOne({ id: Number(id) });
+    const post = await this.postService.findOne({ id });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
     exceptionIfPostDontBelongsToUser(req.user, post);
 
     const category = await this.categoryService.findOne({
-      id: Number(categoryId),
+      id: categoryId,
     });
 
     if (!category)
       throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
 
     return await this.postService.update({
-      where: { id: Number(id) },
-      data: { updatedAt, category: { disconnect: { id: Number(categoryId) } } },
+      where: { id },
+      data: { updatedAt, category: { disconnect: { id: categoryId } } },
     });
   }
 }

@@ -20,7 +20,7 @@ import { UserService } from './user.service';
 describe('UserController', () => {
   let userController: UserController;
   let authHelper: AuthHelper;
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
 
   const userServiceMock = {
     create: jest
@@ -104,7 +104,7 @@ describe('UserController', () => {
 
   describe('UPDATE', () => {
     it('should be able to update a user', async () => {
-      const user = await userController.update(1, MOCK_UPDATE_USER, {
+      const user = await userController.update('1', MOCK_UPDATE_USER, {
         user: { id: MOCK_ID },
       });
       expect(user).toStrictEqual({ id: MOCK_ID });

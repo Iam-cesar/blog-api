@@ -80,19 +80,15 @@ describe('AuthController', () => {
 
   describe('SIGNIN', () => {
     it('should generate tokens to user on signin', async () => {
-      const signin = await authController.signinLocal(
-        { user: FIND_ONE_USER_MOCK_RESPONSE },
-        FIND_ONE_USER_MOCK_RESPONSE,
-      );
+      const signin = await authController.signinLocal({
+        user: FIND_ONE_USER_MOCK_RESPONSE,
+      });
       expect(signin).toStrictEqual({ accessToken });
     });
     it('should to throw an exception', () => {
       authServiceMock.signin.mockRejectedValueOnce(new Error());
       expect(
-        authController.signinLocal(
-          { user: FIND_ONE_USER_MOCK_RESPONSE },
-          FIND_ONE_USER_MOCK_RESPONSE,
-        ),
+        authController.signinLocal({ user: FIND_ONE_USER_MOCK_RESPONSE }),
       ).rejects.toThrowError();
     });
   });

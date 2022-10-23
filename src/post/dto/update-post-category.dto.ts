@@ -5,9 +5,9 @@ import { CreatePostCategoryDto } from './create-post-category.dto';
 export class UpdatePostCategoryDto implements Partial<CreatePostCategoryDto> {
   @ApiProperty()
   @IsNotEmpty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  categoryId: number;
+  categoryId: string;
 }

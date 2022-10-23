@@ -1,17 +1,15 @@
-import { IsEmpty, IsNumber, IsOptional } from '@nestjs/class-validator';
+import { IsEmpty, IsOptional } from '@nestjs/class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 
 export class CreateLikeDto {
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNumber()
-  comment?: number;
+  comment?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNumber()
-  post?: number;
+  post?: string;
 
   @IsEmpty()
   user:

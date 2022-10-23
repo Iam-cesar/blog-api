@@ -25,7 +25,7 @@ describe('PostController', () => {
   let userService: UserService;
   let categoryService: CategoryService;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
   const postServiceMock = {
     create: jest.fn().mockReturnValue({ id: MOCK_ID }),
     findAll: jest.fn().mockReturnValue(MOCK_FIND_ALL_POST_RESPONSE),

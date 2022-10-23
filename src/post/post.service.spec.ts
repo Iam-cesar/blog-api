@@ -14,7 +14,7 @@ describe('PostService', () => {
   let postService: PostService;
   let userService: UserService;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,13 +22,13 @@ describe('PostService', () => {
         {
           provide: PostService,
           useValue: {
-            create: jest.fn().mockResolvedValue({ id: 1 }),
+            create: jest.fn().mockResolvedValue({ id: '1' }),
             findAll: jest.fn().mockResolvedValue(MOCK_FIND_ALL_POST_RESPONSE),
             findOne: jest
               .fn()
               .mockResolvedValue(new PostEntity(MOCK_FIND_ONE_POST_RESPONSE)),
-            update: jest.fn().mockResolvedValue({ id: 1 }),
-            remove: jest.fn().mockResolvedValue({ id: 1 }),
+            update: jest.fn().mockResolvedValue({ id: '1' }),
+            remove: jest.fn().mockResolvedValue({ id: '1' }),
           },
         },
         {

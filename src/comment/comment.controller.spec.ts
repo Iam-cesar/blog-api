@@ -20,7 +20,7 @@ describe('CommentController', () => {
   let userService: UserService;
   let postService: PostService;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
   const MOCK_EMAIL = 'mock@email.com';
 
   const userServiceMock = {
@@ -102,7 +102,7 @@ describe('CommentController', () => {
         commentController.create(
           {
             content: 'mock_comment_updated',
-            post: null,
+            post: { connect: { id: MOCK_ID } },
             user: { connect: { email: MOCK_EMAIL } },
           },
           { user: { email: MOCK_EMAIL } },

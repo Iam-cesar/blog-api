@@ -12,7 +12,6 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthHelper } from './auth.helper';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { Tokens } from './types/token.type';
 
 @Injectable()
@@ -48,7 +47,7 @@ export class AuthService {
       const { accessToken, refreshToken } = await this.signin({
         id,
         email,
-      } as CreateAuthDto);
+      });
 
       await this.updateRefreshToken(id, refreshToken);
       return { accessToken, refreshToken };
@@ -60,7 +59,7 @@ export class AuthService {
     }
   }
 
-  async logout(id: number): Promise<void> {
+  async logout(id: string): Promise<void> {
     const user = await this.userService.findOneWithPassword({ id });
 
     if (!user?.hashedRefreshToken) throw new BadRequestException();
@@ -109,7 +108,7 @@ export class AuthService {
   }
 
   private async updateRefreshToken(
-    userId: number,
+    userId: string,
     refreshToken: string,
   ): Promise<void> {
     const hashToken = await hash(refreshToken, 10);

@@ -13,7 +13,7 @@ import {
 describe('CategoryController', () => {
   let categoryController: CategoryController;
 
-  const MOCK_ID = 1;
+  const MOCK_ID = '1';
 
   const categoryServiceMock = {
     create: jest.fn().mockReturnValue({ id: MOCK_ID }),
