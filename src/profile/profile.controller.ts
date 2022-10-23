@@ -16,6 +16,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { MessageHelper } from '../common/helpers/message.helper';
+import { exceptionIfProfileDontBelongsToUser } from '../common/utils/userPermissionToContent';
 import { UserService } from '../user/user.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -66,10 +67,13 @@ export class ProfileController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateProfileDto,
+    @Req() req: { user: { id: number } },
   ) {
     const profile = await this.profileService.findOne({ id });
 
     if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
+
+    exceptionIfProfileDontBelongsToUser(req.user, profile);
 
     return await this.profileService.update({
       where: { id },
@@ -79,10 +83,15 @@ export class ProfileController {
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: { user: { id: number } },
+  ) {
     const profile = await this.profileService.findOne({ id });
 
     if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
+
+    exceptionIfProfileDontBelongsToUser(req.user, profile);
 
     return await this.profileService.remove({ id });
   }

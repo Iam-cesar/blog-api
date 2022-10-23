@@ -74,7 +74,7 @@ describe('PostController', () => {
     expect(userService).toBeDefined();
     expect(categoryService).toBeDefined();
   });
-
+  // { user: { id: MOCK_ID + 1 } },
   describe('CREATE', () => {
     it('should be able to create a post', async () => {
       const user = await userService.findOne({ id: MOCK_ID });
@@ -161,27 +161,54 @@ describe('PostController', () => {
   });
   describe('UPDATE', () => {
     it('should be able to update a post', async () => {
-      const post = await postController.update(MOCK_ID, MOCK_UPDATE_POST);
+      const post = await postController.update(MOCK_ID, MOCK_UPDATE_POST, {
+        user: { id: MOCK_ID },
+      });
       expect(post).toStrictEqual({ id: MOCK_ID });
     });
-
     it('should to throw an exception', () => {
       postServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
-        postController.update(MOCK_ID, MOCK_UPDATE_POST),
+        postController.update(MOCK_ID, MOCK_UPDATE_POST, {
+          user: { id: MOCK_ID },
+        }),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.POST_NOT_FOUND),
+      );
+    });
+    it('should to throw an exception if user id diferent of author id', async () => {
+      expect(
+        postController.update(MOCK_ID, MOCK_UPDATE_POST, {
+          user: { id: MOCK_ID + 1 },
+        }),
+      ).rejects.toStrictEqual(
+        new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST),
       );
     });
   });
   describe('REMOVE', () => {
     it('should be able to remove a post', async () => {
-      const post = await postController.remove(MOCK_ID);
+      const post = await postController.remove(MOCK_ID, {
+        user: { id: MOCK_ID },
+      });
       expect(post).toStrictEqual({ id: MOCK_ID });
+    });
+    it('should to throw an exception if user id diferent of author id', async () => {
+      expect(
+        postController.remove(MOCK_ID, {
+          user: { id: MOCK_ID + 1 },
+        }),
+      ).rejects.toStrictEqual(
+        new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST),
+      );
     });
     it('should to throw an exception', () => {
       postServiceMock.findOne.mockResolvedValueOnce(null);
-      expect(postController.remove(null)).rejects.toStrictEqual(
+      expect(
+        postController.remove(MOCK_ID, {
+          user: { id: MOCK_ID },
+        }),
+      ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.POST_NOT_FOUND),
       );
     });
@@ -191,16 +218,26 @@ describe('PostController', () => {
       const category = await categoryService.findOne({ id: MOCK_ID });
       const post = await postService.findOne({ id: MOCK_ID });
       expect(
-        await postController.addCategory({
-          categoryId: category.id,
-          id: post.id,
-        }),
+        await postController.addCategory(
+          {
+            categoryId: category.id,
+            id: post.id,
+          },
+          {
+            user: { id: MOCK_ID },
+          },
+        ),
       ).toStrictEqual({ id: MOCK_ID });
     });
     it('should to throw an exception post not found', () => {
       postServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
-        postController.addCategory({ categoryId: MOCK_ID, id: MOCK_ID }),
+        postController.addCategory(
+          { categoryId: MOCK_ID, id: MOCK_ID },
+          {
+            user: { id: MOCK_ID },
+          },
+        ),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.POST_NOT_FOUND),
       );
@@ -208,9 +245,26 @@ describe('PostController', () => {
     it('should to throw an exception category not found', () => {
       categoryServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
-        postController.addCategory({ categoryId: MOCK_ID, id: MOCK_ID }),
+        postController.addCategory(
+          { categoryId: MOCK_ID, id: MOCK_ID },
+          {
+            user: { id: MOCK_ID },
+          },
+        ),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND),
+      );
+    });
+    it('should to throw an exception if user id diferent of author id', async () => {
+      expect(
+        postController.addCategory(
+          { categoryId: MOCK_ID, id: MOCK_ID },
+          {
+            user: { id: MOCK_ID + 1 },
+          },
+        ),
+      ).rejects.toStrictEqual(
+        new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST),
       );
     });
   });
@@ -219,16 +273,22 @@ describe('PostController', () => {
       const category = await categoryService.findOne({ id: MOCK_ID });
       const post = await postService.findOne({ id: MOCK_ID });
       expect(
-        await postController.removeCategory({
-          categoryId: category.id,
-          id: post.id,
-        }),
+        await postController.removeCategory(
+          {
+            categoryId: category.id,
+            id: post.id,
+          },
+          { user: { id: MOCK_ID } },
+        ),
       ).toStrictEqual({ id: MOCK_ID });
     });
     it('should to throw an exception post not found', () => {
       postServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
-        postController.removeCategory({ categoryId: MOCK_ID, id: MOCK_ID }),
+        postController.removeCategory(
+          { categoryId: MOCK_ID, id: MOCK_ID },
+          { user: { id: MOCK_ID } },
+        ),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.POST_NOT_FOUND),
       );
@@ -236,9 +296,24 @@ describe('PostController', () => {
     it('should to throw an exception category not found', () => {
       categoryServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
-        postController.removeCategory({ categoryId: MOCK_ID, id: MOCK_ID }),
+        postController.removeCategory(
+          { categoryId: MOCK_ID, id: MOCK_ID },
+          { user: { id: MOCK_ID } },
+        ),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND),
+      );
+    });
+    it('should to throw an exception if user id diferent of author id', async () => {
+      expect(
+        postController.removeCategory(
+          { categoryId: MOCK_ID, id: MOCK_ID },
+          {
+            user: { id: MOCK_ID + 1 },
+          },
+        ),
+      ).rejects.toStrictEqual(
+        new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST),
       );
     });
   });

@@ -13,21 +13,23 @@ describe('UserService', () => {
 
   const MOCK_ID = 1;
 
+  const userServiceMock = {
+    create: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    findOneWithPassword: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    findAll: jest.fn().mockResolvedValue(FIND_ALL_USER_MOCK_RESPONSE),
+    findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
+    update: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    softRemove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    renew: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+    remove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
           provide: UserService,
-          useValue: {
-            create: jest.fn().mockResolvedValue({ id: MOCK_ID }),
-            findOneWithPassword: jest.fn().mockResolvedValue({ id: MOCK_ID }),
-            findAll: jest.fn().mockResolvedValue(FIND_ALL_USER_MOCK_RESPONSE),
-            findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
-            update: jest.fn().mockResolvedValue({ id: MOCK_ID }),
-            softRemove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
-            renew: jest.fn().mockResolvedValue({ id: MOCK_ID }),
-            remove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
-          },
+          useValue: userServiceMock,
         },
       ],
     }).compile();
@@ -46,8 +48,8 @@ describe('UserService', () => {
     });
 
     it('should to throw an exception', () => {
-      jest.spyOn(userService, 'create').mockRejectedValueOnce(new Error());
-      expect(userService.create(MOCK_CREATE_USER)).rejects.toThrowError();
+      userServiceMock.create.mockRejectedValueOnce(new Error());
+      expect(userService.create(null)).rejects.toThrowError();
     });
   });
 
@@ -60,9 +62,7 @@ describe('UserService', () => {
     });
 
     it('should to throw an exception', () => {
-      jest
-        .spyOn(userService, 'findOneWithPassword')
-        .mockRejectedValueOnce(new Error());
+      userServiceMock.findOneWithPassword.mockRejectedValueOnce(new Error());
       expect(
         userService.findOneWithPassword(MOCK_CREATE_USER),
       ).rejects.toThrowError();
@@ -77,7 +77,7 @@ describe('UserService', () => {
     });
 
     it('should to throw an exception', () => {
-      jest.spyOn(userService, 'findOne').mockRejectedValueOnce(new Error());
+      userServiceMock.findOne.mockRejectedValueOnce(new Error());
       expect(
         userService.findOne({ email: FIND_ONE_USER_MOCK_RESPONSE.email }),
       ).rejects.toThrowError();
@@ -110,7 +110,7 @@ describe('UserService', () => {
     });
 
     it('should to throw an exception', () => {
-      jest.spyOn(userService, 'update').mockRejectedValueOnce(new Error());
+      userServiceMock.update.mockRejectedValueOnce(new Error());
       expect(
         userService.update({
           where: { email: MOCK_CREATE_USER.email },
@@ -127,7 +127,7 @@ describe('UserService', () => {
     });
 
     it('should to throw an exception', () => {
-      jest.spyOn(userService, 'remove').mockRejectedValueOnce(new Error());
+      userServiceMock.remove.mockRejectedValueOnce(new Error());
       expect(
         userService.remove({ email: MOCK_CREATE_USER.email }),
       ).rejects.toThrowError();
@@ -143,7 +143,7 @@ describe('UserService', () => {
     });
 
     it('should to throw an exception', () => {
-      jest.spyOn(userService, 'softRemove').mockRejectedValueOnce(new Error());
+      userServiceMock.softRemove.mockRejectedValueOnce(new Error());
       expect(
         userService.softRemove({ email: MOCK_CREATE_USER.email }),
       ).rejects.toThrowError();
@@ -157,7 +157,7 @@ describe('UserService', () => {
     });
 
     it('should to throw an exception', () => {
-      jest.spyOn(userService, 'renew').mockRejectedValueOnce(new Error());
+      userServiceMock.renew.mockRejectedValueOnce(new Error());
       expect(
         userService.renew({ email: MOCK_CREATE_USER.email }),
       ).rejects.toThrowError();

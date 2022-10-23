@@ -21,6 +21,7 @@ import { CategoryService } from '../category/category.service';
 import { updatedAt } from '../common/helpers/date.helper';
 import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
 import { MessageHelper } from '../common/helpers/message.helper';
+import { exceptionIfPostDontBelongsToUser } from '../common/utils/userPermissionToContent';
 import { UserService } from '../user/user.service';
 import { CreatePostCategoryDto } from './dto/create-post-category.dto';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -83,12 +84,17 @@ export class PostController {
   }
 
   @Post(':id/category/:categoryId')
-  async addCategory(@Param() params: CreatePostCategoryDto) {
+  async addCategory(
+    @Param() params: CreatePostCategoryDto,
+    @Req() req: { user: { id: number } },
+  ) {
     const { categoryId, id } = params;
 
     const post = await this.postService.findOne({ id: Number(id) });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+
+    exceptionIfPostDontBelongsToUser(req.user, post);
 
     const category = await this.categoryService.findOne({
       id: Number(categoryId),
@@ -108,10 +114,13 @@ export class PostController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdatePostDto,
+    @Req() req: { user: { id: number } },
   ) {
     const post = await this.postService.findOne({ id });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+
+    exceptionIfPostDontBelongsToUser(req.user, post);
 
     return await this.postService.update({
       where: { id },
@@ -124,22 +133,32 @@ export class PostController {
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: { user: { id: number } },
+  ) {
     const post = await this.postService.findOne({ id });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+
+    exceptionIfPostDontBelongsToUser(req.user, post);
 
     return await this.postService.remove({ id });
   }
 
   @Delete(':id/category/:categoryId')
   @HttpCode(200)
-  async removeCategory(@Param() params: UpdatePostCategoryDto) {
+  async removeCategory(
+    @Param() params: UpdatePostCategoryDto,
+    @Req() req: { user: { id: number } },
+  ) {
     const { id, categoryId } = params;
 
     const post = await this.postService.findOne({ id: Number(id) });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+
+    exceptionIfPostDontBelongsToUser(req.user, post);
 
     const category = await this.categoryService.findOne({
       id: Number(categoryId),

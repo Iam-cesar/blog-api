@@ -1,4 +1,8 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthHelper } from '../auth/auth.helper';
 import { MessageHelper } from '../common/helpers/message.helper';
@@ -100,28 +104,48 @@ describe('UserController', () => {
 
   describe('UPDATE', () => {
     it('should be able to update a user', async () => {
-      const user = await userController.update(1, MOCK_UPDATE_USER);
+      const user = await userController.update(1, MOCK_UPDATE_USER, {
+        user: { id: MOCK_ID },
+      });
       expect(user).toStrictEqual({ id: MOCK_ID });
     });
-
     it('should to throw an exception', () => {
       userServiceMock.findOne.mockResolvedValueOnce(null);
-      expect(userController.update(MOCK_ID, null)).rejects.toStrictEqual(
+      expect(
+        userController.update(MOCK_ID, null, { user: { id: MOCK_ID } }),
+      ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.USER_NOT_FOUND),
+      );
+    });
+    it('should to throw an exception if user id diferent of author id', async () => {
+      expect(
+        userController.remove(MOCK_ID, { user: { id: MOCK_ID + 1 } }),
+      ).rejects.toStrictEqual(
+        new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST),
       );
     });
   });
 
   describe('REMOVE', () => {
     it('should be able to remove user', async () => {
-      const user = await userController.remove(MOCK_CREATE_USER_RESPONSE.id);
+      const user = await userController.remove(MOCK_CREATE_USER_RESPONSE.id, {
+        user: { id: MOCK_ID },
+      });
       expect(user).toStrictEqual({ id: MOCK_ID });
     });
-
     it('should to throw an exception', () => {
       userServiceMock.findOne.mockResolvedValueOnce(null);
-      expect(userController.remove(MOCK_ID)).rejects.toStrictEqual(
+      expect(
+        userController.remove(MOCK_ID, { user: { id: MOCK_ID } }),
+      ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.USER_NOT_FOUND),
+      );
+    });
+    it('should to throw an exception if user id diferent of author id', async () => {
+      expect(
+        userController.remove(MOCK_ID, { user: { id: MOCK_ID + 1 } }),
+      ).rejects.toStrictEqual(
+        new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST),
       );
     });
   });

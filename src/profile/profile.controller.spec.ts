@@ -1,4 +1,8 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessageHelper } from '../common/helpers/message.helper';
 import { MOCK_CREATE_USER_RESPONSE as MOCK_CREATE_USER } from '../user/mock/userService.mock';
@@ -103,24 +107,43 @@ describe('ProfileController', () => {
       const profile = await profileController.update(
         MOCK_ID,
         MOCK_UPDATE_PROFILE,
+        { user: { id: MOCK_ID } },
       );
       expect(profile).toStrictEqual({ id: 1 });
     });
     it('should to throw an exception', () => {
       profileServiceMock.findOne.mockResolvedValueOnce(null);
-      expect(profileController.update(MOCK_ID, {})).rejects.toThrowError();
+      expect(
+        profileController.update(MOCK_ID, {}, { user: { id: MOCK_ID } }),
+      ).rejects.toThrowError();
+    });
+    it('should to throw an exception if user id diferent of author id', async () => {
+      expect(
+        profileController.update(MOCK_ID, {}, { user: { id: MOCK_ID + 1 } }),
+      ).rejects.toStrictEqual(
+        new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST),
+      );
     });
   });
   describe('REMOVE', () => {
     it('should be able to update a profile', async () => {
-      const profile = await profileController.remove(
-        MOCK_FIND_ONE_PROFILE_RESPONSE.id,
-      );
+      const profile = await profileController.remove(MOCK_ID, {
+        user: { id: MOCK_ID },
+      });
       expect(profile).toStrictEqual({ id: 1 });
     });
     it('should to throw an exception', () => {
       profileServiceMock.findOne.mockResolvedValueOnce(null);
-      expect(profileController.remove(MOCK_ID)).rejects.toThrowError();
+      expect(
+        profileController.remove(MOCK_ID, { user: { id: MOCK_ID } }),
+      ).rejects.toThrowError();
+    });
+    it('should to throw an exception if user id diferent of author id', async () => {
+      expect(
+        profileController.remove(MOCK_ID, { user: { id: MOCK_ID + 1 } }),
+      ).rejects.toStrictEqual(
+        new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST),
+      );
     });
   });
 });

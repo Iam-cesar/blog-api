@@ -7,6 +7,11 @@ export class PostEntity {
   published?: boolean;
   category?: { id?: number; name?: string }[];
   authorId?: number;
+  author?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  };
   like?: LikeEntity[];
   deleted?: boolean;
   deletedAt?: Date;
@@ -15,6 +20,7 @@ export class PostEntity {
 
   constructor(params?: PostEntity) {
     this.id = params.id;
+    this.author = params.author;
     this.title = params.title;
     this.content = params.content;
     this.published = params.published;

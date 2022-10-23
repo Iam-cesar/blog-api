@@ -11,6 +11,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,6 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthHelper } from '../auth/auth.helper';
 import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
 import { MessageHelper } from '../common/helpers/message.helper';
+import { exceptionIfUserDontBelongsToUser } from '../common/utils/userPermissionToContent';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -74,10 +76,13 @@ export class UserController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateUserDto,
+    @Req() req: { user: { id: number } },
   ) {
     const user = await this.userService.findOne({ id });
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
+
+    exceptionIfUserDontBelongsToUser(req.user, user);
 
     return await this.userService.update({
       where: { id },
@@ -110,10 +115,15 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: { user: { id: number } },
+  ) {
     const user = await this.userService.findOne({ id });
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
+
+    exceptionIfUserDontBelongsToUser(req.user, user);
 
     return await this.userService.remove({ id });
   }
