@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "env": {
+    "DATABASE_URL": "file:./database/dev.db",
+    "JWT_PRIVATE_KEY": "8b/swJgB2VQpfVlGOnUB8lxjqnjbXJvThrwmrVCsjLU="
+  },
+  "builds": [
+    {
+      "src": "src/main.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/main.ts",
+      "methods": ["GET", "POST", "PUT", "DELETE"]
+    }
+  ]
+}
