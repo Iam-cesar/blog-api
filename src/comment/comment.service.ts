@@ -35,7 +35,6 @@ export class CommentService {
         like: {
           select: {
             id: true,
-            userId: true,
             user: {
               select: {
                 id: true,

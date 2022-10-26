@@ -39,6 +39,11 @@ export class AuthService {
     try {
       const { password, email } = data;
 
+      const user = await this.userService.findOne({ email });
+
+      if (user)
+        throw new ForbiddenException(MessageHelper.EMAIL_ALREADY_EXISTS);
+
       const { id } = await this.userService.create({
         ...data,
         password: await this.authHelper.createHashPassword(password),
@@ -50,11 +55,9 @@ export class AuthService {
       });
 
       await this.updateRefreshToken(id, refreshToken);
+
       return { accessToken, refreshToken };
     } catch (error) {
-      if (error.meta.target.includes('email'))
-        throw new ForbiddenException(MessageHelper.EMAIL_ALREADY_EXISTS);
-
       throw new BadRequestException(error.message);
     }
   }

@@ -60,13 +60,6 @@ export class PostService {
             createdAt: true,
             content: true,
             user: { select: { id: true, firstName: true, lastName: true } },
-            like: {
-              select: {
-                id: true,
-                createdAt: true,
-                user: { select: { id: true, firstName: true, lastName: true } },
-              },
-            },
           },
         },
         createdAt: true,

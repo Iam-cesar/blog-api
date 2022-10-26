@@ -23,6 +23,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('user')
 @ApiTags('User')
 export class UserController {
@@ -31,7 +32,6 @@ export class UserController {
     private readonly authHelper: AuthHelper,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)
   async create(@Body() data: CreateUserDto) {
@@ -58,7 +58,6 @@ export class UserController {
     });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
@@ -69,7 +68,6 @@ export class UserController {
     return user;
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(
@@ -89,7 +87,6 @@ export class UserController {
     });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Patch(':id/soft-delete')
   @HttpCode(200)
   async softRemove(@Param('id') id: string) {
@@ -100,7 +97,6 @@ export class UserController {
     return await this.userService.softRemove({ id });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Patch(':id/renew')
   @HttpCode(200)
   async renew(@Param('id') id: string) {
@@ -111,7 +107,6 @@ export class UserController {
     return this.userService.renew({ id });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {

@@ -44,7 +44,7 @@ export class CommentController {
 
     if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
 
-    const post = await this.postService.findOne({ id: postId.connect.id });
+    const post = await this.postService.findOne({ id: postId as string });
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 

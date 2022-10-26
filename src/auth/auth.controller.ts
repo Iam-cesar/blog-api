@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
+import { CreateAuthDto } from './dto/create-auth.dto';
 import { Tokens } from './types/token.type';
 
 @Controller('auth')
@@ -31,7 +31,7 @@ export class AuthController {
 
   @Post('signup')
   @HttpCode(201)
-  async signupLocal(@Body() data: CreateUserDto): Promise<Partial<Tokens>> {
+  async signupLocal(@Body() data: CreateAuthDto): Promise<Partial<Tokens>> {
     const { accessToken } = await this.authService.signup(data);
     return { accessToken };
   }

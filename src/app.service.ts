@@ -5,6 +5,7 @@ export class AppService {
   infoAboutAPI(): object {
     return {
       name: 'blog-api',
+      docomentation: 'base_url/doc',
     };
   }
 }

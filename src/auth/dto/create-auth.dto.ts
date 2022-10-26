@@ -15,7 +15,17 @@ export class CreateAuthDto {
     message: MessageHelper.PASSWORD_VALID,
   })
   @ApiProperty()
-  password?: string;
+  password: string;
 
-  id: number;
+  @ApiProperty()
+  @IsNotEmpty()
+  firstName: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  lastName: string;
+
+  deletedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

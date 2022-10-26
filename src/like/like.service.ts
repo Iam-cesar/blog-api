@@ -15,7 +15,23 @@ export class LikeService {
   }
 
   findOne(where: Prisma.LikeWhereUniqueInput): Promise<LikeEntity> {
-    return db.like.findUnique({ where });
+    return db.like.findUnique({
+      where,
+      select: {
+        id: true,
+        commentId: true,
+        postId: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   remove(where: Prisma.LikeWhereUniqueInput): Promise<LikeEntity> {
