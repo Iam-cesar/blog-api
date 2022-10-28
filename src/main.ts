@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({ origin: '*', credentials: true, allowedHeaders: '*' });
 
   const config = new DocumentBuilder()
     .setTitle('BLOG API DOC')
