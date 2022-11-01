@@ -23,7 +23,6 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Controller('comment')
-@UseGuards(AuthGuard('jwt'))
 export class CommentController {
   constructor(
     private readonly CommentService: CommentService,
@@ -31,6 +30,7 @@ export class CommentController {
     private readonly postService: PostService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)
   @ApiTags('Comment')
@@ -70,6 +70,7 @@ export class CommentController {
     return comment;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() data: UpdateCommentDto) {
@@ -83,6 +84,7 @@ export class CommentController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {

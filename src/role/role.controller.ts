@@ -21,11 +21,11 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { RoleService } from './role.service';
 
 @Controller('role')
-@UseGuards(AuthGuard('jwt'))
 @ApiTags('Role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)
   async create(@Body() data: CreateRoleDto) {
@@ -58,6 +58,7 @@ export class RoleController {
     return role;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() data: UpdateRoleDto) {
@@ -71,6 +72,7 @@ export class RoleController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {

@@ -22,11 +22,11 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Controller('category')
-@UseGuards(AuthGuard('jwt'))
 @ApiTags('Category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)
   async create(@Body() data: CreateCategoryDto) {
@@ -61,6 +61,7 @@ export class CategoryController {
     return category;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
@@ -75,6 +76,7 @@ export class CategoryController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {

@@ -32,9 +32,9 @@ export class LikeController {
     private readonly commentService: CommentService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)
-  @UseGuards(AuthGuard('jwt'))
   @ApiTags('Like')
   async create(
     @Body() data: CreateLikeDto,
@@ -70,6 +70,7 @@ export class LikeController {
     return like;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {

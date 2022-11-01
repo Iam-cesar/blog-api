@@ -22,7 +22,6 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileService } from './profile.service';
 
 @Controller('profile')
-@UseGuards(AuthGuard('jwt'))
 @ApiTags('Profile')
 export class ProfileController {
   constructor(
@@ -30,6 +29,7 @@ export class ProfileController {
     private readonly userService: UserService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)
   async create(
@@ -61,6 +61,7 @@ export class ProfileController {
     return profile;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(
@@ -80,6 +81,7 @@ export class ProfileController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {
