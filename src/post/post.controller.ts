@@ -29,7 +29,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PostService } from './post.service';
 
 @Controller('post')
-@UseGuards(AuthGuard('jwt'))
 @ApiTags('Post')
 export class PostController {
   constructor(
@@ -38,6 +37,7 @@ export class PostController {
     private readonly categoryService: CategoryService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)
   async create(
@@ -82,6 +82,7 @@ export class PostController {
     return post;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post(':id/category/:categoryId')
   async addCategory(
     @Param() params: CreatePostCategoryDto,
@@ -108,6 +109,7 @@ export class PostController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(
@@ -130,6 +132,7 @@ export class PostController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {
@@ -142,6 +145,7 @@ export class PostController {
     return await this.postService.remove({ id });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id/category/:categoryId')
   @HttpCode(200)
   async removeCategory(
