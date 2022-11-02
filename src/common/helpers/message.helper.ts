@@ -3,10 +3,12 @@ export const MessageHelper = {
     'The password must contain uppercase letters, numbers and special characters',
   PASSWORD_OR_EMAIL_INVALID: 'Email or password are invalid!',
   EMAIL_ALREADY_EXISTS: 'The email already exists',
+
   COMMENT_AND_POST_INVALID: "Post or comment id's must be provided",
   COMMENT_OR_POST_PROVIDE: "Only comment or post id's must be provided",
 
   UNAUTHORIZED_REQUEST: 'Cannot perform this action',
+  ID_NOT_PROVIDED: 'Id param must be provided !',
 
   USER_NOT_FOUND: 'User not found',
   USER_BAD_REQUEST: 'Something went wrong in users',

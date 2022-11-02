@@ -16,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
 import { MessageHelper } from '../common/helpers/message.helper';
+import { UserService } from './../user/user.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RoleService } from './role.service';
@@ -23,7 +24,10 @@ import { RoleService } from './role.service';
 @Controller('role')
 @ApiTags('Role')
 export class RoleController {
-  constructor(private readonly roleService: RoleService) {}
+  constructor(
+    private readonly roleService: RoleService,
+    private readonly userService: UserService,
+  ) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
@@ -34,6 +38,47 @@ export class RoleController {
     if (!role) throw new BadRequestException(MessageHelper.ROLE_BAD_REQUEST);
 
     return role;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':roleId/user/:userId')
+  @HttpCode(201)
+  async addUser(@Param('roleId') id: string, @Param('userId') userId: string) {
+    if (!id) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
+
+    if (!userId) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
+
+    return await this.roleService.update({
+      where: {
+        id,
+        name: undefined,
+      },
+      data: {
+        user: { connect: { id: userId } },
+      },
+    });
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':roleId/user/:userId')
+  @HttpCode(201)
+  async removeUser(
+    @Param('roleId') id: string,
+    @Param('userId') userId: string,
+  ) {
+    if (!id) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
+
+    if (!userId) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
+
+    return await this.roleService.update({
+      where: {
+        id,
+        name: undefined,
+      },
+      data: {
+        user: { disconnect: { id: userId } },
+      },
+    });
   }
 
   @Get()
