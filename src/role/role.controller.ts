@@ -41,7 +41,7 @@ export class RoleController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Patch(':roleId/user/:userId')
+  @Patch(':roleId/add-user/:userId')
   @HttpCode(201)
   async addUser(@Param('roleId') id: string, @Param('userId') userId: string) {
     if (!id) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
@@ -60,7 +60,7 @@ export class RoleController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Patch(':roleId/user/:userId')
+  @Patch(':roleId/remove-user/:userId')
   @HttpCode(201)
   async removeUser(
     @Param('roleId') id: string,
