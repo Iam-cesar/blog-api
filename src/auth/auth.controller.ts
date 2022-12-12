@@ -22,6 +22,13 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('signin')
   @HttpCode(200)
+  async options() {
+    return {};
+  }
+
+  @UseGuards(AuthGuard('local'))
+  @Post('signin')
+  @HttpCode(200)
   async signinLocal(
     @Req() req: { user: { id: string } },
   ): Promise<Partial<Tokens>> {

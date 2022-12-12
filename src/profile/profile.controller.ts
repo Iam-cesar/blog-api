@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   NotFoundException,
+  Options,
   Param,
   Patch,
   Post,
@@ -28,6 +29,12 @@ export class ProfileController {
     private readonly profileService: ProfileService,
     private readonly userService: UserService,
   ) {}
+
+  @Options('signin')
+  @HttpCode(200)
+  async options() {
+    return {};
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Post()

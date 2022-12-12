@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   NotFoundException,
+  Options,
   Param,
   Patch,
   Post,
@@ -16,7 +17,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
 import { MessageHelper } from '../common/helpers/message.helper';
-import { UserService } from './../user/user.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RoleService } from './role.service';
@@ -24,10 +24,13 @@ import { RoleService } from './role.service';
 @Controller('role')
 @ApiTags('Role')
 export class RoleController {
-  constructor(
-    private readonly roleService: RoleService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly roleService: RoleService) {}
+
+  @Options('signin')
+  @HttpCode(200)
+  async options() {
+    return {};
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Post()

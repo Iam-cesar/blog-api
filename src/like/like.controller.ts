@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   NotFoundException,
+  Options,
   Param,
   Post,
   Req,
@@ -31,6 +32,12 @@ export class LikeController {
     private readonly postService: PostService,
     private readonly commentService: CommentService,
   ) {}
+
+  @Options('signin')
+  @HttpCode(200)
+  async options() {
+    return {};
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Post()

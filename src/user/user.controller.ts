@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   NotFoundException,
+  Options,
   Param,
   Patch,
   Post,
@@ -30,6 +31,12 @@ export class UserController {
     private readonly userService: UserService,
     private readonly authHelper: AuthHelper,
   ) {}
+
+  @Options('signin')
+  @HttpCode(200)
+  async options() {
+    return {};
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
