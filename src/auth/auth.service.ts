@@ -26,8 +26,14 @@ export class AuthService {
     const payload = { sub: id, email };
     const oneWeek = 60 * 60 * 24 * 7;
     const tokens = {
-      accessToken: this.jwtService.sign(payload),
-      refreshToken: this.jwtService.sign(payload, { expiresIn: oneWeek }),
+      accessToken: this.jwtService.sign(payload, {
+        privateKey: process.env.JWT_PRIVATE_KEY,
+      }),
+
+      refreshToken: this.jwtService.sign(payload, {
+        expiresIn: oneWeek,
+        privateKey: process.env.JWT_PRIVATE_KEY,
+      }),
     };
 
     await this.updateRefreshToken(id, tokens.refreshToken);
