@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  Options,
   Post,
   Req,
   UseGuards,
@@ -19,8 +20,7 @@ import { Tokens } from './types/token.type';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard('local'))
-  @Post('signin')
+  @Options('signin')
   @HttpCode(200)
   async options() {
     return {};
