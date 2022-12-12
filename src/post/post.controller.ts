@@ -38,7 +38,7 @@ export class PostController {
     private readonly categoryService: CategoryService,
   ) {}
 
-  @Options('signin')
+  @Options()
   @HttpCode(200)
   async options() {
     return {};

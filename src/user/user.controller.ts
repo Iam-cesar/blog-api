@@ -32,7 +32,7 @@ export class UserController {
     private readonly authHelper: AuthHelper,
   ) {}
 
-  @Options('signin')
+  @Options()
   @HttpCode(200)
   async options() {
     return {};

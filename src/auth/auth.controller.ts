@@ -22,7 +22,7 @@ export class AuthController {
 
   @Options('signin')
   @HttpCode(200)
-  async options() {
+  async optionsSignin() {
     return {};
   }
 
@@ -36,6 +36,12 @@ export class AuthController {
     return { accessToken };
   }
 
+  @Options('signup')
+  @HttpCode(200)
+  async optionsSignUp() {
+    return {};
+  }
+
   @Post('signup')
   @HttpCode(201)
   async signupLocal(@Body() data: CreateAuthDto): Promise<Partial<Tokens>> {
@@ -43,11 +49,23 @@ export class AuthController {
     return { accessToken };
   }
 
+  @Options('logout')
+  @HttpCode(200)
+  async optionsLogout() {
+    return {};
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(200)
   @Post('logout')
   async logout(@Req() req: { user: { id: string } }): Promise<void> {
     return await this.authService.logout(req.user.id);
+  }
+
+  @Options('refresh')
+  @HttpCode(200)
+  async optionsRefresh() {
+    return {};
   }
 
   @UseGuards(AuthGuard('local'))

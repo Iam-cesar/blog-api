@@ -30,7 +30,7 @@ export class ProfileController {
     private readonly userService: UserService,
   ) {}
 
-  @Options('signin')
+  @Options()
   @HttpCode(200)
   async options() {
     return {};

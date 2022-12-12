@@ -33,7 +33,7 @@ export class LikeController {
     private readonly commentService: CommentService,
   ) {}
 
-  @Options('signin')
+  @Options()
   @HttpCode(200)
   async options() {
     return {};

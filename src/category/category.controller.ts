@@ -27,7 +27,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Options('signin')
+  @Options()
   @HttpCode(200)
   async options() {
     return {};

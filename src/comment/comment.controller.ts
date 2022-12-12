@@ -31,7 +31,7 @@ export class CommentController {
     private readonly postService: PostService,
   ) {}
 
-  @Options('signin')
+  @Options()
   @HttpCode(200)
   async options() {
     return {};

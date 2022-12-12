@@ -26,7 +26,7 @@ import { RoleService } from './role.service';
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
-  @Options('signin')
+  @Options()
   @HttpCode(200)
   async options() {
     return {};
