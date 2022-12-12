@@ -21,7 +21,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Options('signin')
-  @HttpCode(200)
+  @HttpCode(204)
   async optionsSignin() {
     return {};
   }
@@ -37,7 +37,7 @@ export class AuthController {
   }
 
   @Options('signup')
-  @HttpCode(200)
+  @HttpCode(204)
   async optionsSignUp() {
     return {};
   }
@@ -50,7 +50,7 @@ export class AuthController {
   }
 
   @Options('logout')
-  @HttpCode(200)
+  @HttpCode(204)
   async optionsLogout() {
     return {};
   }
@@ -63,7 +63,7 @@ export class AuthController {
   }
 
   @Options('refresh')
-  @HttpCode(200)
+  @HttpCode(204)
   async optionsRefresh() {
     return {};
   }
