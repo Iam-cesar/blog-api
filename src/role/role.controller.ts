@@ -26,12 +26,6 @@ import { RoleService } from './role.service';
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
-  @Options()
-  @HttpCode(200)
-  async options() {
-    return {};
-  }
-
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)

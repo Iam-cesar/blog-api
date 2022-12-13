@@ -33,12 +33,6 @@ export class LikeController {
     private readonly commentService: CommentService,
   ) {}
 
-  @Options()
-  @HttpCode(200)
-  async options() {
-    return {};
-  }
-
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)

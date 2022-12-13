@@ -32,12 +32,6 @@ export class UserController {
     private readonly authHelper: AuthHelper,
   ) {}
 
-  @Options()
-  @HttpCode(200)
-  async options() {
-    return {};
-  }
-
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)

@@ -30,12 +30,6 @@ export class ProfileController {
     private readonly userService: UserService,
   ) {}
 
-  @Options()
-  @HttpCode(200)
-  async options() {
-    return {};
-  }
-
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)

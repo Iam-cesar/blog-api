@@ -27,12 +27,6 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Options()
-  @HttpCode(200)
-  async options() {
-    return {};
-  }
-
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)

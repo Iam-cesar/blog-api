@@ -7,6 +7,7 @@ import {
   Options,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -14,17 +15,12 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { Tokens } from './types/token.type';
+import { Response } from 'express';
 
 @Controller('auth')
 @ApiTags('Authentication')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  @Options('signin')
-  @HttpCode(204)
-  async optionsSignin() {
-    return {};
-  }
 
   @UseGuards(AuthGuard('local'))
   @Post('signin')
@@ -36,12 +32,6 @@ export class AuthController {
     return { accessToken };
   }
 
-  @Options('signup')
-  @HttpCode(204)
-  async optionsSignUp() {
-    return {};
-  }
-
   @Post('signup')
   @HttpCode(201)
   async signupLocal(@Body() data: CreateAuthDto): Promise<Partial<Tokens>> {
@@ -49,23 +39,11 @@ export class AuthController {
     return { accessToken };
   }
 
-  @Options('logout')
-  @HttpCode(204)
-  async optionsLogout() {
-    return {};
-  }
-
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(200)
   @Post('logout')
   async logout(@Req() req: { user: { id: string } }): Promise<void> {
     return await this.authService.logout(req.user.id);
-  }
-
-  @Options('refresh')
-  @HttpCode(204)
-  async optionsRefresh() {
-    return {};
   }
 
   @UseGuards(AuthGuard('local'))
