@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -12,6 +17,7 @@ import { ProfileModule } from './profile/profile.module';
 import { RoleModule } from './role/role.module';
 import { RoleService } from './role/role.service';
 import { UserModule } from './user/user.module';
+import { AppMiddleware } from './common/middleware/app.middleware';
 
 @Module({
   imports: [
@@ -28,4 +34,11 @@ import { UserModule } from './user/user.module';
   providers: [PrismaService, RoleService, AppService],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(AppMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.ALL,
+    });
+  }
+}
