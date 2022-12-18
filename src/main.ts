@@ -5,17 +5,9 @@ import { AppModule } from './app.module';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 const PORT = process.env.PORT || 3000;
-const corsOptions: CorsOptions = {
-  allowedHeaders: '*',
-  maxAge: 60 * 3,
-  origin: '*',
-  preflightContinue: true,
-  methods: '*',
-  credentials: true,
-};
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors(corsOptions);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const config = new DocumentBuilder()
     .setTitle('BLOG API DOC')
