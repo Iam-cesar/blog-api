@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Body,
-  CacheInterceptor,
   Controller,
   Delete,
   Get,
@@ -14,7 +13,6 @@ import {
   Req,
   UnauthorizedException,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
@@ -63,7 +61,6 @@ export class PostController {
     return post;
   }
 
-  @UseInterceptors(CacheInterceptor)
   @Get()
   @HttpCode(200)
   async findAll(@Query() query?: FindAllQueryDto) {
