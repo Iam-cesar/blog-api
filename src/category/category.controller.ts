@@ -6,7 +6,6 @@ import {
   Get,
   HttpCode,
   NotFoundException,
-  Options,
   Param,
   Patch,
   Post,
@@ -47,7 +46,7 @@ export class CategoryController {
   ) {
     return await this.categoryService.findAll({
       skip: Number(query?.skip) || undefined,
-      take: Number(query?.skip) || undefined,
+      take: Number(query?.take) || undefined,
     });
   }
 
