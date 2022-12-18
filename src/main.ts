@@ -12,7 +12,7 @@ async function bootstrap() {
     origin: [process.env.CORS_SITE_DOMAIN, process.env.CORS_LOCAL_HOST],
     credentials: true,
     allowedHeaders: '*',
-    methods: ['GET, POST, PUT, DELETE, OPTIONS, PATCH'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   });
 
   const config = new DocumentBuilder()
