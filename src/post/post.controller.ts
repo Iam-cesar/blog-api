@@ -72,6 +72,20 @@ export class PostController {
     return post;
   }
 
+  @Get('by-author')
+  @UseGuards(AuthGuard('jwt'))
+  async findAllByAuthor(
+    @Req() req: { user: { id: string } },
+    @Query() query?: FindAllQueryDto,
+  ) {
+    const post = await this.postService.findAllByAuthor(req.user.id, {
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.take) || undefined,
+    });
+
+    return post;
+  }
+
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {

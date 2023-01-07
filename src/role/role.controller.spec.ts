@@ -119,12 +119,20 @@ describe('RoleController', () => {
       expect(roleController.removeUser(MOCK_ID, null)).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.ID_NOT_PROVIDED),
       );
+
+      expect(roleController.removeUser(null, MOCK_ID)).rejects.toStrictEqual(
+        new BadRequestException(MessageHelper.ID_NOT_PROVIDED),
+      );
     });
     it('should to throw an exception if role id not provided', () => {
       roleServiceMock.addUser.mockRejectedValueOnce(
         new BadRequestException(MessageHelper.ID_NOT_PROVIDED),
       );
       expect(roleController.addUser(null, MOCK_ID)).rejects.toStrictEqual(
+        new BadRequestException(MessageHelper.ID_NOT_PROVIDED),
+      );
+
+      expect(roleController.addUser(MOCK_ID, null)).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.ID_NOT_PROVIDED),
       );
     });

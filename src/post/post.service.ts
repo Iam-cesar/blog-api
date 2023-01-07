@@ -25,9 +25,45 @@ export class PostService {
     return db.post.findMany({
       ...params,
       select: {
+        _count: true,
         id: true,
         title: true,
         createdAt: true,
+        category: { select: { name: true } },
+        author: { select: { id: true, firstName: true, lastName: true } },
+      },
+    });
+  }
+
+  findAllByAuthor(
+    authorId: string,
+    params?: {
+      skip?: number;
+      take?: number;
+      orderBy?: Prisma.PostOrderByWithRelationInput;
+    },
+  ): Promise<PostEntity[]> {
+    console.log('authorId', authorId);
+    return db.post.findMany({
+      ...params,
+      where: { authorId },
+      select: {
+        id: true,
+        title: true,
+        category: { select: { name: true } },
+        published: true,
+        updatedAt: true,
+        deleted: true,
+        createdAt: true,
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            Role: { select: { name: true } },
+          },
+        },
+        _count: true,
       },
     });
   }

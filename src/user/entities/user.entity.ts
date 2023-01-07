@@ -1,4 +1,6 @@
+import { Prisma } from '@prisma/client';
 export class UserEntity {
+  _count?: Prisma.UserCountOutputType;
   id?: string;
   firstName?: string;
   lastName?: string;
