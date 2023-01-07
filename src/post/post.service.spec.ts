@@ -4,6 +4,7 @@ import { UserService } from '../user/user.service';
 import { PostEntity } from './entities/post.entity';
 import {
   MOCK_CREATE_POST,
+  MOCK_FIND_ALL_BY_AUTHOR_POST_RESPONSE,
   MOCK_FIND_ALL_POST_RESPONSE,
   MOCK_FIND_ONE_POST_RESPONSE,
   MOCK_UPDATE_POST,
@@ -24,6 +25,9 @@ describe('PostService', () => {
           useValue: {
             create: jest.fn().mockResolvedValue({ id: '1' }),
             findAll: jest.fn().mockResolvedValue(MOCK_FIND_ALL_POST_RESPONSE),
+            findAllByAuthor: jest
+              .fn()
+              .mockResolvedValue(MOCK_FIND_ALL_BY_AUTHOR_POST_RESPONSE),
             findOne: jest
               .fn()
               .mockResolvedValue(new PostEntity(MOCK_FIND_ONE_POST_RESPONSE)),
@@ -70,6 +74,18 @@ describe('PostService', () => {
     it('should to throw an exception', () => {
       jest.spyOn(postService, 'findAll').mockRejectedValueOnce(new Error());
       expect(postService.findAll(null)).rejects.toThrowError();
+    });
+  });
+  describe('FIND_ALL_BY_AUTHOR', () => {
+    it('should be able to return an array of post entity', async () => {
+      const post = await postService.findAllByAuthor(MOCK_ID);
+      expect(post).toStrictEqual(MOCK_FIND_ALL_BY_AUTHOR_POST_RESPONSE);
+    });
+    it('should to throw an exception', () => {
+      jest
+        .spyOn(postService, 'findAllByAuthor')
+        .mockRejectedValueOnce(new Error());
+      expect(postService.findAllByAuthor(null)).rejects.toThrowError();
     });
   });
   describe('FIND_ONE', () => {

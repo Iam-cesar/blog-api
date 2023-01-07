@@ -12,6 +12,7 @@ import { UserService } from '../user/user.service';
 import { PostEntity } from './entities/post.entity';
 import {
   MOCK_CREATE_POST,
+  MOCK_FIND_ALL_BY_AUTHOR_POST_RESPONSE,
   MOCK_FIND_ALL_POST_RESPONSE,
   MOCK_FIND_ONE_POST_RESPONSE,
   MOCK_UPDATE_POST,
@@ -29,6 +30,9 @@ describe('PostController', () => {
   const postServiceMock = {
     create: jest.fn().mockReturnValue({ id: MOCK_ID }),
     findAll: jest.fn().mockReturnValue(MOCK_FIND_ALL_POST_RESPONSE),
+    findAllByAuthor: jest
+      .fn()
+      .mockReturnValue(MOCK_FIND_ALL_BY_AUTHOR_POST_RESPONSE),
     findOne: jest
       .fn()
       .mockReturnValue(new PostEntity(MOCK_FIND_ONE_POST_RESPONSE)),
@@ -74,7 +78,7 @@ describe('PostController', () => {
     expect(userService).toBeDefined();
     expect(categoryService).toBeDefined();
   });
-  // { user: { id: MOCK_ID + 1 } },
+
   describe('CREATE', () => {
     it('should be able to create a post', async () => {
       const user = await userService.findOne({ id: MOCK_ID });
@@ -145,6 +149,26 @@ describe('PostController', () => {
     it('should to throw an exception', () => {
       jest.spyOn(postController, 'findAll').mockRejectedValueOnce(new Error());
       expect(postController.findAll(null)).rejects.toThrowError();
+    });
+  });
+  describe('FIND_ALL_BY_AUTHOR', () => {
+    it('should be able to return an array of post entity', async () => {
+      const post = await postController.findAllByAuthor({
+        user: { id: MOCK_ID },
+      });
+      expect(post).toStrictEqual(MOCK_FIND_ALL_BY_AUTHOR_POST_RESPONSE);
+    });
+    it('should be able to return an array of post entity with params', async () => {
+      const post = await postController.findAllByAuthor({
+        user: { id: MOCK_ID },
+      });
+      expect(post).toStrictEqual(MOCK_FIND_ALL_BY_AUTHOR_POST_RESPONSE);
+    });
+    it('should to throw an exception', () => {
+      jest
+        .spyOn(postController, 'findAllByAuthor')
+        .mockRejectedValueOnce(new Error());
+      expect(postController.findAllByAuthor(null)).rejects.toThrowError();
     });
   });
   describe('FIND_ONE', () => {

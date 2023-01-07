@@ -16,6 +16,53 @@ export const MOCK_FIND_ALL_POST_RESPONSE = [
   },
 ];
 
+export const MOCK_FIND_ALL_BY_AUTHOR_POST_RESPONSE = [
+  {
+    id: '1',
+    title: 'Mock post title',
+    category: [],
+    published: false,
+    updatedAt: null,
+    deleted: false,
+    createdAt: new Date('2023-01-07T19:44:13.661Z'),
+    author: {
+      id: '1',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      Role: {
+        name: 'mock',
+      },
+    },
+    _count: {
+      comment: 0,
+      like: 0,
+      category: 0,
+    },
+  },
+  {
+    id: '2',
+    title: 'Mock post title',
+    category: [],
+    published: false,
+    updatedAt: null,
+    deleted: false,
+    createdAt: new Date('2023-01-07T19:44:13.661Z'),
+    author: {
+      id: '1',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      Role: {
+        name: 'mock',
+      },
+    },
+    _count: {
+      comment: 0,
+      like: 0,
+      category: 0,
+    },
+  },
+];
+
 export const MOCK_FIND_ONE_POST_RESPONSE = {
   id: '1',
   title: 'Mock post title',
