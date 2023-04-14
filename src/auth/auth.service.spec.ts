@@ -1,6 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { FIND_ONE_USER_MOCK_RESPONSE } from '../user/mock/userService.mock';
+import { MOCK_FIND_ONE_USER_RESPONSE } from '../user/mock/userService.mock';
 import { UserService } from '../user/user.service';
 import { UserEntity } from './../user/entities/user.entity';
 import { MOCK_CREATE_USER } from './../user/mock/userController.mock';
@@ -97,20 +97,20 @@ describe('AuthService', () => {
   });
   describe('LOGOUT', () => {
     it('should create a user and return tokens', async () => {
-      const logout = await authService.logout(FIND_ONE_USER_MOCK_RESPONSE.id);
+      const logout = await authService.logout(MOCK_FIND_ONE_USER_RESPONSE.id);
       expect(logout).toStrictEqual({ accessToken, refreshToken });
     });
     it('should to throw an exception', () => {
       authServiceMock.logout.mockRejectedValueOnce(new Error());
       expect(
-        authService.logout(FIND_ONE_USER_MOCK_RESPONSE.id),
+        authService.logout(MOCK_FIND_ONE_USER_RESPONSE.id),
       ).rejects.toThrowError();
     });
   });
   describe('REFRESH_TOKEN', () => {
     it('should refresh user access token', async () => {
       const refreshedToken = await authService.refreshToken({
-        id: FIND_ONE_USER_MOCK_RESPONSE.id,
+        id: MOCK_FIND_ONE_USER_RESPONSE.id,
         requestRefreshToken: accessToken,
       });
       expect(refreshedToken).toStrictEqual({ accessToken, refreshToken });
@@ -119,7 +119,7 @@ describe('AuthService', () => {
       authServiceMock.refreshToken.mockRejectedValueOnce(new Error());
       expect(
         authService.refreshToken({
-          id: FIND_ONE_USER_MOCK_RESPONSE.id,
+          id: MOCK_FIND_ONE_USER_RESPONSE.id,
           requestRefreshToken: accessToken,
         }),
       ).rejects.toThrowError();

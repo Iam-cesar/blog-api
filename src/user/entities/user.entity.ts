@@ -1,4 +1,8 @@
 import { Prisma } from '@prisma/client';
+import { LikeEntity } from '../..//like/entities/like.entity';
+import { ProfileEntity } from '../..//profile/entities/profile.entity';
+import { RoleEntity } from '../..//role/entities/role.entity';
+import { PostEntity } from '../../post/entities/post.entity';
 export class UserEntity {
   _count?: Prisma.UserCountOutputType;
   id?: string;
@@ -11,10 +15,10 @@ export class UserEntity {
   createdAt?: string | Date;
   updatedAt?: string | Date;
   hashedRefreshToken?: string;
-  role?: string;
-  like?: object | null;
-  post?: object | null;
-  profile?: object | null;
+  role?: Partial<RoleEntity>;
+  like?: Partial<LikeEntity[]>;
+  post?: Partial<PostEntity[]>;
+  profile?: Partial<ProfileEntity>;
 
   constructor(params?: UserEntity) {
     this.id = params.id;

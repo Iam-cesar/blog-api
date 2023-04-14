@@ -1,9 +1,9 @@
-import { PostEntity } from 'src/post/entities/post.entity';
+import { PostEntity } from '../../post/entities/post.entity';
 
 export class CategoryEntity {
   id?: string;
   name?: string;
-  post?: PostEntity;
+  post?: Partial<PostEntity>;
   createdAt?: Date;
   updatedAt?: Date;
 

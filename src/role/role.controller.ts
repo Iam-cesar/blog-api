@@ -29,30 +29,50 @@ export class RoleController {
   @Post()
   @HttpCode(201)
   async create(@Body() data: CreateRoleDto) {
-    const role = await this.roleService.create(data);
+    try {
+      const roleByName = await this.roleService.findOneByName({
+        name: data.name,
+      });
 
-    if (!role) throw new BadRequestException(MessageHelper.ROLE_BAD_REQUEST);
+      if (roleByName)
+        throw new BadRequestException(MessageHelper.ROLE_ALREADY_EXISTS);
 
-    return role;
+      const permitions = data.permitions || ['read'];
+
+      const createRole = { ...data, permitions };
+
+      const role = await this.roleService.create({
+        ...createRole,
+      });
+
+      if (!role) throw new BadRequestException(MessageHelper.ROLE_BAD_REQUEST);
+
+      return role;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':roleId/add-user/:userId')
   @HttpCode(201)
   async addUser(@Param('roleId') id: string, @Param('userId') userId: string) {
-    if (!id) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
+    try {
+      if (!id) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
 
-    if (!userId) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
+      if (!userId) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
 
-    return await this.roleService.update({
-      where: {
-        id,
-        name: undefined,
-      },
-      data: {
-        user: { connect: { id: userId } },
-      },
-    });
+      return await this.roleService.update({
+        where: {
+          id,
+        },
+        data: {
+          user: { connect: { id: userId } },
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -62,19 +82,22 @@ export class RoleController {
     @Param('roleId') id: string,
     @Param('userId') userId: string,
   ) {
-    if (!id) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
+    try {
+      if (!id) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
 
-    if (!userId) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
+      if (!userId) throw new BadRequestException(MessageHelper.ID_NOT_PROVIDED);
 
-    return await this.roleService.update({
-      where: {
-        id,
-        name: undefined,
-      },
-      data: {
-        user: { disconnect: { id: userId } },
-      },
-    });
+      return await this.roleService.update({
+        where: {
+          id,
+        },
+        data: {
+          user: { connect: { id } },
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @Get()
@@ -83,44 +106,65 @@ export class RoleController {
     @Query()
     query?: FindAllQueryDto,
   ) {
-    return await this.roleService.findAll({
-      skip: Number(query?.skip) || undefined,
-      take: Number(query?.take) || undefined,
-    });
+    try {
+      return await this.roleService.findAll({
+        skip: Number(query?.skip) || undefined,
+        take: Number(query?.take) || undefined,
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
-    const role = await this.roleService.findOne({ id });
+    try {
+      const role = await this.roleService.findOne({ id });
 
-    if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
+      if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
 
-    return role;
+      return role;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() data: UpdateRoleDto) {
-    const role = await this.roleService.findOne({ id });
+    try {
+      const role = await this.roleService.findOne({ id });
 
-    if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
+      if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
 
-    return await this.roleService.update({
-      where: { id },
-      data,
-    });
+      const updatedPermitions = new Set(
+        [...data.permitions, role.permitions].flat(),
+      );
+      const permitions = Array.from(updatedPermitions);
+
+      return await this.roleService.update({
+        where: { id },
+        data: { ...data, permitions },
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {
-    const role = await this.roleService.findOne({ id });
+    try {
+      const role = await this.roleService.findOne({ id });
 
-    if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
+      if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
 
-    return await this.roleService.remove({ id });
+      return await this.roleService.remove({ id });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }

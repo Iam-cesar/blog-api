@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import {
   FIND_ALL_USER_MOCK_RESPONSE,
-  FIND_ONE_USER_MOCK_RESPONSE,
   MOCK_CREATE_USER,
   MOCK_CREATE_USER_RESPONSE,
+  MOCK_FIND_ONE_USER_RESPONSE,
   MOCK_UPDATE_USER,
 } from './mock/userService.mock';
 import { UserService } from './user.service';
@@ -18,7 +18,7 @@ describe('UserService', () => {
     create: jest.fn().mockResolvedValue({ id: MOCK_ID }),
     findOneWithPassword: jest.fn().mockResolvedValue({ id: MOCK_ID }),
     findAll: jest.fn().mockResolvedValue(FIND_ALL_USER_MOCK_RESPONSE),
-    findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
+    findOne: jest.fn().mockResolvedValue(MOCK_FIND_ONE_USER_RESPONSE),
     update: jest.fn().mockResolvedValue({ id: MOCK_ID }),
     softRemove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
     renew: jest.fn().mockResolvedValue({ id: MOCK_ID }),
@@ -57,7 +57,7 @@ describe('UserService', () => {
   describe('FIND ONE WITH PASSWORD', () => {
     it('should be able to find with sensitive information', async () => {
       const user = await userService.findOneWithPassword({
-        email: FIND_ONE_USER_MOCK_RESPONSE.email,
+        email: MOCK_FIND_ONE_USER_RESPONSE.email,
       });
       expect(user.id).toBe(MOCK_ID);
     });
@@ -72,7 +72,7 @@ describe('UserService', () => {
   describe('FIND ONE USER', () => {
     it('should be able to find a user', async () => {
       const user = await userService.findOne({
-        email: FIND_ONE_USER_MOCK_RESPONSE.email,
+        email: MOCK_FIND_ONE_USER_RESPONSE.email,
       });
       expect(user.id).toBe(MOCK_ID);
     });
@@ -80,7 +80,7 @@ describe('UserService', () => {
     it('should to throw an exception', () => {
       userServiceMock.findOne.mockRejectedValueOnce(new Error());
       expect(
-        userService.findOne({ email: FIND_ONE_USER_MOCK_RESPONSE.email }),
+        userService.findOne({ email: MOCK_FIND_ONE_USER_RESPONSE.email }),
       ).rejects.toThrowError();
     });
   });

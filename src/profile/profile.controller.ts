@@ -6,7 +6,6 @@ import {
   Get,
   HttpCode,
   NotFoundException,
-  Options,
   Param,
   Patch,
   Post,
@@ -37,29 +36,38 @@ export class ProfileController {
     @Body() data: CreateProfileDto,
     @Req() req: { user: { id: string } },
   ) {
-    const user = await this.userService.findOne({ id: req.user.id });
+    try {
+      const user = await this.userService.findOne({ id: req.user.id });
 
-    if (!user) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
+      if (!user) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
 
-    const profile = await this.profileService.create({
-      ...data,
-      user: { connect: { id: user.id } },
-    });
+      const profile = await this.profileService.create({
+        ...data,
+        user: { connect: { id: user.id } },
+      });
 
-    if (!profile)
-      throw new BadRequestException(MessageHelper.PROFILE_BAD_REQUEST);
+      if (!profile)
+        throw new BadRequestException(MessageHelper.PROFILE_BAD_REQUEST);
 
-    return profile;
+      return profile;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
-    const profile = await this.profileService.findOne({ id });
+    try {
+      const profile = await this.profileService.findOne({ id });
 
-    if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
+      if (!profile)
+        throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
 
-    return profile;
+      return profile;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -70,28 +78,38 @@ export class ProfileController {
     @Body() data: UpdateProfileDto,
     @Req() req: { user: { id: string } },
   ) {
-    const profile = await this.profileService.findOne({ id });
+    try {
+      const profile = await this.profileService.findOne({ id });
 
-    if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
+      if (!profile)
+        throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
 
-    exceptionIfProfileDontBelongsToUser(req.user, profile);
+      exceptionIfProfileDontBelongsToUser({ user: req.user, profile });
 
-    return await this.profileService.update({
-      where: { id },
-      data,
-    });
+      return await this.profileService.update({
+        where: { id },
+        data,
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {
-    const profile = await this.profileService.findOne({ id });
+    try {
+      const profile = await this.profileService.findOne({ id });
 
-    if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
+      if (!profile)
+        throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
 
-    exceptionIfProfileDontBelongsToUser(req.user, profile);
+      exceptionIfProfileDontBelongsToUser({ user: req.user, profile });
 
-    return await this.profileService.remove({ id });
+      return await this.profileService.remove({ id });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }
