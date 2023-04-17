@@ -87,5 +87,5 @@ export const MOCK_POST_WITH_LIKE = {
 
 export const MOCK_CREATE_LIKE = {
   user: { connect: { id: '1' } },
-  post: '1',
+  post: { connect: { id: '1' } },
 };

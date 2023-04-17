@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { updatedAt } from '../common/helpers/date.helper';
 import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
 import { MessageHelper } from '../common/helpers/message.helper';
 import { CategoryService } from './category.service';
@@ -72,7 +71,7 @@ export class CategoryController {
 
     return await this.categoryService.update({
       where: { id },
-      data: { ...data, updatedAt },
+      data,
     });
   }
 

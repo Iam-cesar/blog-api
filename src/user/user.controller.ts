@@ -18,7 +18,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthHelper } from '../auth/auth.helper';
 import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
 import { MessageHelper } from '../common/helpers/message.helper';
-import { exceptionIfUserDontBelongsToUser } from '../common/utils/userPermissionToContent';
+import { exceptionIfContentDontBelongsToUser } from '../common/utils/userPermissionToContent';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -80,7 +80,7 @@ export class UserController {
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
-    exceptionIfUserDontBelongsToUser(req.user, user);
+    exceptionIfContentDontBelongsToUser({ user: req.user, content: user });
 
     return await this.userService.update({
       where: { id },
@@ -118,7 +118,7 @@ export class UserController {
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
-    exceptionIfUserDontBelongsToUser(req.user, user);
+    exceptionIfContentDontBelongsToUser({ user: req.user, content: user });
 
     return await this.userService.remove({ id });
   }

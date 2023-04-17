@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// "data" in signin route is declared for documentation /doc
 import {
   Body,
   Controller,
@@ -26,6 +24,7 @@ export class AuthController {
     @Req() req: { user: { id: string } },
   ): Promise<Partial<Tokens>> {
     const { accessToken } = await this.authService.signin(req.user);
+
     return { accessToken };
   }
 
@@ -33,6 +32,7 @@ export class AuthController {
   @HttpCode(201)
   async signupLocal(@Body() data: CreateAuthDto): Promise<Partial<Tokens>> {
     const { accessToken } = await this.authService.signup(data);
+
     return { accessToken };
   }
 

@@ -29,7 +29,15 @@ export class RoleController {
   @Post()
   @HttpCode(201)
   async create(@Body() data: CreateRoleDto) {
-    const role = await this.roleService.create(data);
+    await this.findOneByName(data.name);
+
+    const permitions = data.permitions || ['read'];
+
+    const createRole = { ...data, permitions };
+
+    const role = await this.roleService.create({
+      ...createRole,
+    });
 
     if (!role) throw new BadRequestException(MessageHelper.ROLE_BAD_REQUEST);
 
@@ -47,7 +55,6 @@ export class RoleController {
     return await this.roleService.update({
       where: {
         id,
-        name: undefined,
       },
       data: {
         user: { connect: { id: userId } },
@@ -69,10 +76,9 @@ export class RoleController {
     return await this.roleService.update({
       where: {
         id,
-        name: undefined,
       },
       data: {
-        user: { disconnect: { id: userId } },
+        user: { connect: { id } },
       },
     });
   }
@@ -99,6 +105,13 @@ export class RoleController {
     return role;
   }
 
+  @Get(':id')
+  @HttpCode(200)
+  async findOneByName(@Param('name') name: string): Promise<void> {
+    const role = await this.roleService.findOneByName({ name });
+    if (role) throw new BadRequestException(MessageHelper.ROLE_ALREADY_EXISTS);
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
@@ -107,9 +120,14 @@ export class RoleController {
 
     if (!role) throw new NotFoundException(MessageHelper.ROLE_NOT_FOUND);
 
+    const updatedPermitions = new Set(
+      [...data.permitions, role.permitions].flat(),
+    );
+    const permitions = Array.from(updatedPermitions);
+
     return await this.roleService.update({
       where: { id },
-      data,
+      data: { ...data, permitions },
     });
   }
 

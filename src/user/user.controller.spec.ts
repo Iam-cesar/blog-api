@@ -8,10 +8,10 @@ import { AuthHelper } from '../auth/auth.helper';
 import { MessageHelper } from '../common/helpers/message.helper';
 import { UserEntity } from './entities/user.entity';
 import {
-  FIND_ALL_USER_MOCK_RESPONSE,
-  FIND_ONE_USER_MOCK_RESPONSE,
   MOCK_CREATE_USER,
   MOCK_CREATE_USER_RESPONSE,
+  MOCK_FIND_ALL_USER_RESPONSE,
+  MOCK_FIND_ONE_USER_RESPONSE,
   MOCK_UPDATE_USER,
 } from './mock/userController.mock';
 import { UserController } from './user.controller';
@@ -27,8 +27,8 @@ describe('UserController', () => {
       .fn()
       .mockResolvedValue(new UserEntity(MOCK_CREATE_USER_RESPONSE)),
     findOneWithPassword: jest.fn().mockResolvedValue({ id: MOCK_ID }),
-    findAll: jest.fn().mockResolvedValue(FIND_ALL_USER_MOCK_RESPONSE),
-    findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
+    findAll: jest.fn().mockResolvedValue(MOCK_FIND_ALL_USER_RESPONSE),
+    findOne: jest.fn().mockResolvedValue(MOCK_FIND_ONE_USER_RESPONSE),
     update: jest.fn().mockResolvedValue({ id: MOCK_ID }),
     softRemove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
     renew: jest.fn().mockResolvedValue({ id: MOCK_ID }),

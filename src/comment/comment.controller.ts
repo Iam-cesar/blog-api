@@ -25,7 +25,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 @Controller('comment')
 export class CommentController {
   constructor(
-    private readonly CommentService: CommentService,
+    private readonly commentService: CommentService,
     private readonly userService: UserService,
     private readonly postService: PostService,
   ) {}
@@ -48,7 +48,7 @@ export class CommentController {
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-    const comment = await this.CommentService.create({
+    const comment = await this.commentService.create({
       ...data,
       user: { connect: { id: user.id } },
       post: { connect: { id: post.id } },
@@ -63,7 +63,7 @@ export class CommentController {
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
-    const comment = await this.CommentService.findOne({ id });
+    const comment = await this.commentService.findOne({ id });
 
     if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
 
@@ -74,11 +74,11 @@ export class CommentController {
   @Patch(':id')
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() data: UpdateCommentDto) {
-    const comment = await this.CommentService.findOne({ id });
+    const comment = await this.commentService.findOne({ id });
 
     if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
 
-    return await this.CommentService.update({
+    return await this.commentService.update({
       where: { id },
       data,
     });
@@ -88,10 +88,10 @@ export class CommentController {
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {
-    const comment = await this.CommentService.findOne({ id });
+    const comment = await this.commentService.findOne({ id });
 
     if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
 
-    return await this.CommentService.remove({ id });
+    return await this.commentService.remove({ id });
   }
 }

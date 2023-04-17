@@ -5,11 +5,11 @@ import { Prisma } from '@prisma/client';
 export class CreateLikeDto {
   @ApiPropertyOptional()
   @IsOptional()
-  comment?: string;
+  comment?: Prisma.CommentCreateNestedOneWithoutLikeInput;
 
   @ApiPropertyOptional()
   @IsOptional()
-  post?: string;
+  post?: Prisma.PostCreateNestedOneWithoutLikeInput;
 
   @IsEmpty()
   user:

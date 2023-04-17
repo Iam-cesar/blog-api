@@ -1,3 +1,6 @@
+import { PostEntity } from '../../post/entities/post.entity';
+import { MOCK_CREATE_POST } from '../../post/mock/postController.mock';
+
 export const MOCK_CREATE_USER_RESPONSE = {
   id: '1',
   firstName: 'mock_first_name',
@@ -7,7 +10,7 @@ export const MOCK_CREATE_USER_RESPONSE = {
   profile: {
     bio: 'This is my fabulous biography',
   },
-  post: [],
+  post: [new PostEntity(MOCK_CREATE_POST)],
   role: null,
   updatedAt: '',
   createdAt: '2022-10-10T22:26:05.108Z',
@@ -51,7 +54,7 @@ export const FIND_ALL_USER_MOCK_RESPONSE = [
   },
 ];
 
-export const FIND_ONE_USER_MOCK_RESPONSE = {
+export const MOCK_FIND_ONE_USER_RESPONSE = {
   id: '1',
   firstName: 'mock_first_name',
   lastName: 'mock_last_name',
@@ -60,7 +63,7 @@ export const FIND_ONE_USER_MOCK_RESPONSE = {
   profile: {
     bio: 'This is my fabulous biography',
   },
-  post: [],
+  post: [new PostEntity(MOCK_CREATE_POST)],
   role: null,
   updatedAt: '2022-10-10T22:36:33.109Z',
   createdAt: '2022-10-10T22:26:05.108Z',

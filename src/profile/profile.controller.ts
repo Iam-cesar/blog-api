@@ -6,7 +6,6 @@ import {
   Get,
   HttpCode,
   NotFoundException,
-  Options,
   Param,
   Patch,
   Post,
@@ -74,7 +73,7 @@ export class ProfileController {
 
     if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
 
-    exceptionIfProfileDontBelongsToUser(req.user, profile);
+    exceptionIfProfileDontBelongsToUser({ user: req.user, profile });
 
     return await this.profileService.update({
       where: { id },
@@ -90,7 +89,7 @@ export class ProfileController {
 
     if (!profile) throw new NotFoundException(MessageHelper.PROFILE_NOT_FOUND);
 
-    exceptionIfProfileDontBelongsToUser(req.user, profile);
+    exceptionIfProfileDontBelongsToUser({ user: req.user, profile });
 
     return await this.profileService.remove({ id });
   }

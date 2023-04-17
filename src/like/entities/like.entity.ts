@@ -1,4 +1,4 @@
-import { UserEntity } from './../../user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 export class LikeEntity {
   id?: string;
   commentId?: string;
@@ -6,7 +6,7 @@ export class LikeEntity {
   userId?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  user?: UserEntity;
+  user?: Partial<UserEntity>;
 
   constructor(params?: LikeEntity) {
     this.id = params.id;

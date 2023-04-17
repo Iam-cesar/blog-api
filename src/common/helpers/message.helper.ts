@@ -1,4 +1,5 @@
 export const MessageHelper = {
+  DEFAULT_ERROR: 'Error handling this resource',
   PASSWORD_VALID:
     'The password must contain uppercase letters, numbers and special characters',
   PASSWORD_OR_EMAIL_INVALID: 'Email or password are invalid!',
@@ -19,6 +20,7 @@ export const MessageHelper = {
 
   ROLE_NOT_FOUND: 'Role not found',
   ROLE_BAD_REQUEST: 'Something went wrong in roles',
+  ROLE_ALREADY_EXISTS: 'Role already exists',
 
   PROFILE_NOT_FOUND: 'Profile not found',
   PROFILE_BAD_REQUEST: 'Something went wrong in profiles',

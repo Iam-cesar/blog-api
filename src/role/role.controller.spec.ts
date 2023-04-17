@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessageHelper } from '../common/helpers/message.helper';
-import { FIND_ONE_USER_MOCK_RESPONSE } from '../user/mock/userService.mock';
+import { MOCK_FIND_ONE_USER_RESPONSE } from '../user/mock/userService.mock';
 import { UserService } from '../user/user.service';
 import { RoleEntity } from './entities/role.entity';
 import {
@@ -26,12 +26,13 @@ describe('RoleController', () => {
     findOne: jest
       .fn()
       .mockResolvedValue(new RoleEntity(MOCK_FIND_ONE_ROLE_RESPONSE)),
+    findOneByName: jest.fn().mockReturnValue(null),
     update: jest.fn().mockResolvedValue({ id: '1' }),
     remove: jest.fn().mockResolvedValue({ id: '1' }),
   };
 
   const userServiceMock = {
-    findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
+    findOne: jest.fn().mockResolvedValue(MOCK_FIND_ONE_USER_RESPONSE),
   };
 
   beforeEach(async () => {
@@ -65,7 +66,9 @@ describe('RoleController', () => {
     });
     it('should to throw an exception', () => {
       roleServiceMock.create.mockResolvedValueOnce(null);
-      expect(roleController.create(MOCK_CREATE_ROLE)).rejects.toStrictEqual(
+      expect(
+        roleController.create({ ...MOCK_CREATE_ROLE, name: 'djsalfja' }),
+      ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.ROLE_BAD_REQUEST),
       );
     });
@@ -73,10 +76,10 @@ describe('RoleController', () => {
   describe('ADD_USER', () => {
     it('should be able to add a user to role', async () => {
       const user = await userServiceMock.findOne(
-        FIND_ONE_USER_MOCK_RESPONSE.id,
+        MOCK_FIND_ONE_USER_RESPONSE.id,
       );
       const role = await roleServiceMock.findOne(
-        FIND_ONE_USER_MOCK_RESPONSE.id,
+        MOCK_FIND_ONE_USER_RESPONSE.id,
       );
       const roleWithUser = await roleController.addUser(role.id, user.id);
 
@@ -103,10 +106,10 @@ describe('RoleController', () => {
   describe('REMOVE_USER', () => {
     it('should be able to remove a user to role', async () => {
       const user = await userServiceMock.findOne(
-        FIND_ONE_USER_MOCK_RESPONSE.id,
+        MOCK_FIND_ONE_USER_RESPONSE.id,
       );
       const role = await roleServiceMock.findOne(
-        FIND_ONE_USER_MOCK_RESPONSE.id,
+        MOCK_FIND_ONE_USER_RESPONSE.id,
       );
       const roleWithUser = await roleController.removeUser(role.id, user.id);
 

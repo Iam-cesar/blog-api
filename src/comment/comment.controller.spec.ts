@@ -7,7 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MessageHelper } from '../common/helpers/message.helper';
 import { MOCK_FIND_ONE_POST_RESPONSE } from '../post/mock/postService.mock';
 import { PostService } from '../post/post.service';
-import { FIND_ONE_USER_MOCK_RESPONSE } from '../user/mock/userService.mock';
+import { MOCK_FIND_ONE_USER_RESPONSE } from '../user/mock/userService.mock';
 import { UserService } from '../user/user.service';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
@@ -24,7 +24,7 @@ describe('CommentController', () => {
   const MOCK_EMAIL = 'mock@email.com';
 
   const userServiceMock = {
-    findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
+    findOne: jest.fn().mockResolvedValue(MOCK_FIND_ONE_USER_RESPONSE),
   };
   const commentServiceMock = {
     create: jest.fn().mockResolvedValue({ id: MOCK_ID }),

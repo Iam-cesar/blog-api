@@ -17,7 +17,6 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { CategoryService } from '../category/category.service';
-import { updatedAt } from '../common/helpers/date.helper';
 import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
 import { MessageHelper } from '../common/helpers/message.helper';
 import { exceptionIfPostDontBelongsToUser } from '../common/utils/userPermissionToContent';
@@ -108,7 +107,7 @@ export class PostController {
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-    exceptionIfPostDontBelongsToUser(req.user, post);
+    exceptionIfPostDontBelongsToUser({ user: req.user, post });
 
     const category = await this.categoryService.findOne({
       id: categoryId,
@@ -119,7 +118,7 @@ export class PostController {
 
     return await this.postService.update({
       where: { id },
-      data: { updatedAt, category: { connect: { id: category.id } } },
+      data: { category: { connect: { id: category.id } } },
     });
   }
 
@@ -135,14 +134,11 @@ export class PostController {
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-    exceptionIfPostDontBelongsToUser(req.user, post);
+    exceptionIfPostDontBelongsToUser({ user: req.user, post });
 
     return await this.postService.update({
       where: { id },
-      data: {
-        ...data,
-        updatedAt,
-      },
+      data,
     });
   }
 
@@ -154,7 +150,7 @@ export class PostController {
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-    exceptionIfPostDontBelongsToUser(req.user, post);
+    exceptionIfPostDontBelongsToUser({ user: req.user, post });
 
     return await this.postService.remove({ id });
   }
@@ -172,7 +168,7 @@ export class PostController {
 
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-    exceptionIfPostDontBelongsToUser(req.user, post);
+    exceptionIfPostDontBelongsToUser({ user: req.user, post });
 
     const category = await this.categoryService.findOne({
       id: categoryId,
@@ -183,7 +179,7 @@ export class PostController {
 
     return await this.postService.update({
       where: { id },
-      data: { updatedAt, category: { disconnect: { id: categoryId } } },
+      data: { category: { disconnect: { id: categoryId } } },
     });
   }
 }

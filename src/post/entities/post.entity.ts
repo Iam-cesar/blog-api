@@ -1,18 +1,16 @@
+import { CategoryEntity } from 'src/category/entities/category.entity';
 import { LikeEntity } from 'src/like/entities/like.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 export class PostEntity {
   id?: string;
   title?: string;
   content?: string;
   published?: boolean;
-  category?: { id?: string; name?: string }[];
+  category?: Partial<CategoryEntity[]>;
   authorId?: string;
-  author?: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-  like?: LikeEntity[];
+  author?: Partial<UserEntity>;
+  like?: Partial<LikeEntity[]>;
   deleted?: boolean;
   deletedAt?: Date;
   createdAt?: Date;

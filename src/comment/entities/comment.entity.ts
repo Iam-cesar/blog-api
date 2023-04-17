@@ -4,7 +4,7 @@ export class CommentEntity {
   id?: string;
   content?: string;
   postId?: string;
-  like?: LikeEntity[];
+  like?: Partial<LikeEntity[]>;
   createdAt?: Date;
   updatedAt?: Date;
 

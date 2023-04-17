@@ -1,56 +1,35 @@
+import { MOCK_CREATE_USER } from '../../user/mock/userService.mock';
+
+import { UserEntity } from '../../user/entities/user.entity';
+
 export const MOCK_CREATE_ROLE = {
   name: 'mock role',
-  canCreatePost: false,
-  canUpdatePost: false,
-  canDeletePost: false,
-  canSoftDeletePost: false,
-  canCreateUser: false,
-  canUpdateUser: false,
-  canDeleteUser: false,
-  canSoftDeleteUser: false,
-  canLikeUser: false,
-  canLikePost: false,
+  permitions: [],
 };
 
 export const MOCK_UPDATE_ROLE = {
   name: 'mock role updated',
-  canCreatePost: true,
-  canUpdatePost: true,
-  canDeletePost: true,
-  canSoftDeletePost: true,
-  canCreateUser: true,
-  canUpdateUser: true,
-  canDeleteUser: true,
-  canSoftDeleteUser: true,
-  canLikeUser: true,
-  canLikePost: true,
+  permitions: [],
 };
 
 export const MOCK_FIND_ONE_ROLE_RESPONSE = {
   id: '1',
   name: 'mock role',
-  canCreatePost: false,
-  canCreateUser: false,
-  canDeletePost: false,
-  canDeleteUser: false,
-  canLikePost: false,
-  canLikeUser: false,
-  canSoftDeletePost: false,
-  canSoftDeleteUser: false,
-  canUpdatePost: false,
-  canUpdateUser: false,
+  permitions: [],
   createdAt: '2022-10-16T13:42:52.937Z',
   updatedAt: null,
-  user: [],
+  user: new UserEntity(MOCK_CREATE_USER),
 };
 
 export const MOCK_FIND_ALL_ROLE_RESPONSE = [
   {
     id: '1',
     name: 'mock role',
+    permitions: [],
   },
   {
     id: 2,
     name: 'mock role 2',
+    permitions: [],
   },
 ];

@@ -55,6 +55,7 @@ describe('RoleService', () => {
       expect(roles[0]).toStrictEqual({
         id: '1',
         name: 'mock role',
+        permitions: [],
       });
     });
 
@@ -65,6 +66,7 @@ describe('RoleService', () => {
       expect(roles[0]).toStrictEqual({
         id: '1',
         name: 'mock role',
+        permitions: [],
       });
     });
 

@@ -14,89 +14,95 @@ model User {
   email              String    @unique
   password           String
   deleted            Boolean   @default(false)
-  deletedAt          DateTime?
-  createdAt          DateTime?
-  updatedAt          DateTime?
-  Role               Role?     @relation(fields: [role], references: [name])
-  role               String?
+  deletedAt          DateTime? @updatedAt
+  createdAt          DateTime? @default(now())
+  updatedAt          DateTime? @updatedAt
   hashedRefreshToken String?
-  like               Like[]
-  post               Post[]
-  comment            Comment[]
   profile            Profile?
+
+  role   Role?   @relation(fields: [roleId], references: [id])
+  roleId String? @db.ObjectId
+
+  like    Like[]
+  post    Post[]
+  comment Comment[]
 }
 
 model Role {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  name              String    @unique
-  canCreatePost     Boolean   @default(false)
-  canUpdatePost     Boolean   @default(false)
-  canDeletePost     Boolean   @default(false)
-  canSoftDeletePost Boolean   @default(false)
-  canCreateUser     Boolean   @default(false)
-  canUpdateUser     Boolean   @default(false)
-  canDeleteUser     Boolean   @default(false)
-  canSoftDeleteUser Boolean   @default(false)
-  canLikeUser       Boolean   @default(false)
-  canLikePost       Boolean   @default(false)
-  user              User[]
-  createdAt         DateTime?
-  updatedAt         DateTime?
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String    @unique
+  permitions String[]
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  user       User[]
 }
 
 model Profile {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  bio       String
-  userId    String    @unique
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  createdAt DateTime?
-  updatedAt DateTime?
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  bio String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique @db.ObjectId
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Post {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   content   String
-  published Boolean    @default(false)
-  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  authorId  String
-  deleted   Boolean    @default(false)
-  createdAt DateTime?
-  updatedAt DateTime?
-  comment   Comment[]
-  like      Like[]
-  category  Category[]
+  published Boolean @default(false)
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authorId String @db.ObjectId
+
+  deleted   Boolean   @default(false)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  comment  Comment[]
+  like     Like[]
+  category Category[]
 }
 
 model Category {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   post      Post?     @relation(fields: [postId], references: [id])
-  postId    String?
-  createdAt DateTime?
-  updatedAt DateTime?
+  postId    String?   @db.ObjectId
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Comment {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  content   String
-  postId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  like      Like[]
-  createdAt DateTime?
-  updatedAt DateTime?
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @db.ObjectId
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId String @db.ObjectId
+
+  like Like[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Like {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  commentId String?
-  comment   Comment?  @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  postId    String?
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
-  createdAt DateTime?
-  updatedAt DateTime?
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  commentId String?  @db.ObjectId
+
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId String? @db.ObjectId
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @db.ObjectId
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }

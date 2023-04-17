@@ -9,7 +9,7 @@ import { MOCK_FIND_ONE_COMMENT_RESPONSE } from '../comment/mock/commentControlle
 import { MessageHelper } from '../common/helpers/message.helper';
 import { MOCK_FIND_ONE_POST_RESPONSE } from '../post/mock/postController.mock';
 import { PostService } from '../post/post.service';
-import { FIND_ONE_USER_MOCK_RESPONSE } from '../user/mock/userController.mock';
+import { MOCK_FIND_ONE_USER_RESPONSE } from '../user/mock/userController.mock';
 import { UserService } from '../user/user.service';
 import { LikeEntity } from './entities/like.entity';
 import { LikeController } from './like.controller';
@@ -30,7 +30,7 @@ describe('LikeController', () => {
   const MOCK_EMAIL = 'user@email.com';
 
   const userServiceMock = {
-    findOne: jest.fn().mockResolvedValue(FIND_ONE_USER_MOCK_RESPONSE),
+    findOne: jest.fn().mockResolvedValue(MOCK_FIND_ONE_USER_RESPONSE),
   };
 
   const postServiceMock = {
@@ -91,7 +91,10 @@ describe('LikeController', () => {
       const like = await likeController.create(
         {
           user: { connect: { email: MOCK_EMAIL } },
-          post: post.id,
+          post: {
+            ...post,
+            connect: { id: MOCK_ID },
+          },
         },
         { user: { email: MOCK_EMAIL } },
       );
@@ -103,7 +106,7 @@ describe('LikeController', () => {
       const like = await likeController.create(
         {
           user: { connect: { email: MOCK_EMAIL } },
-          comment: comment.id,
+          comment: { ...comment, connect: { id: MOCK_ID } },
         },
         { user: { email: MOCK_EMAIL } },
       );
@@ -122,14 +125,18 @@ describe('LikeController', () => {
         new BadRequestException(MessageHelper.COMMENT_AND_POST_INVALID),
       );
     });
+
     it('should accept only one content target', async () => {
       likeServiceMock.create.mockResolvedValueOnce(null);
       expect(
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            comment: MOCK_ID,
-            post: MOCK_ID,
+            comment: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
+            post: {
+              ...MOCK_POST_WITH_LIKE,
+              connect: { id: MOCK_ID },
+            },
           },
           { user: { email: MOCK_EMAIL } },
         ),
@@ -137,13 +144,17 @@ describe('LikeController', () => {
         new BadRequestException(MessageHelper.COMMENT_OR_POST_PROVIDE),
       );
     });
+
     it('should to throw an exception when user not provided', async () => {
       userServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            post: MOCK_ID,
+            post: {
+              ...MOCK_POST_WITH_LIKE,
+              connect: { id: MOCK_ID },
+            },
           },
           { user: { email: MOCK_EMAIL } },
         ),
@@ -157,7 +168,10 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            post: MOCK_ID,
+            post: {
+              ...MOCK_POST_WITH_LIKE,
+              connect: { id: MOCK_ID },
+            },
           },
           { user: { email: MOCK_EMAIL } },
         ),
@@ -171,7 +185,7 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            comment: MOCK_ID,
+            comment: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
           },
           { user: { email: MOCK_EMAIL } },
         ),
@@ -185,7 +199,7 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            comment: MOCK_COMMENT_WITH_LIKE.id,
+            comment: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
           },
           { user: { email: MOCK_EMAIL } },
         ),
@@ -199,7 +213,7 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            post: MOCK_POST_WITH_LIKE.id,
+            post: { ...MOCK_POST_WITH_LIKE, connect: { id: MOCK_ID } },
           },
           { user: { email: MOCK_EMAIL } },
         ),
