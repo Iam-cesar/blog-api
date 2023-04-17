@@ -91,7 +91,7 @@ describe('LikeController', () => {
       const like = await likeController.create(
         {
           user: { connect: { email: MOCK_EMAIL } },
-          postId: {
+          post: {
             ...post,
             connect: { id: MOCK_ID },
           },
@@ -106,7 +106,7 @@ describe('LikeController', () => {
       const like = await likeController.create(
         {
           user: { connect: { email: MOCK_EMAIL } },
-          commentId: { ...comment, connect: { id: MOCK_ID } },
+          comment: { ...comment, connect: { id: MOCK_ID } },
         },
         { user: { email: MOCK_EMAIL } },
       );
@@ -132,8 +132,8 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            commentId: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
-            postId: {
+            comment: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
+            post: {
               ...MOCK_POST_WITH_LIKE,
               connect: { id: MOCK_ID },
             },
@@ -151,7 +151,7 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            postId: {
+            post: {
               ...MOCK_POST_WITH_LIKE,
               connect: { id: MOCK_ID },
             },
@@ -168,7 +168,7 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            postId: {
+            post: {
               ...MOCK_POST_WITH_LIKE,
               connect: { id: MOCK_ID },
             },
@@ -185,7 +185,7 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            commentId: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
+            comment: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
           },
           { user: { email: MOCK_EMAIL } },
         ),
@@ -199,7 +199,7 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            commentId: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
+            comment: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
           },
           { user: { email: MOCK_EMAIL } },
         ),
@@ -213,7 +213,7 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            postId: { ...MOCK_POST_WITH_LIKE, connect: { id: MOCK_ID } },
+            post: { ...MOCK_POST_WITH_LIKE, connect: { id: MOCK_ID } },
           },
           { user: { email: MOCK_EMAIL } },
         ),

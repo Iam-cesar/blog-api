@@ -43,40 +43,32 @@ export class PostController {
     @Body() data: CreatePostDto,
     @Req() req: { user: { email: string } },
   ) {
-    try {
-      if (!req?.user)
-        throw new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST);
+    if (!req?.user)
+      throw new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST);
 
-      const user = await this.userService.findOne({ email: req.user.email });
+    const user = await this.userService.findOne({ email: req.user.email });
 
-      if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
+    if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
-      const post = await this.postService.create({
-        ...data,
-        author: { connect: { email: user.email } },
-      });
+    const post = await this.postService.create({
+      ...data,
+      author: { connect: { email: user.email } },
+    });
 
-      if (!post) throw new BadRequestException(MessageHelper.POST_BAD_REQUEST);
+    if (!post) throw new BadRequestException(MessageHelper.POST_BAD_REQUEST);
 
-      return post;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return post;
   }
 
   @Get()
   @HttpCode(200)
   async findAll(@Query() query?: FindAllQueryDto) {
-    try {
-      const post = await this.postService.findAll({
-        skip: Number(query?.skip) || undefined,
-        take: Number(query?.take) || undefined,
-      });
+    const post = await this.postService.findAll({
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.take) || undefined,
+    });
 
-      return post;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return post;
   }
 
   @Get('by-author')
@@ -85,30 +77,22 @@ export class PostController {
     @Req() req: { user: { id: string } },
     @Query() query?: FindAllQueryDto,
   ) {
-    try {
-      const post = await this.postService.findAllByAuthor(req.user.id, {
-        skip: Number(query?.skip) || undefined,
-        take: Number(query?.take) || undefined,
-      });
+    const post = await this.postService.findAllByAuthor(req.user.id, {
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.take) || undefined,
+    });
 
-      return post;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return post;
   }
 
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
-    try {
-      const post = await this.postService.findOne({ id });
+    const post = await this.postService.findOne({ id });
 
-      if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-      return post;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return post;
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -117,29 +101,25 @@ export class PostController {
     @Param() params: CreatePostCategoryDto,
     @Req() req: { user: { id: string } },
   ) {
-    try {
-      const { categoryId, id } = params;
+    const { categoryId, id } = params;
 
-      const post = await this.postService.findOne({ id });
+    const post = await this.postService.findOne({ id });
 
-      if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-      exceptionIfPostDontBelongsToUser({ user: req.user, post });
+    exceptionIfPostDontBelongsToUser({ user: req.user, post });
 
-      const category = await this.categoryService.findOne({
-        id: categoryId,
-      });
+    const category = await this.categoryService.findOne({
+      id: categoryId,
+    });
 
-      if (!category)
-        throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!category)
+      throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
 
-      return await this.postService.update({
-        where: { id },
-        data: { category: { connect: { id: category.id } } },
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.postService.update({
+      where: { id },
+      data: { category: { connect: { id: category.id } } },
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -150,37 +130,29 @@ export class PostController {
     @Body() data: UpdatePostDto,
     @Req() req: { user: { id: string } },
   ) {
-    try {
-      const post = await this.postService.findOne({ id });
+    const post = await this.postService.findOne({ id });
 
-      if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-      exceptionIfPostDontBelongsToUser({ user: req.user, post });
+    exceptionIfPostDontBelongsToUser({ user: req.user, post });
 
-      return await this.postService.update({
-        where: { id },
-        data,
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.postService.update({
+      where: { id },
+      data,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {
-    try {
-      const post = await this.postService.findOne({ id });
+    const post = await this.postService.findOne({ id });
 
-      if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-      exceptionIfPostDontBelongsToUser({ user: req.user, post });
+    exceptionIfPostDontBelongsToUser({ user: req.user, post });
 
-      return await this.postService.remove({ id });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.postService.remove({ id });
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -190,28 +162,24 @@ export class PostController {
     @Param() params: UpdatePostCategoryDto,
     @Req() req: { user: { id: string } },
   ) {
-    try {
-      const { id, categoryId } = params;
+    const { id, categoryId } = params;
 
-      const post = await this.postService.findOne({ id });
+    const post = await this.postService.findOne({ id });
 
-      if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-      exceptionIfPostDontBelongsToUser({ user: req.user, post });
+    exceptionIfPostDontBelongsToUser({ user: req.user, post });
 
-      const category = await this.categoryService.findOne({
-        id: categoryId,
-      });
+    const category = await this.categoryService.findOne({
+      id: categoryId,
+    });
 
-      if (!category)
-        throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!category)
+      throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
 
-      return await this.postService.update({
-        where: { id },
-        data: { category: { disconnect: { id: categoryId } } },
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.postService.update({
+      where: { id },
+      data: { category: { disconnect: { id: categoryId } } },
+    });
   }
 }

@@ -35,19 +35,15 @@ export class UserController {
   @Post()
   @HttpCode(201)
   async create(@Body() data: CreateUserDto) {
-    try {
-      const { password } = data;
+    const { password } = data;
 
-      const user = await this.userService.create({
-        ...data,
-        password: await this.authHelper.createHashPassword(password),
-      });
-      if (!user) throw new BadRequestException(MessageHelper.ROLE_BAD_REQUEST);
+    const user = await this.userService.create({
+      ...data,
+      password: await this.authHelper.createHashPassword(password),
+    });
+    if (!user) throw new BadRequestException(MessageHelper.ROLE_BAD_REQUEST);
 
-      return user;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return user;
   }
 
   @Get()
@@ -56,28 +52,20 @@ export class UserController {
     @Query()
     query?: FindAllQueryDto,
   ) {
-    try {
-      return await this.userService.findAll({
-        skip: Number(query?.skip) || undefined,
-        take: Number(query?.take) || undefined,
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.userService.findAll({
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.take) || undefined,
+    });
   }
 
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
-    try {
-      const user = await this.userService.findOne({ id });
+    const user = await this.userService.findOne({ id });
 
-      if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
+    if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
-      return user;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return user;
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -88,66 +76,50 @@ export class UserController {
     @Body() data: UpdateUserDto,
     @Req() req: { user: { id: string } },
   ) {
-    try {
-      const user = await this.userService.findOne({ id });
+    const user = await this.userService.findOne({ id });
 
-      if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
+    if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
-      exceptionIfContentDontBelongsToUser({ user: req.user, content: user });
+    exceptionIfContentDontBelongsToUser({ user: req.user, content: user });
 
-      return await this.userService.update({
-        where: { id },
-        data,
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.userService.update({
+      where: { id },
+      data,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id/soft-delete')
   @HttpCode(200)
   async softRemove(@Param('id') id: string) {
-    try {
-      const user = await this.userService.findOne({ id });
+    const user = await this.userService.findOne({ id });
 
-      if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
+    if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
-      return await this.userService.softRemove({ id });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.userService.softRemove({ id });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id/renew')
   @HttpCode(200)
   async renew(@Param('id') id: string) {
-    try {
-      const user = await this.userService.findOne({ id });
+    const user = await this.userService.findOne({ id });
 
-      if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
+    if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
-      return this.userService.renew({ id });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return this.userService.renew({ id });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string, @Req() req: { user: { id: string } }) {
-    try {
-      const user = await this.userService.findOne({ id });
+    const user = await this.userService.findOne({ id });
 
-      if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
+    if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
-      exceptionIfContentDontBelongsToUser({ user: req.user, content: user });
+    exceptionIfContentDontBelongsToUser({ user: req.user, content: user });
 
-      return await this.userService.remove({ id });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.userService.remove({ id });
   }
 }

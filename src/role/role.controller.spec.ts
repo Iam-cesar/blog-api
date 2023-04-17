@@ -26,6 +26,7 @@ describe('RoleController', () => {
     findOne: jest
       .fn()
       .mockResolvedValue(new RoleEntity(MOCK_FIND_ONE_ROLE_RESPONSE)),
+    findOneByName: jest.fn().mockReturnValue(null),
     update: jest.fn().mockResolvedValue({ id: '1' }),
     remove: jest.fn().mockResolvedValue({ id: '1' }),
   };
@@ -65,7 +66,9 @@ describe('RoleController', () => {
     });
     it('should to throw an exception', () => {
       roleServiceMock.create.mockResolvedValueOnce(null);
-      expect(roleController.create(MOCK_CREATE_ROLE)).rejects.toStrictEqual(
+      expect(
+        roleController.create({ ...MOCK_CREATE_ROLE, name: 'djsalfja' }),
+      ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.ROLE_BAD_REQUEST),
       );
     });

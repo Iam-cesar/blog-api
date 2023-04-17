@@ -29,16 +29,12 @@ export class CategoryController {
   @Post()
   @HttpCode(201)
   async create(@Body() data: CreateCategoryDto) {
-    try {
-      const category = await this.categoryService.create(data);
+    const category = await this.categoryService.create(data);
 
-      if (!category)
-        throw new BadRequestException(MessageHelper.CATEGORY_BAD_REQUEST);
+    if (!category)
+      throw new BadRequestException(MessageHelper.CATEGORY_BAD_REQUEST);
 
-      return category;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return category;
   }
 
   @Get()
@@ -47,63 +43,47 @@ export class CategoryController {
     @Query()
     query?: FindAllQueryDto,
   ) {
-    try {
-      return await this.categoryService.findAll({
-        skip: Number(query?.skip) || undefined,
-        take: Number(query?.take) || undefined,
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.categoryService.findAll({
+      skip: Number(query?.skip) || undefined,
+      take: Number(query?.take) || undefined,
+    });
   }
 
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
-    try {
-      const category = await this.categoryService.findOne({ id });
+    const category = await this.categoryService.findOne({ id });
 
-      if (!category)
-        throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!category)
+      throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
 
-      return category;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return category;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
-    try {
-      const category = await this.categoryService.findOne({ id });
+    const category = await this.categoryService.findOne({ id });
 
-      if (!category)
-        throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!category)
+      throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
 
-      return await this.categoryService.update({
-        where: { id },
-        data,
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.categoryService.update({
+      where: { id },
+      data,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {
-    try {
-      const category = await this.categoryService.findOne({ id });
+    const category = await this.categoryService.findOne({ id });
 
-      if (!category)
-        throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
+    if (!category)
+      throw new NotFoundException(MessageHelper.CATEGORY_NOT_FOUND);
 
-      return await this.categoryService.remove({ id });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.categoryService.remove({ id });
   }
 }

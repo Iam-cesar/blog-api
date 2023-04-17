@@ -38,79 +38,60 @@ export class CommentController {
     @Body() data: CreateCommentDto,
     @Req() req: { user: { email: string } },
   ) {
-    try {
-      const { post: postId } = data;
+    const { post: postId } = data;
 
-      const user = await this.userService.findOne({ email: req.user?.email });
+    const user = await this.userService.findOne({ email: req.user?.email });
 
-      if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
+    if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
 
-      const post = await this.postService.findOne({ id: postId as string });
+    const post = await this.postService.findOne({ id: postId as string });
 
-      if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
+    if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
-      const comment = await this.commentService.create({
-        ...data,
-        user: { connect: { id: user.id } },
-        post: { connect: { id: post.id } },
-      });
+    const comment = await this.commentService.create({
+      ...data,
+      user: { connect: { id: user.id } },
+      post: { connect: { id: post.id } },
+    });
 
-      if (!comment)
-        throw new BadRequestException(MessageHelper.COMMENT_BAD_REQUEST);
+    if (!comment)
+      throw new BadRequestException(MessageHelper.COMMENT_BAD_REQUEST);
 
-      return comment;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return comment;
   }
 
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
-    try {
-      const comment = await this.commentService.findOne({ id });
+    const comment = await this.commentService.findOne({ id });
 
-      if (!comment)
-        throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
+    if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
 
-      return comment;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return comment;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() data: UpdateCommentDto) {
-    try {
-      const comment = await this.commentService.findOne({ id });
+    const comment = await this.commentService.findOne({ id });
 
-      if (!comment)
-        throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
+    if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
 
-      return await this.commentService.update({
-        where: { id },
-        data,
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.commentService.update({
+      where: { id },
+      data,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {
-    try {
-      const comment = await this.commentService.findOne({ id });
+    const comment = await this.commentService.findOne({ id });
 
-      if (!comment)
-        throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
+    if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
 
-      return await this.commentService.remove({ id });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.commentService.remove({ id });
   }
 }

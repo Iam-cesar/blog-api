@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -41,64 +40,52 @@ export class LikeController extends LikeHelper {
     @Body() data: CreateLikeDto,
     @Req() req: { user: { email: string } },
   ) {
-    try {
-      const { post: postId, comment: commentId } = data;
-      const createBody = data;
+    const { post: postId, comment: commentId } = data;
+    const createBody = data;
 
-      this.invalidCommentAndPostException({ commentId, postId });
+    this.invalidCommentAndPostException({ commentId, postId });
 
-      this.provideCommentOrPostException({ commentId, postId });
+    this.provideCommentOrPostException({ commentId, postId });
 
-      const user = await this.userService.findOne({ email: req.user.email });
+    const user = await this.userService.findOne({ email: req.user.email });
 
-      if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
+    if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
 
-      if (commentId) {
-        return await this.handleCommentLike({
-          commentId,
-          user: req.user,
-          createBody,
-        });
-      }
+    if (commentId) {
+      return await this.handleCommentLike({
+        commentId,
+        user: req.user,
+        createBody,
+      });
+    }
 
-      if (postId) {
-        return await this.handlePostLike({
-          postId,
-          user: req.user,
-          createBody,
-        });
-      }
-    } catch (error) {
-      throw new BadRequestException(error);
+    if (postId) {
+      return await this.handlePostLike({
+        postId,
+        user: req.user,
+        createBody,
+      });
     }
   }
 
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
-    try {
-      const like = await this.likeService.findOne({ id });
+    const like = await this.likeService.findOne({ id });
 
-      if (!like) throw new NotFoundException(MessageHelper.LIKE_NOT_FOUND);
+    if (!like) throw new NotFoundException(MessageHelper.LIKE_NOT_FOUND);
 
-      return like;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return like;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id') id: string) {
-    try {
-      const like = await this.likeService.findOne({ id });
+    const like = await this.likeService.findOne({ id });
 
-      if (!like) throw new NotFoundException(MessageHelper.LIKE_NOT_FOUND);
+    if (!like) throw new NotFoundException(MessageHelper.LIKE_NOT_FOUND);
 
-      return await this.likeService.remove({ id });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return await this.likeService.remove({ id });
   }
 }
