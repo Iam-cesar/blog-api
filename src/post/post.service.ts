@@ -34,6 +34,7 @@ export class PostService {
           title: true,
           createdAt: true,
           category: { select: { name: true } },
+          published: true,
           author: { select: { id: true, firstName: true, lastName: true } },
         },
       });
