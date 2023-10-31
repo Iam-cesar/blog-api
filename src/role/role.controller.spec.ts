@@ -64,6 +64,13 @@ describe('RoleController', () => {
       const role = await roleController.create(MOCK_CREATE_ROLE);
       expect(role).toStrictEqual({ id: '1' });
     });
+    it('should be able to create a role with data permitions empty', async () => {
+      const role = await roleController.create({
+        ...MOCK_CREATE_ROLE,
+        permitions: null,
+      });
+      expect(role).toStrictEqual({ id: '1' });
+    });
     it('should to throw an exception', () => {
       roleServiceMock.create.mockResolvedValueOnce(null);
       expect(
@@ -163,6 +170,12 @@ describe('RoleController', () => {
       roleServiceMock.findOne.mockResolvedValueOnce(null);
       expect(roleController.findOne(MOCK_ID)).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.ROLE_NOT_FOUND),
+      );
+    });
+    it('should to throw an exception if find role by name', () => {
+      roleServiceMock.findOneByName.mockResolvedValueOnce({ id: MOCK_ID });
+      expect(roleController.findOneByName(MOCK_ID)).rejects.toStrictEqual(
+        new BadRequestException(MessageHelper.ROLE_ALREADY_EXISTS),
       );
     });
   });

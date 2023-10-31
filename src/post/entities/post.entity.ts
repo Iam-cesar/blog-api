@@ -1,5 +1,5 @@
-import { CategoryEntity } from 'src/category/entities/category.entity';
-import { LikeEntity } from 'src/like/entities/like.entity';
+import { CategoryEntity } from '../../category/entities/category.entity';
+import { LikeEntity } from '../../like/entities/like.entity';
 import { UserEntity } from '../../user/entities/user.entity';
 
 export class PostEntity {

@@ -57,7 +57,7 @@ describe('UserService', () => {
   describe('FIND ONE WITH PASSWORD', () => {
     it('should be able to find with sensitive information', async () => {
       const user = await userService.findOneWithPassword({
-        email: MOCK_FIND_ONE_USER_RESPONSE.email,
+        id: MOCK_FIND_ONE_USER_RESPONSE.id,
       });
       expect(user.id).toBe(MOCK_ID);
     });
@@ -65,14 +65,14 @@ describe('UserService', () => {
     it('should to throw an exception', () => {
       userServiceMock.findOneWithPassword.mockRejectedValueOnce(new Error());
       expect(
-        userService.findOneWithPassword(MOCK_CREATE_USER),
+        userService.findOneWithPassword({ id: MOCK_FIND_ONE_USER_RESPONSE.id }),
       ).rejects.toThrowError();
     });
   });
   describe('FIND ONE USER', () => {
     it('should be able to find a user', async () => {
       const user = await userService.findOne({
-        email: MOCK_FIND_ONE_USER_RESPONSE.email,
+        id: MOCK_FIND_ONE_USER_RESPONSE.id,
       });
       expect(user.id).toBe(MOCK_ID);
     });
@@ -80,7 +80,7 @@ describe('UserService', () => {
     it('should to throw an exception', () => {
       userServiceMock.findOne.mockRejectedValueOnce(new Error());
       expect(
-        userService.findOne({ email: MOCK_FIND_ONE_USER_RESPONSE.email }),
+        userService.findOne({ id: MOCK_FIND_ONE_USER_RESPONSE.id }),
       ).rejects.toThrowError();
     });
   });

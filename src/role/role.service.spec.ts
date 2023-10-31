@@ -81,16 +81,15 @@ describe('RoleService', () => {
       expect(role).toStrictEqual(new RoleEntity(MOCK_FIND_ONE_ROLE_RESPONSE));
     });
     it('should to throw an exception', () => {
+      const { id } = MOCK_FIND_ONE_ROLE_RESPONSE;
       jest.spyOn(roleService, 'findOne').mockRejectedValueOnce(new Error());
-      expect(
-        roleService.findOne(MOCK_FIND_ONE_ROLE_RESPONSE),
-      ).rejects.toThrowError();
+      expect(roleService.findOne({ id })).rejects.toThrowError();
     });
   });
   describe('UPDATE', () => {
     it('should be able to update a role', async () => {
       const role = await roleService.update({
-        where: MOCK_FIND_ONE_ROLE_RESPONSE,
+        where: { id: '1' },
         data: MOCK_UPDATE_ROLE,
       });
       expect(role).toStrictEqual({ id: '1' });
@@ -99,7 +98,7 @@ describe('RoleService', () => {
       jest.spyOn(roleService, 'update').mockRejectedValueOnce(new Error());
       expect(
         roleService.update({
-          where: MOCK_FIND_ONE_ROLE_RESPONSE,
+          where: { id: '1' },
           data: MOCK_CREATE_ROLE,
         }),
       ).rejects.toThrowError();
@@ -112,9 +111,7 @@ describe('RoleService', () => {
     });
     it('should to throw an exception', () => {
       jest.spyOn(roleService, 'remove').mockRejectedValueOnce(new Error());
-      expect(
-        roleService.remove(MOCK_FIND_ONE_ROLE_RESPONSE),
-      ).rejects.toThrowError();
+      expect(roleService.remove({ id: '1' })).rejects.toThrowError();
     });
   });
 });

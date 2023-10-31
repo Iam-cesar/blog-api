@@ -5,6 +5,8 @@ export class CommentEntity {
   content?: string;
   postId?: string;
   like?: Partial<LikeEntity[]>;
+  commentId?: string;
+  replys?: CommentEntity[];
   createdAt?: Date;
   updatedAt?: Date;
 
@@ -13,6 +15,8 @@ export class CommentEntity {
     this.content = params.content;
     this.postId = params.postId;
     this.like = params.like;
+    this.replys = params.replys;
+    this.commentId = params.commentId;
     this.createdAt = params.createdAt;
     this.updatedAt = params.updatedAt;
   }

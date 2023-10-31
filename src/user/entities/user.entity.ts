@@ -1,8 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { LikeEntity } from '../..//like/entities/like.entity';
-import { ProfileEntity } from '../..//profile/entities/profile.entity';
-import { RoleEntity } from '../..//role/entities/role.entity';
+import { LikeEntity } from '../../like/entities/like.entity';
 import { PostEntity } from '../../post/entities/post.entity';
+import { ProfileEntity } from '../../profile/entities/profile.entity';
+import { RoleEntity } from '../../role/entities/role.entity';
+
 export class UserEntity {
   _count?: Prisma.UserCountOutputType;
   id?: string;

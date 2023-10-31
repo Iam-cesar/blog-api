@@ -15,6 +15,7 @@ export const MOCK_UPDATE_ROLE = {
 export const MOCK_FIND_ONE_ROLE_RESPONSE = {
   id: '1',
   name: 'mock role',
+  email: 'mock@email.com',
   permitions: [],
   createdAt: '2022-10-16T13:42:52.937Z',
   updatedAt: null,

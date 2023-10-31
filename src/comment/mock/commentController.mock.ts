@@ -1,8 +1,11 @@
+const MOCK_ID = '1';
+const MOCK_EMAIL = 'mock@email.com';
+
 export const MOCK_FIND_ONE_COMMENT_RESPONSE = {
   id: '1',
   content: 'Bela maneira de ensinar a fazer comida ein S2',
   post: {
-    id: 2,
+    id: '2',
   },
   user: {
     id: '1',
@@ -17,4 +20,11 @@ export const MOCK_FIND_ONE_COMMENT_RESPONSE = {
   },
 };
 
-export const MOCK_CREATE_COMMENT = {};
+export const MOCK_CREATE_COMMENT = {
+  content: 'mock_comment_updated',
+  post: { connect: { id: MOCK_ID } },
+  user: { connect: { email: MOCK_EMAIL } },
+  commentId: MOCK_ID,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};

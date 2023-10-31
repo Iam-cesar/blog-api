@@ -31,6 +31,9 @@ describe('LikeController', () => {
 
   const userServiceMock = {
     findOne: jest.fn().mockResolvedValue(MOCK_FIND_ONE_USER_RESPONSE),
+    findByEmailWithPassword: jest
+      .fn()
+      .mockResolvedValue(MOCK_FIND_ONE_USER_RESPONSE),
   };
 
   const postServiceMock = {
@@ -96,7 +99,7 @@ describe('LikeController', () => {
             connect: { id: MOCK_ID },
           },
         },
-        { user: { email: MOCK_EMAIL } },
+        { user: { email: MOCK_EMAIL, id: MOCK_COMMENT_WITH_LIKE.user.id } },
       );
 
       expect(like).toStrictEqual({ id: MOCK_ID });
@@ -108,26 +111,29 @@ describe('LikeController', () => {
           user: { connect: { email: MOCK_EMAIL } },
           comment: { ...comment, connect: { id: MOCK_ID } },
         },
-        { user: { email: MOCK_EMAIL } },
+        { user: { email: MOCK_EMAIL, id: MOCK_COMMENT_WITH_LIKE.user.id } },
       );
 
       expect(like).toStrictEqual({ id: MOCK_ID });
     });
     it('should to throw an exception when content target arent provided', async () => {
-      likeServiceMock.create.mockResolvedValueOnce(null);
+      likeServiceMock.create.mockRejectedValueOnce(
+        new BadRequestException(MessageHelper.COMMENT_AND_POST_INVALID),
+      );
       const user = await userService.findOne({ id: MOCK_ID });
       expect(
         likeController.create(
           { user: { connect: { id: user.id } } },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: MOCK_COMMENT_WITH_LIKE.user.id } },
         ),
       ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.COMMENT_AND_POST_INVALID),
       );
     });
-
     it('should accept only one content target', async () => {
-      likeServiceMock.create.mockResolvedValueOnce(null);
+      likeServiceMock.create.mockRejectedValueOnce(
+        new BadRequestException(MessageHelper.COMMENT_OR_POST_PROVIDE),
+      );
       expect(
         likeController.create(
           {
@@ -138,15 +144,14 @@ describe('LikeController', () => {
               connect: { id: MOCK_ID },
             },
           },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: MOCK_COMMENT_WITH_LIKE.user.id } },
         ),
       ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.COMMENT_OR_POST_PROVIDE),
       );
     });
-
     it('should to throw an exception when user not provided', async () => {
-      userServiceMock.findOne.mockResolvedValueOnce(null);
+      userServiceMock.findByEmailWithPassword.mockResolvedValueOnce(null);
       expect(
         likeController.create(
           {
@@ -156,7 +161,7 @@ describe('LikeController', () => {
               connect: { id: MOCK_ID },
             },
           },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: MOCK_COMMENT_WITH_LIKE.user.id } },
         ),
       ).rejects.toStrictEqual(
         new UnauthorizedException(MessageHelper.USER_NOT_FOUND),
@@ -168,12 +173,9 @@ describe('LikeController', () => {
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
-            post: {
-              ...MOCK_POST_WITH_LIKE,
-              connect: { id: MOCK_ID },
-            },
+            post: { ...MOCK_POST_WITH_LIKE, connect: { id: MOCK_ID } },
           },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: MOCK_COMMENT_WITH_LIKE.user.id } },
         ),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.POST_NOT_FOUND),
@@ -187,7 +189,7 @@ describe('LikeController', () => {
             user: { connect: { email: MOCK_EMAIL } },
             comment: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
           },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: MOCK_COMMENT_WITH_LIKE.user.id } },
         ),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.COMMENT_NOT_FOUND),
@@ -201,21 +203,23 @@ describe('LikeController', () => {
             user: { connect: { email: MOCK_EMAIL } },
             comment: { ...MOCK_COMMENT_WITH_LIKE, connect: { id: MOCK_ID } },
           },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: MOCK_ID } },
         ),
       ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.USER_ALREADY_LIKED),
       );
     });
     it('should to throw an exception if user already liked a post', async () => {
-      postServiceMock.findOne.mockResolvedValueOnce(MOCK_POST_WITH_LIKE);
+      postServiceMock.findOne.mockResolvedValueOnce({
+        ...MOCK_POST_WITH_LIKE,
+      });
       expect(
         likeController.create(
           {
             user: { connect: { email: MOCK_EMAIL } },
             post: { ...MOCK_POST_WITH_LIKE, connect: { id: MOCK_ID } },
           },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: MOCK_ID } },
         ),
       ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.USER_ALREADY_LIKED),

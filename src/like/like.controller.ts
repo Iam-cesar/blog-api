@@ -38,16 +38,24 @@ export class LikeController extends LikeHelper {
   @ApiTags('Like')
   async create(
     @Body() data: CreateLikeDto,
-    @Req() req: { user: { email: string } },
+    @Req() req: { user: { email: string; id: string } },
   ) {
     const { post: postId, comment: commentId } = data;
     const createBody = data;
 
-    this.invalidCommentAndPostException({ commentId, postId });
+    this.invalidCommentAndPostException({
+      commentId,
+      postId,
+    });
 
-    this.provideCommentOrPostException({ commentId, postId });
+    this.provideCommentOrPostException({
+      commentId,
+      postId,
+    });
 
-    const user = await this.userService.findOne({ email: req.user.email });
+    const user = await this.userService.findByEmailWithPassword({
+      email: req.user.email,
+    });
 
     if (!user) throw new UnauthorizedException(MessageHelper.USER_NOT_FOUND);
 

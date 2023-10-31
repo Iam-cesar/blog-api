@@ -48,10 +48,7 @@ export class UserController {
 
   @Get()
   @HttpCode(200)
-  async findAll(
-    @Query()
-    query?: FindAllQueryDto,
-  ) {
+  async findAll(@Query() query?: FindAllQueryDto) {
     return await this.userService.findAll({
       skip: Number(query?.skip) || undefined,
       take: Number(query?.take) || undefined,

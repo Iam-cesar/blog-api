@@ -1,5 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { db } from '../prisma/utils/db.server';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -7,25 +6,22 @@ import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  create(data: CreateUserDto): Promise<UserEntity> {
+  async create(data: CreateUserDto): Promise<UserEntity> {
     try {
-      return db.user.create({
+      return await db.user.create({
         data,
         select: {
           id: true,
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findOneWithPassword(where: {
-    id?: string;
-    email?: string;
-  }): Promise<UserEntity> {
+  async findOneWithPassword(where: { id: string }): Promise<UserEntity> {
     try {
-      return db.user.findUnique({
+      return await db.user.findUnique({
         where,
         select: {
           password: true,
@@ -35,17 +31,33 @@ export class UserService {
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findAll(params?: {
+  async findByEmailWithPassword(where: { email: string }): Promise<UserEntity> {
+    try {
+      return await db.user.findUnique({
+        where: { email: where.email },
+        select: {
+          password: true,
+          email: true,
+          id: true,
+          hashedRefreshToken: true,
+        },
+      });
+    } catch (error) {
+      new BadRequestException(error?.meta?.message);
+    }
+  }
+
+  async findAll(params?: {
     skip?: number;
     take?: number;
-    orderBy?: Prisma.UserOrderByWithRelationInput;
+    orderBy?: any;
   }): Promise<Partial<UserEntity[]>> {
     try {
-      return db.user.findMany({
+      return await db.user.findMany({
         ...params,
         select: {
           id: true,
@@ -56,16 +68,16 @@ export class UserService {
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findOne(where: {
-    id?: string;
+  async findOne(where: {
+    id: string;
     email?: string;
-  }): Promise<Partial<User> | null> {
+  }): Promise<Partial<UserEntity> | null> {
     try {
-      return db.user.findUnique({
+      return await db.user.findUnique({
         where,
         select: {
           _count: true,
@@ -95,55 +107,55 @@ export class UserService {
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  update(params: {
+  async update(params: {
     where: { id: string };
     data: UpdateUserDto;
   }): Promise<UserEntity> {
     try {
       const { where, data } = params;
-      return db.user.update({
+      return await db.user.update({
         where,
         data,
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  softRemove(where: { id: string }): Promise<UserEntity> {
+  async softRemove(where: { id: string }): Promise<UserEntity> {
     try {
-      return db.user.update({
+      return await db.user.update({
         where,
         data: { deleted: true },
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  renew(where: { id: string }): Promise<UserEntity> {
+  async renew(where: { id: string }): Promise<UserEntity> {
     try {
-      return db.user.update({
+      return await db.user.update({
         where,
         data: { deleted: false },
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  remove(where: { id: string }): Promise<UserEntity> {
+  async remove(where: { id: string }): Promise<UserEntity> {
     try {
-      return db.user.delete({ where, select: { id: true } });
+      return await db.user.delete({ where, select: { id: true } });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 }

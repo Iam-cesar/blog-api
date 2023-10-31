@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -7,24 +7,24 @@ import { RoleEntity } from './entities/role.entity';
 
 @Injectable()
 export class RoleService {
-  create(data: CreateRoleDto): Promise<RoleEntity> {
+  async create(data: CreateRoleDto): Promise<RoleEntity> {
     try {
-      return db.role.create({
+      return await db.role.create({
         data,
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findAll(params?: {
+  async findAll(params?: {
     skip?: number;
     take?: number;
     orderBy?: Prisma.RoleOrderByWithAggregationInput;
   }): Promise<RoleEntity[]> {
     try {
-      return db.role.findMany({
+      return await db.role.findMany({
         ...params,
         select: {
           id: true,
@@ -32,13 +32,13 @@ export class RoleService {
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findOne(where: Prisma.RoleWhereUniqueInput): Promise<RoleEntity> {
+  async findOne(where: Prisma.RoleWhereUniqueInput): Promise<RoleEntity> {
     try {
-      return db.role.findUnique({
+      return await db.role.findUnique({
         where,
         select: {
           id: true,
@@ -49,44 +49,46 @@ export class RoleService {
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findOneByName({ name }: Prisma.RoleWhereUniqueInput): Promise<RoleEntity> {
+  async findOneByName({
+    name,
+  }: Prisma.RoleWhereUniqueInput): Promise<RoleEntity> {
     try {
-      return db.role.findUnique({
+      return await db.role.findUnique({
         where: { name },
         select: {
           id: true,
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  update(params: {
+  async update(params: {
     where: Prisma.RoleWhereUniqueInput;
     data: UpdateRoleDto;
   }): Promise<RoleEntity> {
     try {
       const { where, data } = params;
-      return db.role.update({
+      return await db.role.update({
         where,
         data,
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  remove(where: Prisma.RoleWhereUniqueInput): Promise<RoleEntity> {
+  async remove(where: Prisma.RoleWhereUniqueInput): Promise<RoleEntity> {
     try {
-      return db.role.delete({ where, select: { id: true } });
+      return await db.role.delete({ where, select: { id: true } });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 }

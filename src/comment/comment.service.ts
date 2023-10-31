@@ -1,25 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentEntity } from './entities/comment.entity';
 
 @Injectable()
 export class CommentService {
-  create(data: CreateCommentDto): Promise<CommentEntity> {
+  async create(data: Prisma.CommentCreateInput): Promise<CommentEntity> {
     try {
-      return db.comment.create({
+      return await db.comment.create({
         data,
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findOne(where: { id: string }): Promise<CommentEntity> {
+  async findOne(where: { id: string }): Promise<CommentEntity> {
     try {
-      return db.comment.findUnique({
+      return await db.comment.findUnique({
         where,
         select: {
           id: true,
@@ -48,37 +47,117 @@ export class CommentService {
               },
             },
           },
+          replys: {
+            select: {
+              _count: {
+                select: {
+                  like: true,
+                },
+              },
+              id: true,
+              like: {
+                select: {
+                  user: {
+                    select: {
+                      id: true,
+                      firstName: true,
+                      lastName: true,
+                    },
+                  },
+                },
+              },
+              user: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
           createdAt: true,
           updatedAt: true,
           _count: true,
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  update(params: {
+  async findAllByPost(
+    where: { post: { id: string } },
+    params?: {
+      skip?: number;
+      take?: number;
+      orderBy?: Prisma.CommentOrderByWithRelationInput;
+    },
+  ): Promise<CommentEntity[]> {
+    try {
+      const postId = where.post.id;
+      return await db.comment.findMany({
+        ...params,
+        where: {
+          postId,
+        },
+        select: {
+          id: true,
+          content: true,
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              role: true,
+            },
+          },
+          like: {
+            select: {
+              id: true,
+              user: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+          replys: true,
+          createdAt: true,
+          updatedAt: true,
+          _count: true,
+        },
+      });
+    } catch (error) {
+      new BadRequestException(error?.meta?.message);
+    }
+  }
+
+  async update(params: {
     where: { id: string };
-    data: UpdateCommentDto;
+    data: Prisma.CommentUpdateInput;
   }): Promise<CommentEntity> {
     try {
       const { where, data } = params;
-      return db.comment.update({
+      return await db.comment.update({
         where,
         data,
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  remove(where: { id: string }): Promise<CommentEntity> {
+  async remove(where: { id: string }): Promise<CommentEntity> {
     try {
-      return db.comment.delete({ where, select: { id: true } });
+      return await db.comment.delete({ where, select: { id: true } });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Like, Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
 import { CreateLikeDto } from './dto/create-like.dto';
@@ -6,46 +6,40 @@ import { LikeEntity } from './entities/like.entity';
 
 @Injectable()
 export class LikeService {
-  create(data: CreateLikeDto): Promise<LikeEntity> {
+  async create(data: CreateLikeDto): Promise<LikeEntity> {
     try {
-      return db.like.create({
+      return await db.like.create({
         data,
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findOne(where: Prisma.LikeWhereUniqueInput): Promise<Partial<Like>> {
+  async findOne(where: Prisma.LikeWhereUniqueInput): Promise<Partial<Like>> {
     try {
-      return db.like.findUnique({
+      return await db.like.findUnique({
         where,
         select: {
           id: true,
           commentId: true,
           postId: true,
-          user: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-            },
-          },
+          user: { select: { id: true } },
           createdAt: true,
           updatedAt: true,
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  remove(where: Prisma.LikeWhereUniqueInput): Promise<LikeEntity> {
+  async remove(where: Prisma.LikeWhereUniqueInput): Promise<LikeEntity> {
     try {
-      return db.like.delete({ where, select: { id: true } });
+      return await db.like.delete({ where, select: { id: true } });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 }

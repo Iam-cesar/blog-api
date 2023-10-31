@@ -109,7 +109,8 @@ export class RoleController {
   @HttpCode(200)
   async findOneByName(@Param('name') name: string): Promise<void> {
     const role = await this.roleService.findOneByName({ name });
-    if (role) throw new BadRequestException(MessageHelper.ROLE_ALREADY_EXISTS);
+    if (role?.id)
+      throw new BadRequestException(MessageHelper.ROLE_ALREADY_EXISTS);
   }
 
   @UseGuards(AuthGuard('jwt'))

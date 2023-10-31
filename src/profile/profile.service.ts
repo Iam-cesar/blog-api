@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
 import { CreateProfileDto } from './dto/create-profile.dto';
@@ -7,50 +7,50 @@ import { ProfileEntity } from './entities/profile.entity';
 
 @Injectable()
 export class ProfileService {
-  create(data: CreateProfileDto): Promise<ProfileEntity> {
+  async create(data: CreateProfileDto): Promise<ProfileEntity> {
     try {
-      return db.profile.create({
+      return await db.profile.create({
         data,
         select: {
           id: true,
         },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  findOne(
+  async findOne(
     where: Prisma.ProfileWhereUniqueInput,
   ): Promise<ProfileEntity | null> {
     try {
-      return db.profile.findUnique({ where });
+      return await db.profile.findUnique({ where });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  update(params: {
+  async update(params: {
     where: Prisma.ProfileWhereUniqueInput;
     data: UpdateProfileDto;
   }): Promise<ProfileEntity> {
     try {
       const { where, data } = params;
-      return db.profile.update({
+      return await db.profile.update({
         where,
         data,
         select: { id: true },
       });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 
-  remove(where: Prisma.ProfileWhereUniqueInput): Promise<ProfileEntity> {
+  async remove(where: Prisma.ProfileWhereUniqueInput): Promise<ProfileEntity> {
     try {
-      return db.profile.delete({ where, select: { id: true } });
+      return await db.profile.delete({ where, select: { id: true } });
     } catch (error) {
-      return error;
+      new BadRequestException(error?.meta?.message);
     }
   }
 }

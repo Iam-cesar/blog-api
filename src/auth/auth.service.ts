@@ -1,12 +1,10 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, compareSync, hash } from 'bcryptjs';
-import { MessageHelper } from '../common/helpers/message.helper';
 import { db } from '../prisma/utils/db.server';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserEntity } from '../user/entities/user.entity';
@@ -44,11 +42,6 @@ export class AuthService {
   async signup(data: CreateUserDto): Promise<Tokens> {
     try {
       const { password, email } = data;
-
-      const user = await this.userService.findOne({ email });
-
-      if (user)
-        throw new ForbiddenException(MessageHelper.EMAIL_ALREADY_EXISTS);
 
       const { id } = await this.userService.create({
         ...data,
@@ -104,7 +97,7 @@ export class AuthService {
     let user: UserEntity;
 
     try {
-      user = await this.userService.findOneWithPassword({ email });
+      user = await this.userService.findByEmailWithPassword({ email });
 
       const isPasswordValid = compareSync(password, user?.password);
 

@@ -29,7 +29,7 @@ export class LikeHelper {
       throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);
 
     const userLikes = commentResponse.like.filter(
-      (item) => item.userId === user.id,
+      (item) => item.user.id === user.id,
     );
 
     if (userLikes.length > 0) {
@@ -45,7 +45,7 @@ export class LikeHelper {
       throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
 
     const userLikes = postResponse.like.filter(
-      (item) => item.userId === user.id,
+      (item) => item.user.id === user.id,
     );
 
     if (userLikes.length > 0) {

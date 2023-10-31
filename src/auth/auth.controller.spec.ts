@@ -12,13 +12,9 @@ import { AuthService } from './auth.service';
 
 describe('AuthController', () => {
   let authController: AuthController;
-
   let authService: AuthService;
-
   let userService: UserService;
-
   let jwtService: JwtService;
-
   let authHelper: AuthHelper;
 
   const accessToken = 'mock_access_token';

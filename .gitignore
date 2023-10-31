@@ -39,3 +39,7 @@ lerna-debug.log*
 
 # DEV DATABASE
 /prisma/database
+
+# Dockerfiles
+docker-compose.yml
+Dockerfile

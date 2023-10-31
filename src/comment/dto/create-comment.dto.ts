@@ -12,15 +12,19 @@ export class CreateCommentDto {
 
   @IsNotEmpty()
   @ApiProperty()
-  post: Prisma.PostCreateNestedOneWithoutCommentInput;
+  post: Prisma.LikeCreateNestedManyWithoutCommentInput;
 
   @ApiPropertyOptional()
   @IsOptional()
   like?: Prisma.LikeCreateNestedManyWithoutCommentInput;
 
+  @ApiPropertyOptional()
   @IsOptional()
-  createdAt?: string | Date;
+  commentId: string;
 
   @IsOptional()
-  updatedAt?: string | Date;
+  createdAt: Date;
+
+  @IsOptional()
+  updatedAt: Date;
 }

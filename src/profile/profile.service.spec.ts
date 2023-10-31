@@ -88,7 +88,7 @@ describe('ProfileService', () => {
     it('should to throw an exception', () => {
       profileServiceMock.update.mockRejectedValueOnce(new Error());
       expect(
-        profileService.update({ where: {}, data: {} }),
+        profileService.update({ where: { id: '1' }, data: {} }),
       ).rejects.toThrowError();
     });
   });

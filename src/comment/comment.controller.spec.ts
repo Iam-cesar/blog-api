@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessageHelper } from '../common/helpers/message.helper';
+import { MOCK_POST_WITH_LIKE } from '../like/mock/likeService.mock';
 import { MOCK_FIND_ONE_POST_RESPONSE } from '../post/mock/postService.mock';
 import { PostService } from '../post/post.service';
 import { MOCK_FIND_ONE_USER_RESPONSE } from '../user/mock/userService.mock';
@@ -12,11 +13,13 @@ import { UserService } from '../user/user.service';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { CommentEntity } from './entities/comment.entity';
-import { MOCK_FIND_ONE_COMMENT_RESPONSE } from './mock/commentController.mock';
+import {
+  MOCK_CREATE_COMMENT,
+  MOCK_FIND_ONE_COMMENT_RESPONSE,
+} from './mock/commentController.mock';
 
 describe('CommentController', () => {
   let commentController: CommentController;
-
   let userService: UserService;
   let postService: PostService;
 
@@ -31,6 +34,12 @@ describe('CommentController', () => {
     findOne: jest
       .fn()
       .mockResolvedValue(new CommentEntity(MOCK_FIND_ONE_COMMENT_RESPONSE)),
+    findAllByPost: jest
+      .fn()
+      .mockResolvedValue([
+        new CommentEntity(MOCK_FIND_ONE_COMMENT_RESPONSE),
+        new CommentEntity(MOCK_FIND_ONE_COMMENT_RESPONSE),
+      ]),
     update: jest.fn().mockResolvedValue({ id: MOCK_ID }),
     remove: jest.fn().mockResolvedValue({ id: MOCK_ID }),
   };
@@ -73,11 +82,12 @@ describe('CommentController', () => {
     it('should be able to create a comment', async () => {
       const comment = await commentController.create(
         {
+          ...MOCK_CREATE_COMMENT,
           content: 'mock_comment_updated',
           post: { connect: { id: MOCK_ID } },
           user: { connect: { email: MOCK_EMAIL } },
         },
-        { user: { email: MOCK_EMAIL } },
+        { user: { email: MOCK_EMAIL, id: MOCK_ID } },
       );
       expect(comment).toStrictEqual({ id: MOCK_ID });
     });
@@ -86,6 +96,7 @@ describe('CommentController', () => {
       expect(
         commentController.create(
           {
+            ...MOCK_CREATE_COMMENT,
             content: 'mock_comment_updated',
             post: { connect: { id: MOCK_ID } },
             user: { connect: { email: MOCK_EMAIL } },
@@ -101,11 +112,12 @@ describe('CommentController', () => {
       expect(
         commentController.create(
           {
+            ...MOCK_CREATE_COMMENT,
             content: 'mock_comment_updated',
             post: { connect: { id: MOCK_ID } },
             user: { connect: { email: MOCK_EMAIL } },
           },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: null } },
         ),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.POST_NOT_FOUND),
@@ -116,11 +128,12 @@ describe('CommentController', () => {
       expect(
         commentController.create(
           {
+            ...MOCK_CREATE_COMMENT,
             content: '',
             user: { connect: { email: MOCK_EMAIL } },
             post: { connect: { id: MOCK_ID } },
           },
-          { user: { email: MOCK_EMAIL } },
+          { user: { email: MOCK_EMAIL, id: null } },
         ),
       ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.COMMENT_BAD_REQUEST),
@@ -141,6 +154,30 @@ describe('CommentController', () => {
       );
     });
   });
+  describe('FIND_ALL', () => {
+    it('should be able to find all comments by post', async () => {
+      const comments = await commentController.findAllByPost(
+        MOCK_POST_WITH_LIKE.id,
+      );
+      expect(comments).toHaveLength(2);
+    });
+    it('should be able to find all comments with pagination', async () => {
+      const comments = await commentController.findAllByPost(
+        MOCK_POST_WITH_LIKE.id,
+        {
+          skip: 1,
+          take: 10,
+        },
+      );
+      expect(comments).toHaveLength(2);
+    });
+    it('should to throw an exception if postId not provided', () => {
+      const comments = commentController.findAllByPost(null, null);
+      expect(comments).resolves.toStrictEqual(
+        new NotFoundException(MessageHelper.COMMENT_NOT_FOUND),
+      );
+    });
+  });
   describe('UPDATE', () => {
     it('should be able to update a comment', async () => {
       const comment = await commentController.update(MOCK_ID, {
@@ -150,11 +187,12 @@ describe('CommentController', () => {
       });
       expect(comment).toStrictEqual({ id: MOCK_ID });
     });
-    it('should to throw an exception', () => {
+    it('should to throw an exception if user not provided', () => {
       commentServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
         commentController.update(MOCK_ID, {
           content: '',
+          user: undefined,
           post: { connect: { id: MOCK_ID } },
         }),
       ).rejects.toStrictEqual(

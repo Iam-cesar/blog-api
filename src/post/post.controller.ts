@@ -46,7 +46,10 @@ export class PostController {
     if (!req?.user)
       throw new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST);
 
-    const user = await this.userService.findOne({ email: req.user.email });
+    const user = await this.userService.findOne({
+      email: req.user.email,
+      id: null,
+    });
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);
 
