@@ -41,14 +41,14 @@ export class PostController {
   @HttpCode(201)
   async create(
     @Body() data: CreatePostDto,
-    @Req() req: { user: { email: string } },
+    @Req() req: { user: { email: string; id: string } },
   ) {
     if (!req?.user)
       throw new UnauthorizedException(MessageHelper.UNAUTHORIZED_REQUEST);
 
     const user = await this.userService.findOne({
       email: req.user.email,
-      id: null,
+      id: req.user.id,
     });
 
     if (!user) throw new NotFoundException(MessageHelper.USER_NOT_FOUND);

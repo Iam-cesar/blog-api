@@ -109,7 +109,7 @@ describe('PostController', () => {
           ...MOCK_CREATE_POST,
           author: { connect: { id: user.id } },
         },
-        { user: { email: user.email } },
+        { user: { email: user.email, id: MOCK_ID } },
       );
 
       expect(post).toStrictEqual({ id: MOCK_ID });
@@ -124,7 +124,7 @@ describe('PostController', () => {
             ...MOCK_CREATE_POST,
             author: { connect: { id: MOCK_ID } },
           },
-          { user: { email: '' } },
+          { user: { email: '', id: undefined } },
         ),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.USER_NOT_FOUND),
@@ -142,7 +142,7 @@ describe('PostController', () => {
             ...MOCK_CREATE_POST,
             author: { connect: { id: user.id } },
           },
-          { user: { email: user.email } },
+          { user: { email: user.email, id: MOCK_ID } },
         ),
       ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.POST_BAD_REQUEST),
