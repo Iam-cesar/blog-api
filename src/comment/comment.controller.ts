@@ -16,13 +16,14 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
 import { FindAllQueryDto } from '../common/helpers/dto/findAllQuery.dto';
 import { MessageHelper } from '../common/helpers/message.helper';
 import { PostService } from '../post/post.service';
 import { UserService } from '../user/user.service';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
+import { CommentEntity } from './entities/comment.entity';
 import { IReqUserProps } from './types';
 
 @Controller('comment')
@@ -42,6 +43,7 @@ export class CommentController {
     @Req() req: { user: IReqUserProps },
   ) {
     const { post: postId, commentId } = data;
+    let comment: CommentEntity;
 
     const user = await this.userService.findOne({
       email: req.user?.email,
@@ -55,13 +57,15 @@ export class CommentController {
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
     delete data.commentId;
 
-    if (!!commentId) await this.createReply({ commentId, data, post, user });
-
-    const comment = await this.commentService.create({
-      ...data,
-      user: { connect: { id: user.id } },
-      post: { connect: { id: post.id } },
-    });
+    if (!!commentId) {
+      comment = await this.createReply({ commentId, data, post, user });
+    } else {
+      comment = await this.commentService.create({
+        ...data,
+        user: { connect: { id: user.id } },
+        post: { connect: { id: post.id } },
+      });
+    }
 
     if (!comment)
       throw new BadRequestException(MessageHelper.COMMENT_BAD_REQUEST);
@@ -82,9 +86,6 @@ export class CommentController {
       },
       where: { id: commentId },
     });
-
-    if (!comment)
-      throw new BadRequestException(MessageHelper.COMMENT_BAD_REQUEST);
 
     return comment;
   }
@@ -124,10 +125,7 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   @HttpCode(200)
-  async update(
-    @Param('id') id: string,
-    @Body() data: Prisma.CommentCreateInput,
-  ) {
+  async update(@Param('id') id: string, @Body() data: UpdateCommentDto) {
     const comment = await this.commentService.findOne({ id });
 
     if (!comment) throw new NotFoundException(MessageHelper.COMMENT_NOT_FOUND);

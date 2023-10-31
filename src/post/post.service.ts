@@ -1,13 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entities/post.entity';
 
 @Injectable()
 export class PostService {
-  async create(data: CreatePostDto): Promise<PostEntity> {
+  async create(data: Prisma.PostCreateInput): Promise<PostEntity> {
     try {
       return await db.post.create({
         data,
@@ -121,7 +119,7 @@ export class PostService {
 
   async update(params: {
     where: { id: string };
-    data: UpdatePostDto;
+    data: Prisma.PostUpdateInput;
   }): Promise<PostEntity> {
     try {
       const { where, data } = params;

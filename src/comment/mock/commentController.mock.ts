@@ -21,10 +21,10 @@ export const MOCK_FIND_ONE_COMMENT_RESPONSE = {
 };
 
 export const MOCK_CREATE_COMMENT = {
-  content: 'mock_comment_updated',
+  content: 'mock_comment_created',
   post: { connect: { id: MOCK_ID } },
   user: { connect: { email: MOCK_EMAIL } },
-  commentId: MOCK_ID,
+  commentId: null,
   createdAt: new Date(),
   updatedAt: new Date(),
 };

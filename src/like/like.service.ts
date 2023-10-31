@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Like, Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
-import { CreateLikeDto } from './dto/create-like.dto';
 import { LikeEntity } from './entities/like.entity';
 
 @Injectable()
 export class LikeService {
-  async create(data: CreateLikeDto): Promise<LikeEntity> {
+  async create(data: Prisma.LikeCreateInput): Promise<LikeEntity> {
     try {
       return await db.like.create({
         data,

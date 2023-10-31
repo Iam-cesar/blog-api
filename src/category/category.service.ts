@@ -1,13 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Category, Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryEntity } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
-  async create(data: CreateCategoryDto): Promise<CategoryEntity> {
+  async create(data: Prisma.CategoryCreateInput): Promise<CategoryEntity> {
     try {
       return await db.category.create({
         data,
@@ -58,7 +56,7 @@ export class CategoryService {
 
   async update(params: {
     where: Prisma.CategoryWhereUniqueInput;
-    data: UpdateCategoryDto;
+    data: Prisma.CategoryUpdateInput;
   }): Promise<CategoryEntity> {
     try {
       const { where, data } = params;

@@ -1,13 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
 import { RoleEntity } from './entities/role.entity';
 
 @Injectable()
 export class RoleService {
-  async create(data: CreateRoleDto): Promise<RoleEntity> {
+  async create(data: Prisma.RoleCreateInput): Promise<RoleEntity> {
     try {
       return await db.role.create({
         data,
@@ -70,7 +68,7 @@ export class RoleService {
 
   async update(params: {
     where: Prisma.RoleWhereUniqueInput;
-    data: UpdateRoleDto;
+    data: Prisma.RoleUpdateInput;
   }): Promise<RoleEntity> {
     try {
       const { where, data } = params;

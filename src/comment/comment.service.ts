@@ -3,6 +3,13 @@ import { Prisma } from '@prisma/client';
 import { db } from '../prisma/utils/db.server';
 import { CommentEntity } from './entities/comment.entity';
 
+const user = {
+  id: true,
+  firstName: true,
+  lastName: true,
+  role: true,
+};
+
 @Injectable()
 export class CommentService {
   async create(data: Prisma.CommentCreateInput): Promise<CommentEntity> {
@@ -29,22 +36,11 @@ export class CommentService {
             },
           },
           user: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-            },
+            select: user,
           },
           like: {
             select: {
-              id: true,
-              user: {
-                select: {
-                  id: true,
-                  firstName: true,
-                  lastName: true,
-                },
-              },
+              user: { select: user },
             },
           },
           replys: {
@@ -57,22 +53,10 @@ export class CommentService {
               id: true,
               like: {
                 select: {
-                  user: {
-                    select: {
-                      id: true,
-                      firstName: true,
-                      lastName: true,
-                    },
-                  },
+                  user: { select: user },
                 },
               },
-              user: {
-                select: {
-                  id: true,
-                  firstName: true,
-                  lastName: true,
-                },
-              },
+              user: { select: user },
             },
             orderBy: {
               createdAt: 'asc',
@@ -100,33 +84,32 @@ export class CommentService {
       const postId = where.post.id;
       return await db.comment.findMany({
         ...params,
-        where: {
-          postId,
-        },
+        where: { postId },
         select: {
           id: true,
           content: true,
           user: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              role: true,
-            },
+            select: user,
           },
           like: {
             select: {
               id: true,
-              user: {
-                select: {
-                  id: true,
-                  firstName: true,
-                  lastName: true,
-                },
-              },
+              user: { select: user },
             },
           },
-          replys: true,
+          replys: {
+            select: {
+              _count: {
+                select: { like: true },
+              },
+              id: true,
+              like: { select: { user: { select: user } } },
+              user: { select: user },
+            },
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
           createdAt: true,
           updatedAt: true,
           _count: true,

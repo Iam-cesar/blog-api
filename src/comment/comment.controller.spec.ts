@@ -80,29 +80,24 @@ describe('CommentController', () => {
 
   describe('CREATE', () => {
     it('should be able to create a comment', async () => {
+      const comment = await commentController.create(MOCK_CREATE_COMMENT, {
+        user: { email: MOCK_EMAIL, id: MOCK_ID },
+      });
+      expect(comment).toStrictEqual({ id: MOCK_ID });
+    });
+    it('should be able to create a reply', async () => {
       const comment = await commentController.create(
+        { ...MOCK_CREATE_COMMENT, commentId: MOCK_ID },
         {
-          ...MOCK_CREATE_COMMENT,
-          content: 'mock_comment_updated',
-          post: { connect: { id: MOCK_ID } },
-          user: { connect: { email: MOCK_EMAIL } },
+          user: { email: MOCK_EMAIL, id: MOCK_ID },
         },
-        { user: { email: MOCK_EMAIL, id: MOCK_ID } },
       );
       expect(comment).toStrictEqual({ id: MOCK_ID });
     });
     it('should to throw an exception if user not provided', async () => {
       userServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
-        commentController.create(
-          {
-            ...MOCK_CREATE_COMMENT,
-            content: 'mock_comment_updated',
-            post: { connect: { id: MOCK_ID } },
-            user: { connect: { email: MOCK_EMAIL } },
-          },
-          { user: null },
-        ),
+        commentController.create(MOCK_CREATE_COMMENT, { user: null }),
       ).rejects.toStrictEqual(
         new UnauthorizedException(MessageHelper.USER_NOT_FOUND),
       );
@@ -110,31 +105,19 @@ describe('CommentController', () => {
     it('should to throw an exception if post not provided', async () => {
       postServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
-        commentController.create(
-          {
-            ...MOCK_CREATE_COMMENT,
-            content: 'mock_comment_updated',
-            post: { connect: { id: MOCK_ID } },
-            user: { connect: { email: MOCK_EMAIL } },
-          },
-          { user: { email: MOCK_EMAIL, id: null } },
-        ),
+        commentController.create(MOCK_CREATE_COMMENT, {
+          user: { email: MOCK_EMAIL, id: null },
+        }),
       ).rejects.toStrictEqual(
         new NotFoundException(MessageHelper.POST_NOT_FOUND),
       );
     });
-    it('should to throw an exception', () => {
-      commentServiceMock.create.mockResolvedValueOnce(null);
+    it('should to throw an exception if user id not provided', () => {
+      commentServiceMock.create.mockResolvedValueOnce(undefined);
       expect(
-        commentController.create(
-          {
-            ...MOCK_CREATE_COMMENT,
-            content: '',
-            user: { connect: { email: MOCK_EMAIL } },
-            post: { connect: { id: MOCK_ID } },
-          },
-          { user: { email: MOCK_EMAIL, id: null } },
-        ),
+        commentController.create(MOCK_CREATE_COMMENT, {
+          user: { email: undefined, id: undefined },
+        }),
       ).rejects.toStrictEqual(
         new BadRequestException(MessageHelper.COMMENT_BAD_REQUEST),
       );

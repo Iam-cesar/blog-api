@@ -12,7 +12,7 @@ export class CreateCommentDto {
 
   @IsNotEmpty()
   @ApiProperty()
-  post: Prisma.LikeCreateNestedManyWithoutCommentInput;
+  post: Prisma.PostCreateNestedOneWithoutCommentInput;
 
   @ApiPropertyOptional()
   @IsOptional()
