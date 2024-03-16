@@ -9,9 +9,10 @@
     "node": "18.x"
   },
   "scripts": {
+    "postinstall": "prisma generate",
     "prepare": "husky install",
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "prisma generate && nest build",
     "dist": "npx prisma db push && npm run start:prod",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "nest start",
