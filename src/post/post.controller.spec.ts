@@ -184,7 +184,7 @@ describe('PostController', () => {
     it('should to throw an exception', () => {
       jest.spyOn(postController, 'findAll').mockRejectedValueOnce(new Error());
 
-      expect(postController.findAll(null)).rejects.toThrowError();
+      expect(postController.findAll(null)).rejects.toThrow();
     });
   });
 
@@ -224,7 +224,7 @@ describe('PostController', () => {
         .spyOn(postController, 'findAllByAuthor')
         .mockRejectedValueOnce(new Error());
 
-      expect(postController.findAllByAuthor(null)).rejects.toThrowError();
+      expect(postController.findAllByAuthor(null)).rejects.toThrow();
     });
   });
 

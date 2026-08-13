@@ -115,7 +115,7 @@ describe('ProfileController', () => {
       profileServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
         profileController.update(MOCK_ID, {}, { user: { id: MOCK_ID } }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
     it('should to throw an exception if user id diferent of author id', async () => {
       expect(
@@ -136,7 +136,7 @@ describe('ProfileController', () => {
       profileServiceMock.findOne.mockResolvedValueOnce(null);
       expect(
         profileController.remove(MOCK_ID, { user: { id: MOCK_ID } }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
     it('should to throw an exception if user id diferent of author id', async () => {
       expect(

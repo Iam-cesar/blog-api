@@ -44,7 +44,7 @@ describe('LikeService', () => {
       likeServiceMock.create.mockResolvedValueOnce(new Error());
       expect(
         likeService.create({ user: { connect: { id: MOCK_ID } } }),
-      ).resolves.toThrowError();
+      ).resolves.toThrow();
     });
   });
   describe('FIND_ONE', () => {
@@ -54,7 +54,7 @@ describe('LikeService', () => {
     });
     it('should to throw an exception', () => {
       likeServiceMock.findOne.mockResolvedValueOnce(new Error());
-      expect(likeService.findOne({ id: MOCK_ID })).resolves.toThrowError();
+      expect(likeService.findOne({ id: MOCK_ID })).resolves.toThrow();
     });
   });
   describe('REMOVE', () => {
@@ -64,7 +64,7 @@ describe('LikeService', () => {
     });
     it('should to throw an exception', () => {
       likeServiceMock.remove.mockResolvedValueOnce(new Error());
-      expect(likeService.remove({ id: MOCK_ID })).resolves.toThrowError();
+      expect(likeService.remove({ id: MOCK_ID })).resolves.toThrow();
     });
   });
 });

@@ -1,4 +1,4 @@
-import { IsEmpty, Length } from '@nestjs/class-validator';
+import { IsEmpty, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 

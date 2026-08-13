@@ -5,7 +5,7 @@ import {
   IsOptional,
   Length,
   Matches,
-} from '@nestjs/class-validator';
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { MessageHelper } from '../../common/helpers/message.helper';

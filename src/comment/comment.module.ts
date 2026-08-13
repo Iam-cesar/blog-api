@@ -9,8 +9,7 @@ import { CommentService } from './comment.service';
 @Module({
   imports: [
     CacheModule.register({
-      ttl: 5,
-      max: 100,
+      ttl: 5000,
     }),
   ],
   controllers: [CommentController],

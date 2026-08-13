@@ -51,7 +51,7 @@ describe('CommentService', () => {
           post: { connect: { id: MOCK_ID } },
           user: { connect: { email: '' } },
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('FIND_ONE', () => {
@@ -65,7 +65,7 @@ describe('CommentService', () => {
     });
     it('should to throw an exception', () => {
       commentServiceMock.findOne.mockRejectedValueOnce(new Error());
-      expect(commentService.findOne({ id: MOCK_ID })).rejects.toThrowError();
+      expect(commentService.findOne({ id: MOCK_ID })).rejects.toThrow();
     });
   });
   describe('UPDATE', () => {
@@ -92,7 +92,7 @@ describe('CommentService', () => {
             user: { connect: { email: '' } },
           },
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('REMOVE', () => {
@@ -102,7 +102,7 @@ describe('CommentService', () => {
     });
     it('should to throw an exception', () => {
       commentServiceMock.remove.mockRejectedValueOnce(new Error());
-      expect(commentService.remove({ id: MOCK_ID })).rejects.toThrowError();
+      expect(commentService.remove({ id: MOCK_ID })).rejects.toThrow();
     });
   });
 });

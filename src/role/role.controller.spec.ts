@@ -158,7 +158,7 @@ describe('RoleController', () => {
     });
     it('should to throw an exception', () => {
       jest.spyOn(roleController, 'findAll').mockRejectedValueOnce(new Error());
-      expect(roleController.findAll()).rejects.toThrowError();
+      expect(roleController.findAll()).rejects.toThrow();
     });
   });
   describe('FIND_ONE', () => {

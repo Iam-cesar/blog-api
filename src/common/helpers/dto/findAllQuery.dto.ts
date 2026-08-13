@@ -1,4 +1,4 @@
-import { IsOptional } from '@nestjs/class-validator';
+import { IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FindAllQueryDto {

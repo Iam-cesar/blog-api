@@ -102,7 +102,7 @@ export class AuthService {
       const isPasswordValid = compareSync(password, user?.password);
 
       if (!isPasswordValid) return null;
-    } catch (error) {
+    } catch {
       return null;
     }
 

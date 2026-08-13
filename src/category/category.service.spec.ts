@@ -46,7 +46,7 @@ describe('CategoryService', () => {
     });
     it('should to throw an exception', () => {
       categoryServiceMock.create.mockRejectedValueOnce(new Error());
-      expect(categoryService.create(MOCK_CREATE_CATEGORY)).rejects.toThrowError(
+      expect(categoryService.create(MOCK_CREATE_CATEGORY)).rejects.toThrow(
         new Error(),
       );
     });
@@ -60,7 +60,7 @@ describe('CategoryService', () => {
     });
     it('should to throw an exception', () => {
       categoryServiceMock.findOne.mockRejectedValueOnce(new Error());
-      expect(categoryService.findOne({ id: MOCK_ID })).rejects.toThrowError(
+      expect(categoryService.findOne({ id: MOCK_ID })).rejects.toThrow(
         new Error(),
       );
     });
@@ -76,7 +76,7 @@ describe('CategoryService', () => {
     });
     it('should to throw an exception', () => {
       categoryServiceMock.findAll.mockRejectedValueOnce(new Error());
-      expect(categoryService.findAll()).rejects.toThrowError(new Error());
+      expect(categoryService.findAll()).rejects.toThrow(new Error());
     });
   });
   describe('UPDATE', () => {
@@ -96,7 +96,7 @@ describe('CategoryService', () => {
           data: MOCK_CREATE_CATEGORY,
           where: { id: MOCK_ID },
         }),
-      ).rejects.toThrowError(new Error());
+      ).rejects.toThrow(new Error());
     });
   });
   describe('REMOVE', () => {
@@ -106,7 +106,7 @@ describe('CategoryService', () => {
     });
     it('should to throw an exception', () => {
       categoryServiceMock.remove.mockRejectedValueOnce(new Error());
-      expect(categoryService.remove({ id: MOCK_ID })).rejects.toThrowError(
+      expect(categoryService.remove({ id: MOCK_ID })).rejects.toThrow(
         new Error(),
       );
     });

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, Length, Matches } from '@nestjs/class-validator';
+import { IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { MessageHelper } from '../../common/helpers/message.helper';
 import { RegexHelper } from '../../common/helpers/regexp.helper';

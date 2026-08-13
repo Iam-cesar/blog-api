@@ -93,7 +93,7 @@ describe('AuthController', () => {
 
       expect(
         authController.signinLocal({ user: MOCK_FIND_ONE_USER_RESPONSE }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -107,9 +107,7 @@ describe('AuthController', () => {
     it('should to throw an exception', () => {
       authServiceMock.signup.mockRejectedValueOnce(new Error());
 
-      expect(
-        authController.signupLocal(MOCK_CREATE_USER),
-      ).rejects.toThrowError();
+      expect(authController.signupLocal(MOCK_CREATE_USER)).rejects.toThrow();
     });
   });
 
@@ -125,7 +123,7 @@ describe('AuthController', () => {
 
       expect(
         authController.logout({ user: { id: MOCK_FIND_ONE_USER_RESPONSE.id } }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -151,7 +149,7 @@ describe('AuthController', () => {
             hashedRefreshToken: accessToken,
           },
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 });

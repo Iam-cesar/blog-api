@@ -74,7 +74,7 @@ describe('PostService', () => {
     it('should to throw an exception', () => {
       jest.spyOn(postService, 'create').mockRejectedValueOnce(new Error());
 
-      expect(postService.create(null)).rejects.toThrowError();
+      expect(postService.create(null)).rejects.toThrow();
     });
   });
 
@@ -88,7 +88,7 @@ describe('PostService', () => {
     it('should to throw an exception', () => {
       jest.spyOn(postService, 'findAll').mockRejectedValueOnce(new Error());
 
-      expect(postService.findAll(null)).rejects.toThrowError();
+      expect(postService.findAll(null)).rejects.toThrow();
     });
   });
 
@@ -104,7 +104,7 @@ describe('PostService', () => {
         .spyOn(postService, 'findAllByAuthor')
         .mockRejectedValueOnce(new Error());
 
-      expect(postService.findAllByAuthor(null)).rejects.toThrowError();
+      expect(postService.findAllByAuthor(null)).rejects.toThrow();
     });
   });
 
@@ -118,7 +118,7 @@ describe('PostService', () => {
     it('should to throw an exception', () => {
       jest.spyOn(postService, 'findOne').mockRejectedValueOnce(new Error());
 
-      expect(postService.findOne(null)).rejects.toThrowError();
+      expect(postService.findOne(null)).rejects.toThrow();
     });
   });
 
@@ -135,7 +135,7 @@ describe('PostService', () => {
     it('should to throw an exception', () => {
       jest.spyOn(postService, 'update').mockRejectedValueOnce(new Error());
 
-      expect(postService.update(null)).rejects.toThrowError();
+      expect(postService.update(null)).rejects.toThrow();
     });
   });
 
@@ -149,7 +149,7 @@ describe('PostService', () => {
     it('should to throw an exception', () => {
       jest.spyOn(postService, 'remove').mockRejectedValueOnce(new Error());
 
-      expect(postService.remove(null)).rejects.toThrowError();
+      expect(postService.remove(null)).rejects.toThrow();
     });
   });
 });

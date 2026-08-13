@@ -57,7 +57,7 @@ export class CommentController {
     if (!post) throw new NotFoundException(MessageHelper.POST_NOT_FOUND);
     delete data.commentId;
 
-    if (!!commentId) {
+    if (commentId) {
       comment = await this.createReply({ commentId, data, post, user });
     } else {
       comment = await this.commentService.create({

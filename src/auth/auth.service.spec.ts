@@ -82,7 +82,7 @@ describe('AuthService', () => {
       authServiceMock.signin.mockRejectedValueOnce(new Error());
       expect(
         authService.signin(new UserEntity(MOCK_CREATE_USER)),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('SIGNUP', () => {
@@ -92,7 +92,7 @@ describe('AuthService', () => {
     });
     it('should to throw an exception', () => {
       authServiceMock.signup.mockRejectedValueOnce(new Error());
-      expect(authService.signup(MOCK_CREATE_USER)).rejects.toThrowError();
+      expect(authService.signup(MOCK_CREATE_USER)).rejects.toThrow();
     });
   });
   describe('LOGOUT', () => {
@@ -104,7 +104,7 @@ describe('AuthService', () => {
       authServiceMock.logout.mockRejectedValueOnce(new Error());
       expect(
         authService.logout(MOCK_FIND_ONE_USER_RESPONSE.id),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('REFRESH_TOKEN', () => {
@@ -122,7 +122,7 @@ describe('AuthService', () => {
           id: MOCK_FIND_ONE_USER_RESPONSE.id,
           requestRefreshToken: accessToken,
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('VALIDATE_USER', () => {
@@ -140,7 +140,7 @@ describe('AuthService', () => {
           MOCK_CREATE_USER.email,
           MOCK_CREATE_USER.password,
         ),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 });

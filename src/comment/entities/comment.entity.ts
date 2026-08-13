@@ -1,4 +1,4 @@
-import { LikeEntity } from 'src/like/entities/like.entity';
+import { LikeEntity } from '../../like/entities/like.entity';
 
 export class CommentEntity {
   id?: string;

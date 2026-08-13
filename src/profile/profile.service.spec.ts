@@ -64,7 +64,7 @@ describe('ProfileService', () => {
           ...MOCK_CREATE_PROFILE,
           user: { connect: { id: MOCK_ID } },
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('FIND_ONE', () => {
@@ -74,7 +74,7 @@ describe('ProfileService', () => {
     });
     it('should to throw an exception', () => {
       profileServiceMock.findOne.mockRejectedValueOnce(new Error());
-      expect(profileService.findOne({ id: MOCK_ID })).rejects.toThrowError();
+      expect(profileService.findOne({ id: MOCK_ID })).rejects.toThrow();
     });
   });
   describe('UPDATE', () => {
@@ -89,7 +89,7 @@ describe('ProfileService', () => {
       profileServiceMock.update.mockRejectedValueOnce(new Error());
       expect(
         profileService.update({ where: { id: '1' }, data: {} }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('REMOVE', () => {
@@ -102,7 +102,7 @@ describe('ProfileService', () => {
     it('should to throw an exception', () => {
       profileServiceMock.remove.mockRejectedValueOnce(new Error());
 
-      expect(profileService.remove({ id: MOCK_ID })).rejects.toThrowError();
+      expect(profileService.remove({ id: MOCK_ID })).rejects.toThrow();
     });
   });
 });

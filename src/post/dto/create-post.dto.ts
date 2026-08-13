@@ -1,9 +1,4 @@
-import {
-  IsEmpty,
-  IsNotEmpty,
-  IsOptional,
-  Length,
-} from '@nestjs/class-validator';
+import { IsEmpty, IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 

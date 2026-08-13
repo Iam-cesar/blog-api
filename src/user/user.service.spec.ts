@@ -50,7 +50,7 @@ describe('UserService', () => {
 
     it('should to throw an exception', () => {
       userServiceMock.create.mockRejectedValueOnce(new Error());
-      expect(userService.create(null)).rejects.toThrowError();
+      expect(userService.create(null)).rejects.toThrow();
     });
   });
 
@@ -66,7 +66,7 @@ describe('UserService', () => {
       userServiceMock.findOneWithPassword.mockRejectedValueOnce(new Error());
       expect(
         userService.findOneWithPassword({ id: MOCK_FIND_ONE_USER_RESPONSE.id }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('FIND ONE USER', () => {
@@ -81,7 +81,7 @@ describe('UserService', () => {
       userServiceMock.findOne.mockRejectedValueOnce(new Error());
       expect(
         userService.findOne({ id: MOCK_FIND_ONE_USER_RESPONSE.id }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -96,7 +96,7 @@ describe('UserService', () => {
 
     it('should to throw an exception', () => {
       jest.spyOn(userService, 'findAll').mockRejectedValueOnce(new Error());
-      expect(userService.findAll()).rejects.toThrowError();
+      expect(userService.findAll()).rejects.toThrow();
     });
   });
 
@@ -117,7 +117,7 @@ describe('UserService', () => {
           where: { id: MOCK_CREATE_USER_RESPONSE.id },
           data: MOCK_UPDATE_USER,
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -133,7 +133,7 @@ describe('UserService', () => {
       userServiceMock.remove.mockRejectedValueOnce(new Error());
       expect(
         userService.remove({ id: MOCK_CREATE_USER_RESPONSE.id }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -149,7 +149,7 @@ describe('UserService', () => {
       userServiceMock.softRemove.mockRejectedValueOnce(new Error());
       expect(
         userService.softRemove({ id: MOCK_CREATE_USER_RESPONSE.id }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -165,7 +165,7 @@ describe('UserService', () => {
       userServiceMock.renew.mockRejectedValueOnce(new Error());
       expect(
         userService.renew({ id: MOCK_CREATE_USER_RESPONSE.id }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 });

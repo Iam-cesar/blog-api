@@ -44,7 +44,7 @@ describe('RoleService', () => {
 
     it('should to throw an exception', () => {
       jest.spyOn(roleService, 'create').mockRejectedValueOnce(new Error());
-      expect(roleService.create(MOCK_CREATE_ROLE)).rejects.toThrowError();
+      expect(roleService.create(MOCK_CREATE_ROLE)).rejects.toThrow();
     });
   });
   describe('FIND_ALL', () => {
@@ -72,7 +72,7 @@ describe('RoleService', () => {
 
     it('should to throw an exception', () => {
       jest.spyOn(roleService, 'findAll').mockRejectedValueOnce(new Error());
-      expect(roleService.findAll()).rejects.toThrowError();
+      expect(roleService.findAll()).rejects.toThrow();
     });
   });
   describe('FIND_ONE', () => {
@@ -83,7 +83,7 @@ describe('RoleService', () => {
     it('should to throw an exception', () => {
       const { id } = MOCK_FIND_ONE_ROLE_RESPONSE;
       jest.spyOn(roleService, 'findOne').mockRejectedValueOnce(new Error());
-      expect(roleService.findOne({ id })).rejects.toThrowError();
+      expect(roleService.findOne({ id })).rejects.toThrow();
     });
   });
   describe('UPDATE', () => {
@@ -101,7 +101,7 @@ describe('RoleService', () => {
           where: { id: '1' },
           data: MOCK_CREATE_ROLE,
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
   describe('REMOVE', () => {
@@ -111,7 +111,7 @@ describe('RoleService', () => {
     });
     it('should to throw an exception', () => {
       jest.spyOn(roleService, 'remove').mockRejectedValueOnce(new Error());
-      expect(roleService.remove({ id: '1' })).rejects.toThrowError();
+      expect(roleService.remove({ id: '1' })).rejects.toThrow();
     });
   });
 });

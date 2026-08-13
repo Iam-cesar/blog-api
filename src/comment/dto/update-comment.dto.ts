@@ -1,4 +1,4 @@
-import { IsEmpty } from '@nestjs/class-validator';
+import { IsEmpty } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 import { Prisma } from '@prisma/client';
 import { CreateCommentDto } from './create-comment.dto';

@@ -1,4 +1,4 @@
-import { IsNotEmpty } from '@nestjs/class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePostCategoryDto {
